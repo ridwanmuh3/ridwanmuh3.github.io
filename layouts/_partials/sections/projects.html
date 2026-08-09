@@ -1,0 +1,46 @@
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $s := $d.sections.projects }}
+{{ $items := $d.projects.project }}
+{{ with $items }}
+<section class="flow-lead">
+    {{ partial "components/section-head.html" (dict
+        "title" ($s.title | default "// Featured Projects")
+        "body" $s.body) }}
+    <div class="mt-8 space-y-4">
+        {{ range . }}
+        {{ $p := . }}
+        {{ with .name }}
+        <article class="card-arrive surface-raised rounded-lg p-5">
+            <div class="space-y-1">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                    <h3 class="type-title text-ink text-balance min-w-0">
+                        {{ with $p.url }}
+                        <a class="link-quiet text-ink" href="{{ . }}" {{ if hasPrefix . "http" }}rel="noopener" {{ end }}>{{ $p.name }}</a>
+                        {{ else }}
+                        {{ $p.name }}
+                        {{ end }}
+                    </h3>
+                    {{ with $p.duration }}
+                    <span class="type-meta sm:text-nowrap shrink-0">{{ . }}</span>
+                    {{ end }}
+                </div>
+                {{/* Full-strength accent — a shaded amber reads as a fifth colour. */}}
+                {{ with $p.type }}<p class="type-meta text-accent">{{ . }}</p>{{ end }}
+            </div>
+            {{ with $p.description }}
+            <p class="type-body mt-4 measure">{{ . }}</p>
+            {{ end }}
+            {{ with $p.skills }}
+            <ul class="mt-4 flex gap-2 flex-wrap">
+                {{ range . }}
+                <li class="px-3 py-2 type-label surface-raised rounded-lg text-ink-body max-w-full">{{
+                    . }}</li>
+                {{ end }}
+            </ul>
+            {{ end }}
+        </article>
+        {{ end }}
+        {{ end }}
+    </div>
+</section>
+{{ end }}

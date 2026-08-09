@@ -1,0 +1,28 @@
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $s := $d.sections.skills }}
+{{ $items := $d.skills.skill }}
+{{ with $items }}
+<section class="flow">
+    {{ partial "components/section-head.html" (dict
+        "title" ($s.title | default "// Skills")
+        "body" $s.body) }}
+    <div class="mt-8">
+        {{/* Two identical groups so the loop point is invisible; the second is
+             hidden from screen readers. */}}
+        <div class="marquee marquee-ltr">
+            <div class="marquee-track">
+                <ul class="marquee-group">
+                    {{ range . }}
+                    {{ partial "components/skill-chip.html" . }}
+                    {{ end }}
+                </ul>
+                <ul class="marquee-group" aria-hidden="true">
+                    {{ range . }}
+                    {{ partial "components/skill-chip.html" . }}
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{{ end }}

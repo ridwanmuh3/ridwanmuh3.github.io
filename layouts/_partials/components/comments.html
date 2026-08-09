@@ -1,0 +1,42 @@
+{{/* Blog comments, stored as GitHub Discussions. Reading needs no account; only
+     posting asks for a sign-in. Renders once `params.giscus.repoId` is filled
+     in — giscus matches on GraphQL node IDs, not the names beside them. */}}
+
+{{ $g := site.Params.giscus }}
+{{ with $g.repoId }}
+{{ $term := $.Params.giscus_term | default $.File.ContentBaseName }}
+<section class="mt-8 pt-8 border-t border-line">
+    {{ partial "components/section-head.html" (dict
+        "title" (i18n "comments")
+        "body" (i18n "comments_note")) }}
+
+    <div class="mt-8">
+        {{/* `specific` + the content file's base name, not `pathname`, so a page
+             and its future translation share one thread. `strict` because
+             without it giscus falls back to a fuzzy title search and can bind to
+             the wrong discussion. `transparent_dark` lets --color-page through
+             instead of painting GitHub's grey mid-page. */}}
+        <script src="https://giscus.app/client.js"
+            data-repo="{{ $g.repo }}"
+            data-repo-id="{{ . }}"
+            data-category="{{ $g.category }}"
+            data-category-id="{{ $g.categoryId }}"
+            data-mapping="specific"
+            data-term="{{ $term }}"
+            data-strict="1"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="transparent_dark"
+            data-lang="{{ site.Language.Lang }}"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async></script>
+        <noscript>
+            <p class="type-body measure">{{ i18n "comments_needs_js" }}</p>
+        </noscript>
+    </div>
+</section>
+{{ else }}
+{{ warnidf "giscus-unconfigured" "comments not rendered: params.giscus.repoId is empty in hugo.toml (see the giscus setup notes in the repo README)" }}
+{{ end }}

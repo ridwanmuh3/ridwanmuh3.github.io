@@ -1,0 +1,25 @@
+{{/* `hugo.Sites` holds only the languages actually being built, so one
+     switched off with `disableLanguages` takes its button with it. */}}
+{{ if gt (len hugo.Sites) 1 }}
+{{ $current := site.Language.Lang }}
+{{ $homes := dict }}
+{{ range hugo.Sites }}{{ $homes = merge $homes (dict .Language.Lang .Home) }}{{ end }}
+{{/* `order-2` for below `sm`, where the header's wrapper is `display: contents`
+     and this becomes a direct nav child that would otherwise sort ahead of the
+     logo. Inert at `sm` and up. */}}
+<div class="flex items-center gap-1 max-sm:order-2" role="group" aria-label="{{ i18n "lang_switch" }}">
+    {{ range hugo.Sites }}
+    {{ $code := .Language.Lang }}
+    {{ $label := .Language.Label }}
+    {{ $target := index $homes $code }}
+    {{ range $.Translations }}{{ if eq .Language.Lang $code }}{{ $target = . }}{{ end }}{{ end }}
+    {{ if eq $code $current }}
+    <span class="px-2 py-1 text-xs font-header font-semibold text-accent" aria-current="true"
+        title="{{ $label }}">{{ $code | upper }}</span>
+    {{ else }}
+    <a href="{{ $target.RelPermalink }}" class="link-quiet px-2 py-1 text-xs font-header"
+        title="{{ $label }}" hreflang="{{ $code }}">{{ $code | upper }}</a>
+    {{ end }}
+    {{ end }}
+</div>
+{{ end }}

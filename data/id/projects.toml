@@ -1,0 +1,14 @@
+[[project]]
+name = "Smart Secure QR"
+skills = ["Go", "Cryptography", "PostgreSQL"]
+duration = "Mar 2026 - Jun 2026"
+description = "QR code dengan dua tanda tangan, dari penerbit dan dari timelock. Setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis."
+url = "/projects/smart-secure-qr/"
+type = "Riset"
+
+[[project]]
+name = "Dasbor Inventori"
+skills = ["NodeJS", "PostgreSQL", "Redis"]
+duration = "Des 2025 - Mar 2026"
+description = "Dasbor inventori dan keuangan untuk dapur katering. Mencatat stok bahan baku dan jumlah makanan yang diproduksi beserta pengeluaran hariannya."
+type = "Produk"

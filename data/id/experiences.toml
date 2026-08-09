@@ -1,0 +1,13 @@
+[[experience]]
+name = "Asisten Peneliti"
+company = "Universitas Siliwangi"
+duration = "Mar 2026 - Jun 2026"
+description = "Mengimplementasikan skema tanda tangan ganda pada Smart Secure QR: tanda tangan penerbit yang dipadukan dengan timelock."
+keypoints = ["kriptografi", "tanda tangan digital", "qr code", "enkripsi timelock"]
+
+[[experience]]
+name = "Pengembang Web Full Stack"
+company = "SPPG Sinar Asri"
+duration = "Des 2025 - Mar 2026"
+description = "Membangun dasbor yang digunakan tim dapur untuk melacak stok bahan makanan dan keuangan."
+keypoints = ["frontend", "backend"]

@@ -1,0 +1,10 @@
+{{/* Inline an SVG from assets/icons — local files, not a CDN webfont, so a
+     blocked third party can never blank out the contact links. */}}
+{{ $name := .name }}
+{{ $class := .class | default "size-6" }}
+{{ with resources.Get (printf "icons/%s.svg" $name) }}
+{{ $svg := .Content | safeHTML }}
+<span class="{{ $class }} inline-flex shrink-0 [&>svg]:size-full" aria-hidden="true">{{ $svg }}</span>
+{{ else }}
+{{ warnf "icon %q not found in assets/icons" $name }}
+{{ end }}

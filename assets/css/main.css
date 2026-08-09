@@ -1,0 +1,980 @@
+@import "tailwindcss";
+
+/* Self-hosted, latin subset, single variable file per family covering the whole
+   100-900 axis. Replaces a render-blocking chain through fonts.googleapis.com
+   that had to resolve before any text could paint. */
+@font-face {
+    font-family: 'Geist';
+    src: url('/fonts/geist-latin-var.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Geist Mono';
+    src: url('/fonts/geist-mono-latin-var.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-body: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-header: 'Geist Mono', ui-monospace, monospace;
+    /* Tailwind's own --font-mono default was still the OS stack, so every
+       `font-mono` pill silently rendered in a third family. */
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+    /* Colour by role, not value — nothing downstream reaches for a raw scale
+       step. Dark only (`<body class="dark">`), so one value per role. */
+    --color-ink: var(--color-zinc-100);
+    /* headings, row titles, strong */
+    --color-ink-body: var(--color-zinc-300);
+    /* paragraphs */
+    --color-ink-muted: var(--color-zinc-400);
+    /* meta, dates, subtitles */
+    --color-ink-faint: var(--color-zinc-600);
+    /* trailing affordance arrows */
+
+    --color-accent: var(--color-amber-400);
+    --color-accent-hover: var(--color-amber-300);
+    --color-accent-press: var(--color-amber-500);
+
+    --color-page: var(--color-zinc-950);
+    --color-surface: var(--color-zinc-900);
+    /* raised fill */
+    --color-surface-hover: var(--color-zinc-800);
+    --color-surface-press: var(--color-zinc-700);
+
+    --color-line: var(--color-zinc-800);
+    /* every divider and rail */
+    --color-line-raised: var(--color-zinc-700);
+    /* border on a raised surface */
+
+    /* The only non-zinc, non-amber hue, and the only reason to add one: amber
+       is what the visitor is invited to press, so it cannot also mean error. */
+    --color-danger: var(--color-red-400);
+}
+
+/* Spacing, one value per relationship, applied with ordinary Tailwind
+   utilities. Every step is a multiple of 0.25rem:
+
+     pill px-3 py-2 · chip p-3 · link row p-4 · card p-5
+     tight stack space-y-1 (space-y-2 at display scale)
+     heading -> its line space-y-4 · header -> content mt-8
+     list gap space-y-4 (space-y-8 on the timeline) · inside a card mt-4 */
+
+/* Registered so the fill can be *transitioned* — an unregistered custom
+   property flips discretely, turning a 200ms hover into a hard cut. */
+@property --surface-fill {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: transparent;
+}
+
+/* The one raised surface in the system: cards, pills, the header island, the
+   social buttons. The fill is a custom property because the gradient's lower
+   stop is opaque — a plain `hover:bg-*` on top of this gets painted over. */
+@utility surface-raised {
+    --surface-fill: var(--color-surface);
+    border: 1px solid var(--color-line-raised);
+    background-color: var(--surface-fill);
+    background-image: linear-gradient(to bottom, --alpha(var(--color-line-raised) / 40%), var(--surface-fill));
+    box-shadow: inset 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.45);
+}
+
+/* Type roles, named for the job so the ramp stays one decision. One tier per
+   heading level: h1 type-display, h2 type-section, h3 type-title. Prose is
+   always type-body, including the line under a section heading; type-meta is
+   metadata only — dates, durations, a company line, reading time.
+
+   Each role owns its colour. The heading roles stay colourless, because a
+   heading is amber on a section and ink in a card. */
+@utility type-display {
+    font-family: var(--font-header);
+    font-size: clamp(2.25rem, 1.7rem + 2.2vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+@utility type-section {
+    font-family: var(--font-header);
+    font-size: clamp(1.875rem, 1.6rem + 1.1vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+@utility type-title {
+    font-family: var(--font-header);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+@utility type-body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.75;
+    letter-spacing: 0.005em;
+    color: var(--color-ink-body);
+}
+
+@utility type-meta {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--color-ink-muted);
+}
+
+@utility type-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+/* The amber text link: prose, the back-link, the links inside i18n strings.
+   Underline is part of the role — these sit in running text, where colour alone
+   is not a reliable signal. */
+@utility link-accent {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 45%, transparent);
+    transition: color var(--dur-state) var(--ease-state), text-decoration-color var(--dur-state) var(--ease-state);
+
+    &:hover {
+        color: var(--color-accent-hover);
+        text-decoration-color: currentColor;
+    }
+
+    &:active {
+        color: var(--color-accent-press);
+    }
+}
+
+/* The quiet link that lights up: nav items, the locale switcher, a card title.
+   No underline — these are standalone targets, not runs of prose. */
+@utility link-quiet {
+    color: var(--color-ink-body);
+    transition: color var(--dur-state) var(--ease-state);
+
+    &:hover {
+        color: var(--color-accent);
+    }
+
+    &:active {
+        color: var(--color-accent-press);
+    }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Page gutter. Falls back to 1rem; widens only where a notch or rounded
+   corner actually intrudes (landscape on notched phones). */
+@utility gutter {
+    padding-inline: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
+}
+
+/* Vertical cadence. Top margins only: adjacent sections would otherwise
+   collapse to a single flat interval, and the alternation between `flow`
+   (continuation) and `flow-lead` (new movement) is what gives the page rhythm.
+   Both scale with viewport height so short landscape phones stay tight. */
+@utility flow {
+    margin-block-start: clamp(3.5rem, 10vh, 6.5rem);
+}
+
+@utility flow-lead {
+    margin-block-start: clamp(5rem, 15vh, 10rem);
+}
+
+/* The tail of the last section on a route. Same interval as `flow`, so the gap
+   above the footer matches the gaps between sections; it was inlined as a
+   literal clamp in five templates and could drift from `flow` at any time. */
+@utility flow-end {
+    margin-block-end: clamp(3.5rem, 10vh, 6.5rem);
+}
+
+/* Reading measure. One number, not twelve copies of the same arbitrary-value
+   class. */
+@utility measure {
+    max-width: 65ch;
+}
+
+/* Hero hugs the header so identity + stack reach the first screen on a phone. */
+@utility hero-gap {
+    margin-block: clamp(1.5rem, 4vh, 4rem) 0;
+}
+
+html {
+    @apply scroll-smooth;
+}
+
+/* The header is a sticky island, so an unadjusted anchor jump parks its target
+   underneath it. One row at every width, so one offset clears it. */
+#main,
+:target {
+    scroll-margin-block-start: 6rem;
+}
+
+/* Sticky footer, so a short route does not leave the colophon floating
+   mid-screen with page colour running on below it.
+
+   `svh`, not `vh` or `dvh`: `vh` overshoots by a mobile toolbar's height and
+   puts the footer off-screen; `dvh` re-measures as that toolbar hides, which
+   animates the footer while you scroll.
+
+   `flex: 1 0 auto` on <main>, not `flex: 1` — the latter zeroes flex-basis and
+   lets a tall page's content be squeezed by the sibling header and footer. */
+body {
+    @apply font-body antialiased text-ink bg-page;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+h1,h2,h3,h4,h5 {
+    @apply font-header;
+}
+
+/* A pasted URL, a long unhyphenated skill name, or a CJK/German string must
+   never push the page into horizontal scroll. */
+h1, h2, h3, h4, h5, p, li, a {
+    overflow-wrap: break-word;
+}
+
+/* Keyboard focus must stay visible everywhere, including on the dark surfaces
+   where the UA default ring nearly disappears. */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+}
+
+/* Windows High Contrast drops the gradients and shadows, but every surface here
+   also carries a real 1px border, which forced-colors repaints for us. Only the
+   focus ring needs remapping to a system colour. */
+@media (forced-colors: active) {
+    :focus-visible {
+        outline-color: Highlight;
+    }
+}
+
+/* Header menu disclosure. `aria-expanded` is the only state — nothing to read
+   but the attribute a screen reader is already announcing. Outside `@layer`, so
+   these beat the utilities on the same elements without `!important`. */
+
+@media (width < 40rem) {
+    .site-menu,
+    .site-cta {
+        display: none;
+    }
+
+    .site-nav:has(.site-nav-toggle[aria-expanded="true"]) .site-menu {
+        display: flex;
+    }
+
+    /* The CTA travels with the links: two amber targets on a 375px island
+       leave no room to breathe, and the panel is where a visitor who opened the
+       menu is already looking. */
+    .site-nav:has(.site-nav-toggle[aria-expanded="true"]) .site-cta {
+        display: block;
+    }
+}
+
+/* One button, two marks: the toggle shows the way out once it is open. */
+.site-nav-toggle .icon-close,
+.site-nav-toggle[aria-expanded="true"] .icon-open {
+    display: none;
+}
+
+.site-nav-toggle[aria-expanded="true"] .icon-close {
+    display: inline-flex;
+}
+
+/* Article prose. A Read surface: measure and rhythm lead, and paragraph spacing
+   alone marks paragraph boundaries (no indent as well, which double-marks).
+   Markdown emits bare tags, so every element it can produce is covered here. */
+@utility prose-article {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.75;
+    letter-spacing: 0.005em;
+    color: var(--color-ink-body);
+
+    & > * + * {
+        margin-block-start: 1.5rem;
+    }
+
+    & h2 {
+        font-family: var(--font-header);
+        font-size: 1.5rem;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+        color: var(--color-accent);
+        margin-block-start: 3rem;
+    }
+
+    & h3 {
+        font-family: var(--font-header);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+        color: var(--color-ink);
+        margin-block-start: 2.25rem;
+    }
+
+    & h4 {
+        font-family: var(--font-header);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-ink);
+        margin-block-start: 2rem;
+    }
+
+    & strong {
+        font-weight: 600;
+        color: var(--color-ink);
+    }
+
+    & a {
+        @apply link-accent;
+    }
+
+    & ul,
+    & ol {
+        padding-inline-start: 1.5rem;
+    }
+
+    & ul {
+        list-style: disc;
+    }
+
+    & ol {
+        list-style: decimal;
+    }
+
+    /* `ink-muted`, not `ink-faint`: a marker recedes below its text but still has
+       to be seen. `ink-faint` is reserved for pure decoration that also has a
+       hover state to reveal it. */
+    & li::marker {
+        color: var(--color-ink-muted);
+    }
+
+    & li + li {
+        margin-block-start: 0.5rem;
+    }
+
+    & blockquote {
+        border-inline-start: 1px solid var(--color-line-raised);
+        padding-inline-start: 1.25rem;
+        color: var(--color-ink-muted);
+        font-style: italic;
+    }
+
+    & code {
+        font-family: var(--font-mono);
+        font-size: 0.875em;
+        background: var(--color-surface);
+        border: 1px solid var(--color-line);
+        border-radius: 0.25rem;
+        padding: 0.125em 0.375em;
+    }
+
+    & pre {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.7;
+        background: var(--color-surface);
+        border: 1px solid var(--color-line);
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        overflow-x: auto;
+    }
+
+    /* A code block inside <pre> must not inherit the inline-code chrome. */
+    & pre code {
+        background: none;
+        border: 0;
+        padding: 0;
+        font-size: inherit;
+    }
+
+    & hr {
+        border-color: var(--color-line);
+        margin-block: 2.5rem;
+    }
+
+    & img {
+        border-radius: 0.5rem;
+        max-width: 100%;
+        height: auto;
+    }
+
+    & table {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9375rem;
+    }
+
+    & th,
+    & td {
+        border: 1px solid var(--color-line);
+        padding: 0.5rem 0.75rem;
+        text-align: start;
+    }
+
+    & th {
+        font-family: var(--font-header);
+        font-weight: 600;
+        color: var(--color-ink);
+    }
+}
+
+/* ===========================================================================
+   Motion
+
+   One idea at three scales: a stroke that closes. Arcs meet around the
+   portrait, the rail draws through the work history, the rule above the ask
+   completes — the gesture a portfolio built on signature verification can mean
+   something by.
+
+   Everything scroll-linked is a CSS scroll-driven animation, no library and no
+   scroll listener. Where `animation-timeline` is unsupported the shorthand
+   falls back to 0s with `both` and the element lands drawn, lit, arrived —
+   nothing can end up stuck invisible.
+   =========================================================================== */
+
+:root {
+    /* Confident deceleration: leaves fast, settles long. Everything that
+       travels uses it. */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Symmetric, for colour and shadow — they have no distance to express. */
+    --ease-state: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --dur-press: 110ms;
+    --dur-state: 200ms;
+    --dur-view: 380ms;
+    --dur-focal: 760ms;
+}
+
+/* --- Focal moment: the dual signature ------------------------------------
+   Two arcs close the ring in one pass, then leave — the research this site
+   leads with is a *dual* signature scheme. Runs once at load, never on scroll.
+
+   The portrait is excluded from the entrance: it is the LCP element, and fading
+   it in would postpone the largest paint by the length of the animation. */
+.sig-sweep {
+    position: absolute;
+    inset: 0;
+    /* Path data starts at 3 o'clock; rotating the whole ring puts the two
+       start points at 12 and 6 so they meet on the horizontal. */
+    transform: rotate(-90deg);
+    pointer-events: none;
+}
+
+.sig-arc {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    /* pathLength normalises the circumference to 100, so "50" is exactly half
+       the ring at any rendered size. Gap 100 keeps the pattern to a single
+       dash; offset 50 parks that dash entirely before the start, so the arc
+       begins at nothing and grows rather than sliding into place. */
+    stroke-dasharray: 50 100;
+    stroke-dashoffset: 50;
+    transform-origin: 50% 50%;
+    animation:
+        sig-trace var(--dur-focal) var(--ease-out-expo) 80ms both,
+        sig-clear 300ms var(--ease-state) calc(80ms + var(--dur-focal)) both;
+}
+
+.sig-arc-b {
+    transform: rotate(180deg);
+}
+
+@keyframes sig-trace {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* The ring is the moment, not a permanent ornament: it hands the portrait back
+   to its resting 1px border and gets out of the way. */
+@keyframes sig-clear {
+    to {
+        opacity: 0;
+    }
+}
+
+/* Identity, then role, then the ways to reach him — the order a recruiter
+   reads them in. Total delay is capped at 200ms so the last item has settled
+   well inside the first second. */
+.hero-stage > * {
+    animation: arrive var(--dur-view) var(--ease-out-expo) both;
+}
+
+.hero-stage > *:nth-child(2) {
+    animation-delay: 110ms;
+}
+
+.hero-stage > *:nth-child(3) {
+    animation-delay: 200ms;
+}
+
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* --- Continuity between pages -------------------------------------------- */
+
+/* The header island, the footer and the page background are identical on every
+   route, so cross-fading them is invisible; only <main> carries a direction,
+   which is what tells the visitor a new page arrived rather than the same one
+   redrawing. Unsupported browsers get an ordinary navigation. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 180ms;
+}
+
+::view-transition-old(page) {
+    animation: page-exit 140ms var(--ease-state) both;
+}
+
+::view-transition-new(page) {
+    animation: page-enter var(--dur-view) var(--ease-out-expo) both;
+}
+
+@keyframes page-exit {
+    to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* --- The work history is a drawn line ------------------------------------- */
+
+.timeline {
+    position: relative;
+}
+
+.timeline::before,
+.timeline::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 1px;
+}
+
+/* The unlit rail: the full span of the history, always present. */
+.timeline::before {
+    background-color: var(--color-line);
+}
+
+/* The lit rail grows as the reader moves down, so the line reports reading
+   progress through the history instead of decorating the margin. */
+.timeline::after {
+    background-image: linear-gradient(to bottom, --alpha(var(--color-accent) / 20%), var(--color-accent));
+    transform-origin: top;
+    animation: rail-draw linear both;
+    animation-timeline: view();
+    animation-range: cover 12% cover 62%;
+}
+
+@keyframes rail-draw {
+    from {
+        transform: scaleY(0);
+    }
+}
+
+/* Each role's marker ignites as the reader reaches it. The zinc-950 ring is
+   part of the keyframes rather than a utility because a box-shadow cannot be
+   half-owned: the glow would otherwise erase it. */
+.timeline-dot {
+    animation: dot-ignite linear both;
+    animation-timeline: view();
+    animation-range: cover 25% cover 42%;
+}
+
+@keyframes dot-ignite {
+    from {
+        background-color: var(--color-line-raised);
+        box-shadow: 0 0 0 4px var(--color-page);
+    }
+
+    to {
+        background-color: var(--color-accent);
+        box-shadow: 0 0 0 4px var(--color-page), 0 0 12px 2px --alpha(var(--color-accent) / 28%);
+    }
+}
+
+/* --- The rule above the ask completes ------------------------------------- */
+
+.rule-draw {
+    position: relative;
+}
+
+.rule-draw::before,
+.rule-draw::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 1px;
+}
+
+.rule-draw::before {
+    background-color: var(--color-line);
+}
+
+.rule-draw::after {
+    background-image: linear-gradient(to right, var(--color-accent), --alpha(var(--color-accent) / 0%));
+    /* Both site languages are LTR; a physical origin is honest here. */
+    transform-origin: 0 0;
+    animation: rule-draw linear both;
+    animation-timeline: view();
+    animation-range: cover 15% cover 45%;
+}
+
+@keyframes rule-draw {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+/* --- Cards arrive as the list they are ------------------------------------ */
+
+/* Project cards are a genuine list, so a sibling arrival reads correctly here
+   and nowhere else on the page. It starts from 0.35 rather than 0 so a card
+   sitting at the fold is never a blank rectangle. */
+.card-arrive {
+    animation: card-arrive linear both;
+    animation-timeline: view();
+    animation-range: entry 20% entry 100%;
+}
+
+@keyframes card-arrive {
+    from {
+        opacity: 0.35;
+        transform: translateY(12px);
+    }
+}
+
+/* --- The header reports that you have left the top ------------------------ */
+
+.header-island {
+    animation: header-lift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 5rem;
+}
+
+/* Elevation alone carries the message. The border stays `line-raised` through
+   the whole scroll: a raised surface has one border identity, and lightening it
+   here made the island's edge disagree with every card on the page. */
+@keyframes header-lift {
+    from {
+        box-shadow: inset 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.45);
+    }
+
+    to {
+        box-shadow: inset 0 1px rgb(255 255 255 / 0.12), 0 10px 30px -12px rgb(0 0 0 / 0.9), 0 2px 8px -2px rgb(0 0 0 / 0.55);
+    }
+}
+
+/* --- Reading progress -----------------------------------------------------
+   A 1px hairline under the header island, drawn from the leading edge as the
+   document scrolls. No track — it would sit on every route as a permanent empty
+   line.
+
+   Gated on `@supports`: `both` fill would otherwise land it finished wherever
+   `animation-timeline` is unsupported, reporting a fully read page nobody has
+   scrolled. Absent is the honest fallback.
+
+   Exempt from `prefers-reduced-motion` — it moves only as far as the reader has
+   already scrolled, like the scrollbar it restates. */
+.scroll-progress {
+    display: none;
+    height: 1px;
+    margin-block-start: 0.5rem;
+    border-radius: 9999px;
+    /* Both site languages are LTR, matching `.rule-draw`'s physical origin. */
+    transform-origin: 0 50%;
+    background-image: linear-gradient(to right, --alpha(var(--color-accent) / 55%), var(--color-accent));
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root);
+}
+
+@supports (animation-timeline: scroll()) {
+    .scroll-progress {
+        display: block;
+    }
+}
+
+@keyframes scroll-progress {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* Press feedback. The primary visitor is on a phone, where `:hover` never
+   fires — a press that answers back is the only feedback they receive. */
+@utility press {
+    transition-property: transform, background-color, --surface-fill, color, border-color, box-shadow, opacity;
+    transition-duration: var(--dur-state);
+    transition-timing-function: var(--ease-state);
+
+    &:active {
+        transform: scale(0.97);
+        transition-duration: var(--dur-press);
+    }
+}
+
+/* Full-width rows travel a visibly longer distance at the same scale factor,
+   so they take a smaller one. */
+@utility press-row {
+    transition-property: transform, background-color, --surface-fill, color, border-color, box-shadow, opacity;
+    transition-duration: var(--dur-state);
+    transition-timing-function: var(--ease-state);
+
+    &:active {
+        transform: scale(0.99);
+        transition-duration: var(--dur-press);
+    }
+}
+
+/* The single filled button: the header's Hire me and the closing ask. Only the
+   padding differs — compact in a sticky bar, generous at the end of a page. */
+@utility btn-accent {
+    @apply press;
+    font-family: var(--font-header);
+    line-height: 1;
+    border-radius: 0.5rem;
+    background-color: var(--color-accent);
+    color: var(--color-page);
+
+    &:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+    &:active {
+        background-color: var(--color-accent-press);
+    }
+}
+
+/* Any raised thing you can tap: a list row, a project card, a social button, a
+   skill chip. Was four hand-rolled copies of the same surface plus the same two
+   state colours. */
+@utility row-raised {
+    @apply surface-raised press-row;
+    border-radius: 0.5rem;
+
+    &:hover {
+        --surface-fill: var(--color-surface-hover);
+    }
+
+    &:active {
+        --surface-fill: var(--color-surface-press);
+    }
+}
+
+/* Text inputs and the message box: `row-raised`'s material without its press
+   scale, since a field is a place to type. `font-size: 1rem` is load-bearing —
+   iOS Safari zooms the page for any focused field under 16px. Focus is the
+   global `:focus-visible` ring; do not add a second one. */
+@utility field {
+    @apply surface-raised;
+    width: 100%;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    transition: border-color var(--dur-state) var(--ease-state), --surface-fill var(--dur-state) var(--ease-state);
+
+    &::placeholder {
+        color: var(--color-ink-faint);
+    }
+
+    /* The border carries the invalid state on its own. A red *fill* would make
+       the field look disabled, and the message under it already says what to
+       fix — this only has to point at which one. */
+    &[aria-invalid="true"] {
+        border-color: var(--color-danger);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+/* Skills marquee. Two identical groups translated by exactly one group width
+   (-50%), so the loop point is invisible. Hovering pauses it. */
+.marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
+    will-change: transform;
+}
+
+/* Play the scroll backwards, which flips the travel direction from
+   right-to-left to left-to-right. */
+.marquee-ltr .marquee-track {
+    animation-direction: reverse;
+}
+
+.marquee:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+/* An endless loop has no business running where nobody can see it. The flag is
+   set by the observer in baseof.html for offscreen and backgrounded states;
+   `will-change` is retired with it, since a permanent compositor layer for a
+   stopped animation is pure cost. */
+.marquee[data-paused="true"] .marquee-track {
+    animation-play-state: paused;
+    will-change: auto;
+}
+
+/* One group is a copy of the row's chips; making it the flex row means the
+   chips flow horizontally, and the trailing padding equals the internal gap
+   so the duplicate groups line up seamlessly at the -50% wrap point. */
+.marquee-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-inline-end: 1rem;
+}
+
+@keyframes marquee-scroll {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Devicon marks keep their brand colours as-is: the fine outlines (the Go
+   gopher's black lines, Redis' highlight) sit inside each logo's light
+   parts, so no grayscale pass is applied. */
+
+/* Reduced motion removes travel, scale and looping — the vestibular triggers —
+   and keeps everything that was carrying information: the lit rail, the ignited
+   markers, the completed rule, the press and hover colours, the header's
+   elevation. The page loses its choreography, not its meaning. */
+@media (prefers-reduced-motion: reduce) {
+
+    /* Smooth scrolling is itself a trigger. */
+    html {
+        scroll-behavior: auto;
+    }
+
+    /* The signature ring is pure authorship, so it simply does not happen. */
+    .sig-arc {
+        animation: none;
+        opacity: 0;
+    }
+
+    .hero-stage > *,
+    .card-arrive {
+        animation: none;
+    }
+
+    /* Scroll-linked growth is movement; the finished line is not. */
+    .timeline::after,
+    .rule-draw::after {
+        animation: none;
+        transform: none;
+    }
+
+    .timeline-dot {
+        animation: none;
+        background-color: var(--color-accent);
+        box-shadow: 0 0 0 4px var(--color-page);
+    }
+
+    .press:active,
+    .press-row:active {
+        transform: none;
+    }
+
+    ::view-transition-old(page) {
+        animation: page-fade-out 120ms linear both;
+    }
+
+    ::view-transition-new(page) {
+        animation: page-fade-in 120ms linear both;
+    }
+
+    @keyframes page-fade-out {
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes page-fade-in {
+        from {
+            opacity: 0;
+        }
+    }
+
+    /* Stopped, the track would be wider than its clipped container and the
+       later chips unreachable. Wrap instead, and drop the edge mask and the
+       duplicate group — both exist only to hide a loop seam. */
+    .marquee {
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    .marquee-track {
+        animation: none;
+        width: auto;
+    }
+
+    .marquee-group {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-inline-end: 0;
+    }
+
+    .marquee-track > [aria-hidden="true"] {
+        display: none;
+    }
+}

@@ -1,0 +1,41 @@
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $s := $d.sections.experiences }}
+{{ $items := $d.experiences.experience }}
+{{ with $items }}
+<section class="flow">
+    {{ partial "components/section-head.html" (dict
+        "title" ($s.title | default "// Work Experiences")
+        "body" $s.body) }}
+    {{/* The rail is drawn by `.timeline` rather than a border, because it is two
+         lines: the unlit full span, and the lit one that tracks reading. */}}
+    <ol class="timeline mt-8 ml-1 pl-6 space-y-8">
+        {{ range . }}
+        {{ $e := . }}
+        {{ with .name }}
+        <li class="relative">
+            {{/* Colour and ring live in `.timeline-dot`: the ring is a
+                 box-shadow the ignite keyframes must own, or they erase it. */}}
+            <span class="timeline-dot absolute -left-[1.8125rem] top-2 size-2.5 rounded-full"></span>
+            <div class="space-y-1">
+                <h3 class="type-title text-ink text-balance">{{ $e.name }}</h3>
+                {{ with delimit (slice $e.company $e.duration | complement (slice "" nil)) " · " }}
+                <p class="type-meta">{{ . }}</p>
+                {{ end }}
+            </div>
+            {{ with $e.description }}
+            <p class="type-body mt-4 measure">{{ . }}</p>
+            {{ end }}
+            {{ with $e.keypoints }}
+            <ul class="mt-4 flex gap-2 flex-wrap">
+                {{ range . }}
+                <li class="px-3 py-2 type-label surface-raised rounded-lg text-ink-body max-w-full">{{
+                    . }}</li>
+                {{ end }}
+            </ul>
+            {{ end }}
+        </li>
+        {{ end }}
+        {{ end }}
+    </ol>
+</section>
+{{ end }}

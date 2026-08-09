@@ -1,0 +1,9 @@
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $about := $d.sections.about }}
+{{ if $about.body }}
+<section class="flow">
+    {{ partial "components/section-head.html" (dict
+        "title" ($about.title | default "// About")
+        "body" $about.body) }}
+</section>
+{{ end }}

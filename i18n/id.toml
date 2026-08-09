@@ -1,0 +1,51 @@
+# Terjemahan antarmuka Bahasa Indonesia
+
+# baseof.html
+skip_to_content = "Lewati ke konten"
+
+# header.html
+hire_me = "Rekrut saya"
+nav_main = "Navigasi utama"
+nav_home = "{{ . }}, beranda"
+nav_menu = "Menu"
+lang_switch = "Ganti bahasa"
+
+# footer.html
+all_rights_reserved = "Hak cipta dilindungi"
+powered_by = "Dibangun dengan <a href=\"https://gohugo.io/\" class=\"link-accent\">Hugo</a>"
+
+# list.html empty state
+nothing_published_here = "Belum ada konten yang diterbitkan di sini."
+empty_blogs = "Tulisan masih dalam proses penyusunan. Sementara itu, karya yang sudah ada dapat dilihat di <a href=\"/projects/\" class=\"link-accent\">halaman proyek</a>."
+empty_other = "Tulisan sedang dipersiapkan. <a href=\"/\" class=\"link-accent\">Halaman utama</a> memuat pekerjaan yang telah diselesaikan sejauh ini."
+
+# contact/list.html — formulir pesan
+contact_form_title = "// Kirim Pesan"
+contact_form_body = "Langsung masuk ke kotak masuk saya. Semuanya saya baca."
+contact_name = "Nama"
+contact_email = "Email"
+contact_message = "Pesan"
+contact_message_placeholder = "Posisi apa yang sedang Anda cari?"
+contact_send = "Kirim pesan"
+contact_sending = "Mengirim…"
+contact_sent = "Terkirim. Saya akan membalas ke alamat tersebut."
+# Galat per kolom — server hanya mengembalikan nama kolom, bukan kalimat.
+contact_invalid_name = "Mohon isi nama Anda."
+contact_invalid_email = "Alamat email tersebut sepertinya keliru."
+contact_invalid_message = "Mohon tulis sedikit lebih panjang — minimal 10 karakter."
+contact_error = "Pesan gagal dikirim. WhatsApp di atas adalah jalur tercepat."
+contact_rate_limited = "Sudah beberapa pesan dalam satu jam. Silakan gunakan WhatsApp di atas."
+contact_needs_js = "Formulir pesan memerlukan JavaScript. Kanal di atas tetap berfungsi tanpanya."
+
+# single.html
+min_read = "menit baca"
+back_to = "Kembali ke {{ . }}"
+nav_section = "Bagian"
+comments = "// Komentar"
+comments_note = "Masuk dengan GitHub hanya diperlukan untuk berkomentar. Membaca tidak perlu apa pun."
+comments_needs_js = "Komentar memerlukan JavaScript. Semuanya juga tersimpan di tab GitHub Discussions repositori ini, yang tetap bisa dibuka tanpanya."
+
+# 404.html
+error_404_title = "// 404 Tidak Ditemukan"
+error_404_body = "Halaman ini telah dipindahkan atau memang tidak pernah ada. Tidak ada kekeliruan pada perangkat Anda."
+start_from_homepage = "Atau <a href=\"/\" class=\"link-accent\">mulai dari halaman utama</a>."

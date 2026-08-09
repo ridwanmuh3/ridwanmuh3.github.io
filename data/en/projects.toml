@@ -1,0 +1,14 @@
+[[project]]
+name = "Smart Secure QR"
+skills = ["Go", "Cryptography", "PostgreSQL"]
+duration = "Mar 2026 - Jun 2026"
+description = "QR codes carrying two signatures, one from the issuer and one from a timelock. Each scan verifies where the code originated and rejects it once its validity period has passed."
+url = "/projects/smart-secure-qr/"
+type = "Research"
+
+[[project]]
+name = "Inventory Dashboard"
+skills = ["NodeJS", "PostgreSQL", "Redis"]
+duration = "Dec 2025 - Mar 2026"
+description = "Inventory and finance dashboard for a catering kitchen. Records ingredient stock and meals prepared alongside the daily expenditure they account for."
+type = "Product"

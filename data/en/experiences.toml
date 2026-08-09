@@ -1,0 +1,13 @@
+[[experience]]
+name = "Research Assistant"
+company = "Siliwangi University"
+duration = "Mar 2026 - Jun 2026"
+description = "Implemented the dual-signature scheme behind Smart Secure QR: an issuer signature combined with a timelock."
+keypoints = ["cryptography", "digital signature", "qr code", "timelock encryption"]
+
+[[experience]]
+name = "Full Stack Web Developer"
+company = "SPPG Sinar Asri"
+duration = "Dec 2025 - Mar 2026"
+description = "Built the dashboard used by the kitchen team to track food stock and finances."
+keypoints = ["frontend", "backend"]

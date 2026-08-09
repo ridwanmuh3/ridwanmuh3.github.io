@@ -1,0 +1,51 @@
+# English UI strings
+
+# baseof.html
+skip_to_content = "Skip to content"
+
+# header.html
+hire_me = "Hire me"
+nav_main = "Main navigation"
+nav_home = "{{ . }}, home"
+nav_menu = "Menu"
+lang_switch = "Change language"
+
+# footer.html
+all_rights_reserved = "All rights reserved"
+powered_by = "Powered by <a href=\"https://gohugo.io/\" class=\"link-accent\">Hugo</a>"
+
+# list.html empty state
+nothing_published_here = "Nothing published here yet."
+empty_blogs = "Posts are still being written. In the meantime, the work itself is listed on the <a href=\"/projects/\" class=\"link-accent\">projects page</a>."
+empty_other = "Write-ups are in preparation. The <a href=\"/\" class=\"link-accent\">homepage</a> lists the work completed so far."
+
+# contact/list.html — the message form
+contact_form_title = "// Send a message"
+contact_form_body = "Goes straight to my inbox. I read every one."
+contact_name = "Name"
+contact_email = "Email"
+contact_message = "Message"
+contact_message_placeholder = "What role are you hiring for?"
+contact_send = "Send message"
+contact_sending = "Sending…"
+contact_sent = "Sent. I will reply to that address."
+# Field-level errors — the server answers with a field name, not a sentence.
+contact_invalid_name = "Please enter your name."
+contact_invalid_email = "That email address does not look right."
+contact_invalid_message = "Please write a little more — at least 10 characters."
+contact_error = "The message could not be sent. WhatsApp above is the quickest alternative."
+contact_rate_limited = "That is several messages in an hour. Try WhatsApp above instead."
+contact_needs_js = "The message form needs JavaScript. The channels above work without it."
+
+# single.html
+min_read = "min read"
+back_to = "Back to {{ . }}"
+nav_section = "Section"
+comments = "// Comments"
+comments_note = "Signing in with GitHub is only needed to post. Reading takes nothing."
+comments_needs_js = "Comments need JavaScript. They also live on this repository's GitHub Discussions tab, which works without it."
+
+# 404.html
+error_404_title = "// 404 Not Found"
+error_404_body = "This page has been moved or never existed. Nothing is at fault on your end."
+start_from_homepage = "Or <a href=\"/\" class=\"link-accent\">start from the homepage</a>."

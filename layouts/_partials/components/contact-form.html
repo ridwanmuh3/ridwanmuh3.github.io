@@ -1,0 +1,200 @@
+{{/* The message form on /contact/, below the channel list.
+
+     Renders only when `params.contact.endpoint` is set, so a repo without the
+     Worker deployed has no form pointing at nothing.
+
+     JavaScript is required, because Turnstile is; `<noscript>` sends that
+     visitor back to the channels above rather than to a gate they cannot pass.
+
+     Copy rides on data-* attributes because the script is inline and has no
+     access to `i18n`. */}}
+
+{{ $c := site.Params.contact }}
+{{ with $c.endpoint }}
+<section class="mt-8 pt-8 border-t border-line">
+    {{ partial "components/section-head.html" (dict
+        "title" (i18n "contact_form_title")
+        "body" (i18n "contact_form_body")) }}
+
+    <form class="contact-form mt-8 space-y-4 measure" novalidate action="{{ . }}" method="post"
+        data-msg-sent="{{ i18n "contact_sent" }}"
+        data-msg-error="{{ i18n "contact_error" }}"
+        data-msg-rate-limited="{{ i18n "contact_rate_limited" }}"
+        data-msg-sending="{{ i18n "contact_sending" }}"
+        data-err-name="{{ i18n "contact_invalid_name" }}"
+        data-err-email="{{ i18n "contact_invalid_email" }}"
+        data-err-message="{{ i18n "contact_invalid_message" }}">
+
+        {{/* Written by the script at page load, never by Hugo: a build-time value
+             on a CDN-cached page is the same for every visitor forever, which
+             makes the Worker's time-on-form check meaningless. */}}
+        <input type="hidden" name="t" value="">
+
+        {{/* Honeypot — off-screen, out of the AT tree, out of tab order. Only a
+             bot filling every input finds it. */}}
+        <div class="sr-only" aria-hidden="true">
+            <label for="cf-company">Company</label>
+            <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="space-y-2">
+            <label for="cf-name" class="type-label text-ink-muted block">{{ i18n "contact_name" }}</label>
+            <input class="field" type="text" id="cf-name" name="name" maxlength="100" autocomplete="name"
+                aria-describedby="cf-name-error" required>
+            <p id="cf-name-error" class="type-meta text-danger" hidden></p>
+        </div>
+
+        <div class="space-y-2">
+            <label for="cf-email" class="type-label text-ink-muted block">{{ i18n "contact_email" }}</label>
+            <input class="field" type="email" id="cf-email" name="email" maxlength="254" autocomplete="email"
+                inputmode="email" aria-describedby="cf-email-error" required>
+            <p id="cf-email-error" class="type-meta text-danger" hidden></p>
+        </div>
+
+        <div class="space-y-2">
+            <label for="cf-message" class="type-label text-ink-muted block">{{ i18n "contact_message" }}</label>
+            <textarea class="field resize-y min-h-36" id="cf-message" name="message" rows="6" minlength="10"
+                maxlength="5000" placeholder="{{ i18n "contact_message_placeholder" }}"
+                aria-describedby="cf-message-error" required></textarea>
+            <p id="cf-message-error" class="type-meta text-danger" hidden></p>
+        </div>
+
+        {{/* `interaction-only` keeps the widget out of the layout unless
+             Cloudflare actually wants a challenge. The token lands in a hidden
+             `cf-turnstile-response` input Turnstile injects into this form. */}}
+        <div class="cf-turnstile" data-sitekey="{{ $c.turnstileSiteKey }}" data-theme="dark"
+            data-appearance="interaction-only"></div>
+
+        <div class="pt-2">
+            <button type="submit" class="contact-submit btn-accent inline-block px-6 py-4">{{ i18n "contact_send" }}</button>
+        </div>
+
+        <noscript>
+            <p class="type-body text-danger">{{ i18n "contact_needs_js" }}</p>
+        </noscript>
+    </form>
+
+    {{/* Outside the form: on success the form is hidden, and a status line
+         nested inside would vanish with the thing it reports on. `role="status"`
+         announces without stealing focus from a visitor who is finished. */}}
+    <p class="contact-status type-body mt-4 measure" role="status" aria-live="polite"></p>
+</section>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+<script>
+    (() => {
+        const form = document.querySelector('.contact-form');
+        if (!form) return;
+
+        const submit = form.querySelector('.contact-submit');
+        const status = form.parentElement.querySelector('.contact-status');
+        const sendLabel = submit.textContent;
+        const d = form.dataset;
+
+        form.elements.t.value = String(Date.now());
+
+        const errFor = (field) => d[`err${field[0].toUpperCase()}${field.slice(1)}`];
+        const inputOf = (field) => form.elements[field];
+        const errorOf = (field) => form.querySelector(`#cf-${field}-error`);
+
+        const showError = (field) => {
+            inputOf(field).setAttribute('aria-invalid', 'true');
+            const el = errorOf(field);
+            el.textContent = errFor(field);
+            el.hidden = false;
+            inputOf(field).focus();
+        };
+
+        const clearErrors = () => {
+            for (const field of ['name', 'email', 'message']) {
+                inputOf(field).removeAttribute('aria-invalid');
+                const el = errorOf(field);
+                el.textContent = '';
+                el.hidden = true;
+            }
+        };
+
+        const setStatus = (text, isError) => {
+            status.textContent = text;
+            status.classList.toggle('text-danger', Boolean(isError));
+        };
+
+        /* Mirrors the Worker's rules rather than deferring to native validation:
+           browser bubbles arrive in the browser's language, not the site's. The
+           Worker re-checks everything — this only saves a round trip. */
+        const firstInvalid = () => {
+            const name = form.elements.name.value.trim();
+            const email = form.elements.email.value.trim();
+            const message = form.elements.message.value.trim();
+            if (name.length < 1 || name.length > 100) return 'name';
+            if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return 'email';
+            if (message.length < 10 || message.length > 5000) return 'message';
+            return null;
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
+            setStatus('', false);
+
+            const bad = firstInvalid();
+            if (bad) return showError(bad);
+
+            /* Turnstile tokens are single-use, so every failure below must reset
+               the widget or the next attempt is rejected for reusing a spent
+               one. */
+            const token = form.elements['cf-turnstile-response']?.value ?? '';
+            const reset = () => window.turnstile?.reset?.();
+
+            submit.disabled = true;
+            submit.textContent = d.msgSending;
+
+            try {
+                const res = await fetch(form.action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: form.elements.name.value.trim(),
+                        email: form.elements.email.value.trim(),
+                        message: form.elements.message.value.trim(),
+                        company: form.elements.company.value,
+                        t: Number(form.elements.t.value),
+                        token,
+                    }),
+                });
+
+                let payload = null;
+                try { payload = await res.json(); } catch { /* leave null */ }
+
+                if (res.ok && payload?.ok) {
+                    /* The form goes away once it has done its job — an empty one
+                       under a success message invites a second send. */
+                    form.hidden = true;
+                    setStatus(d.msgSent, false);
+                    return;
+                }
+
+                if (res.status === 422 && payload?.field) {
+                    showError(payload.field);
+                } else {
+                    setStatus(res.status === 429 ? d.msgRateLimited : d.msgError, true);
+                }
+                reset();
+            } catch {
+                /* Offline, DNS, blocked extension — indistinguishable from here,
+                   and the visitor can act on only one thing: the channels above
+                   still work. */
+                setStatus(d.msgError, true);
+                reset();
+            } finally {
+                if (!form.hidden) {
+                    submit.disabled = false;
+                    submit.textContent = sendLabel;
+                }
+            }
+        });
+    })();
+</script>
+{{ else }}
+{{ warnf "contact form not rendered: params.contact.endpoint is empty in hugo.toml (see workers/contact/README.md)" }}
+{{ end }}

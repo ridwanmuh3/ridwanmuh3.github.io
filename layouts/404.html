@@ -1,0 +1,20 @@
+{{ define "main" }}
+<section class="flow flow-end">
+    {{ partial "components/section-head.html" (dict
+        "level" "h1"
+        "title" (i18n "error_404_title")
+        "body" (i18n "error_404_body")) }}
+    <ul class="mt-8 space-y-4">
+        {{ range site.Menus.main }}
+        <li>
+            <a href="{{ .URL }}" class="row-raised block p-4">
+                <span class="type-title text-ink">{{ .Name }}</span>
+            </a>
+        </li>
+        {{ end }}
+    </ul>
+    <p class="type-body mt-8 measure">
+        {{ i18n "start_from_homepage" | safeHTML }}
+    </p>
+</section>
+{{ end }}

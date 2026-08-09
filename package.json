@@ -1,0 +1,10 @@
+{
+    "name": "portfolio",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Tailwind lives here only so Hugo's css.TailwindCSS pipeline can shell out to the CLI. There is no build script: baseof.html compiles assets/css/main.css during the Hugo build.",
+    "devDependencies": {
+        "@tailwindcss/cli": "^4.3.3",
+        "tailwindcss": "^4.3.3"
+    }
+}

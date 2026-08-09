@@ -1,0 +1,59 @@
+[[skill]]
+name = "Go"
+confident = "85%"
+slug = "go"
+tone = "color"
+
+[[skill]]
+name = "Fiber"
+confident = "80%"
+slug = "fiber"
+tone = "color"
+
+[[skill]]
+name = "NodeJS"
+confident = "80%"
+slug = "nodejs"
+tone = "color"
+
+[[skill]]
+name = "PostgreSQL"
+confident = "80%"
+slug = "postgresql"
+tone = "color"
+
+[[skill]]
+name = "Redis"
+confident = "70%"
+slug = "redis"
+tone = "color"
+
+[[skill]]
+name = "Git"
+confident = "80%"
+slug = "git"
+tone = "color"
+
+[[skill]]
+name = "Github"
+confident = "80%"
+slug = "github"
+tone = "mono"
+
+[[skill]]
+name = "Google Cloud Platform"
+confident = "82%"
+slug = "googlecloud"
+tone = "color"
+
+[[skill]]
+name = "Linux"
+confident = "85%"
+slug = "linux"
+tone = "mono"
+
+[[skill]]
+name = "Postman"
+confident = "75%"
+slug = "postman"
+tone = "color"

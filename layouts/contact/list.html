@@ -1,0 +1,44 @@
+{{ define "main" }}
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $p := index $d.sections.pages "contact" }}
+{{ $title := .Title }}
+{{ $body := "" }}
+{{ with $p }}
+{{ $title = .title | default $title }}
+{{ $body = .body | default "" }}
+{{ end }}
+{{/* Contact is a destination, not a list: the generic template's "nothing
+     published yet" is wrong here, and the channels are the content. */}}
+<section class="flow flow-end">
+    {{ partial "components/section-head.html" (dict
+        "level" "h1"
+        "title" $title
+        "body" $body
+        "content" .Content) }}
+
+    {{ with $d.socials.social }}
+    <ul class="mt-8 space-y-4">
+        {{ range . }}
+        {{ if and .href .icon }}
+        <li>
+            <a href="{{ .href }}" rel="me noopener"
+                class="row-raised group flex items-center gap-4 p-4 text-ink-body">
+                {{ partial "components/icon.html" (dict "name" .icon "class" "size-6 text-ink-muted group-hover:text-accent transition-colors") }}
+                <span class="type-title text-ink min-w-0">{{ .label | default .icon }}</span>
+                {{/* `size-4`: an affordance hint, subordinate to the icon that
+                     names the channel. */}}
+                <span class="ms-auto">
+                    {{ partial "components/icon.html" (dict "name" "arrow-up-right" "class" "size-4 text-ink-faint group-hover:text-accent transition-colors") }}
+                </span>
+            </a>
+        </li>
+        {{ end }}
+        {{ end }}
+    </ul>
+    {{ end }}
+
+    {{/* Under the channels, never above: the list is one tap and WhatsApp is how
+         this market opens a professional conversation. */}}
+    {{ partial "components/contact-form.html" . }}
+</section>
+{{ end }}
