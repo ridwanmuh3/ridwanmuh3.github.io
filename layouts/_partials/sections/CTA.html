@@ -9,7 +9,10 @@
         "body" .) }}
     {{ with $s.cta_label }}
     <div class="mt-8">
-        <a href="{{ $s.cta_href | default "/contact/" }}" class="btn-accent inline-block px-6 py-4">{{
+        {{/* No leading slash — see header.html. An external cta_href passes through. */}}
+    {{ $href := $s.cta_href | default "contact/" }}
+    {{ if not (hasPrefix $href "http") }}{{ $href = $href | strings.TrimPrefix "/" | relURL }}{{ end }}
+    <a href="{{ $href }}" class="btn-accent inline-block px-6 py-4">{{
             . }}</a>
     </div>
     {{ end }}

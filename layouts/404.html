@@ -14,7 +14,7 @@
         {{ end }}
     </ul>
     <p class="type-body mt-8 measure">
-        {{ i18n "start_from_homepage" | safeHTML }}
+        {{ i18n "start_from_homepage" (dict "url" site.Home.RelPermalink) | safeHTML }}
     </p>
 </section>
 {{ end }}

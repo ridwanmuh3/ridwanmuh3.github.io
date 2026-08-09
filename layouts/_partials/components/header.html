@@ -12,7 +12,11 @@
                      opposite: below `sm` that group is whatever exists — the
                      toggle always, the locale switcher only while a second
                      language is built. */}}
-                <a href="/" class="order-1 max-sm:me-auto sm:justify-self-start"
+                {{/* Internal links go through the page or through `relURL` with
+                     no leading slash. A leading slash makes `relURL` a no-op, and
+                     the site is served from a subpath (/portfolio/), so "/contact/"
+                     would leave the deployment entirely. */}}
+                <a href="{{ site.Home.RelPermalink }}" class="order-1 max-sm:me-auto sm:justify-self-start"
                     aria-label="{{ i18n "nav_home" .Site.Params.fullname }}">
                     <span
                         class="block bg-linear-to-b from-amber-300 from-10% to-amber-700 bg-clip-text font-header font-black text-3xl sm:text-4xl text-transparent leading-none">R</span>
@@ -36,7 +40,7 @@
                          and grows the island. `basis-full` gives it its own row
                          in the open panel; `.site-cta` is what main.css shows and
                          hides alongside the links. */}}
-                    <a href="/contact/"
+                    <a href="{{ "contact/" | relURL }}"
                         class="site-cta btn-accent inline-block whitespace-nowrap text-sm px-3 py-3 sm:px-4 sm:py-1.5 max-sm:order-4 max-sm:basis-full max-sm:mt-2 max-sm:text-center">{{
                         i18n "hire_me" }}</a>
                     {{/* `-me-2` spends the island's own `px-4` on the tap target:

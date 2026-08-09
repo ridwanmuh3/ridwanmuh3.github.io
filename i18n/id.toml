@@ -16,8 +16,8 @@ powered_by = "Dibangun dengan <a href=\"https://gohugo.io/\" class=\"link-accent
 
 # list.html empty state
 nothing_published_here = "Belum ada konten yang diterbitkan di sini."
-empty_blogs = "Tulisan masih dalam proses penyusunan. Sementara itu, karya yang sudah ada dapat dilihat di <a href=\"/projects/\" class=\"link-accent\">halaman proyek</a>."
-empty_other = "Tulisan sedang dipersiapkan. <a href=\"/\" class=\"link-accent\">Halaman utama</a> memuat pekerjaan yang telah diselesaikan sejauh ini."
+empty_blogs = "Tulisan masih dalam proses penyusunan. Sementara itu, karya yang sudah ada dapat dilihat di <a href=\"{{ .url }}\" class=\"link-accent\">halaman proyek</a>."
+empty_other = "Tulisan sedang dipersiapkan. <a href=\"{{ .url }}\" class=\"link-accent\">Halaman utama</a> memuat pekerjaan yang telah diselesaikan sejauh ini."
 
 # contact/list.html — formulir pesan
 contact_form_title = "// Kirim Pesan"
@@ -48,4 +48,4 @@ comments_needs_js = "Komentar memerlukan JavaScript. Semuanya juga tersimpan di 
 # 404.html
 error_404_title = "// 404 Tidak Ditemukan"
 error_404_body = "Halaman ini telah dipindahkan atau memang tidak pernah ada. Tidak ada kekeliruan pada perangkat Anda."
-start_from_homepage = "Atau <a href=\"/\" class=\"link-accent\">mulai dari halaman utama</a>."
+start_from_homepage = "Atau <a href=\"{{ .url }}\" class=\"link-accent\">mulai dari halaman utama</a>."

@@ -15,7 +15,8 @@
                 <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
                     <h3 class="type-title text-ink text-balance min-w-0">
                         {{ with $p.url }}
-                        <a class="link-quiet text-ink" href="{{ . }}" {{ if hasPrefix . "http" }}rel="noopener" {{ end }}>{{ $p.name }}</a>
+                        <a class="link-quiet text-ink" href="{{ if hasPrefix . "http" }}{{ . }}{{ else }}{{ . | strings.TrimPrefix "/" | relURL }}{{ end }}"
+                            {{ if hasPrefix . "http" }}rel="noopener" {{ end }}>{{ $p.name }}</a>
                         {{ else }}
                         {{ $p.name }}
                         {{ end }}

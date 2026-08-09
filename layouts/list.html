@@ -39,9 +39,9 @@
         <p class="type-body measure">{{ i18n "nothing_published_here" }}</p>
         <p class="type-body measure">
             {{ if eq .Section "blogs" }}
-            {{ i18n "empty_blogs" | safeHTML }}
+            {{ i18n "empty_blogs" (dict "url" ("projects/" | relURL)) | safeHTML }}
             {{ else }}
-            {{ i18n "empty_other" | safeHTML }}
+            {{ i18n "empty_other" (dict "url" site.Home.RelPermalink) | safeHTML }}
             {{ end }}
         </p>
     </div>

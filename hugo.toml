@@ -32,9 +32,9 @@ turnstileSiteKey = "0x4AAAAAAEK5YpgnLFRwX4pR"
 # announcement-type, so only the maintainer can open a thread.
 [params.giscus]
 repo = "ridwanmuh3/portfolio"
-repoId = ""
+repoId = "R_kgDOTzB6UA"
 category = "Announcements"
-categoryId = ""
+categoryId = "DIC_kwDOTzB6UM4DC_N4"
 
 [languages]
 [languages.en]
