@@ -527,34 +527,11 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* --- The work history is a drawn line ------------------------------------- */
+/* --- The work history ---------------------------------------------------- */
 
 .timeline {
     position: relative;
-    /* The unlit rail: 1px column at the leading edge. */
     border-inline-start: 1px solid var(--color-line);
-}
-
-/* The lit rail grows as the reader moves down, so the line reports reading
-   progress through the history instead of decorating the margin. */
-.timeline::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 100%;
-    background-image: linear-gradient(to bottom, --alpha(var(--color-accent) / 20%), var(--color-accent));
-    transform-origin: top;
-    animation: rail-draw linear both;
-    animation-timeline: view();
-    animation-range: cover 12% cover 62%;
-}
-
-@keyframes rail-draw {
-    from {
-        transform: scaleY(0);
-    }
 }
 
 /* Each role's marker ignites as the reader reaches it — radio-button style:
@@ -564,7 +541,7 @@ h1, h2, h3, h4, h5, p, li, a {
    sub-pixel-smooth circles. */
 .timeline-dot {
     position: absolute;
-    left: -0.4375rem;
+    left: 0;
     top: 0.25rem;
     width: 0;
     height: 0;
@@ -664,45 +641,6 @@ h1, h2, h3, h4, h5, p, li, a {
 
     to {
         box-shadow: inset 0 1px rgb(255 255 255 / 0.12), 0 10px 30px -12px rgb(0 0 0 / 0.9), 0 2px 8px -2px rgb(0 0 0 / 0.55);
-    }
-}
-
-/* --- Reading progress -----------------------------------------------------
-   A 1px hairline under the header island, drawn from the leading edge as the
-   document scrolls. No track — it would sit on every route as a permanent empty
-   line.
-
-   Gated on `@supports`: `both` fill would otherwise land it finished wherever
-   `animation-timeline` is unsupported, reporting a fully read page nobody has
-   scrolled. Absent is the honest fallback.
-
-   Exempt from `prefers-reduced-motion` — it moves only as far as the reader has
-   already scrolled, like the scrollbar it restates. */
-.scroll-progress {
-    display: none;
-    height: 1px;
-    margin-block-start: 0.5rem;
-    border-radius: 9999px;
-    /* Both site languages are LTR, matching `.rule-draw`'s physical origin. */
-    transform-origin: 0 50%;
-    background-image: linear-gradient(to right, --alpha(var(--color-accent) / 55%), var(--color-accent));
-    animation: scroll-progress linear both;
-    animation-timeline: scroll(root);
-}
-
-@supports (animation-timeline: scroll()) {
-    .scroll-progress {
-        display: block;
-    }
-}
-
-@keyframes scroll-progress {
-    from {
-        transform: scaleX(0);
-    }
-
-    to {
-        transform: scaleX(1);
     }
 }
 
@@ -824,7 +762,6 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 
     /* Scroll-linked growth is movement; the finished line is not. */
-    .timeline::after,
     .rule-draw::after {
         animation: none;
         transform: none;

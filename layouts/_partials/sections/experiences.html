@@ -6,8 +6,7 @@
     {{ partial "components/section-head.html" (dict
         "title" ($s.title | default "// Work Experiences")
         "body" $s.body) }}
-    {{/* The rail is drawn by `.timeline` rather than a border, because it is two
-         lines: the unlit full span, and the lit one that tracks reading. */}}
+    {{/* Vertical rail at the leading edge. */}}
     <ol class="timeline mt-8 space-y-8">
         {{ range . }}
         {{ $e := . }}
