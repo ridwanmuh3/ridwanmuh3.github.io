@@ -2,22 +2,22 @@
     <div class="mx-auto max-w-2xl w-full gutter">
         <div class="header-island surface-raised w-full rounded-lg">
             {{/* Grid, not `justify-between`: two `1fr` rails around an `auto`
-                 column centre the links on the island itself, so they stop
-                 moving whenever a side label changes width. Below `sm` the links
-                 and the CTA collapse into the disclosure panel and `order-*`
-                 re-stacks the row into bar, links, CTA. */}}
+            column centre the links on the island itself, so they stop
+            moving whenever a side label changes width. Below `sm` the links
+            and the CTA collapse into the disclosure panel and `order-*`
+            re-stacks the row into bar, links, CTA. */}}
             <nav class="site-nav flex flex-wrap items-center gap-x-3 px-4 py-2 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:gap-x-4"
-                aria-label="{{ i18n "nav_main" }}">
+                aria-label="{{ i18n " nav_main" }}">
                 {{/* `me-auto` from the logo rather than `ms-auto` on the group
-                     opposite: below `sm` that group is whatever exists — the
-                     toggle always, the locale switcher only while a second
-                     language is built. */}}
+                opposite: below `sm` that group is whatever exists — the
+                toggle always, the locale switcher only while a second
+                language is built. */}}
                 {{/* Internal links go through the page or through `relURL` with
-                     no leading slash. A leading slash makes `relURL` a no-op, and
-                     the site is served from a subpath (/portfolio/), so "/contact/"
-                     would leave the deployment entirely. */}}
+                no leading slash. A leading slash makes `relURL` a no-op, and
+                the site is served from a subpath (/portfolio/), so "/contact/"
+                would leave the deployment entirely. */}}
                 <a href="{{ site.Home.RelPermalink }}" class="order-1 max-sm:me-auto sm:justify-self-start"
-                    aria-label="{{ i18n "nav_home" .Site.Params.fullname }}">
+                    aria-label="{{ i18n " nav_home" .Site.Params.fullname }}">
                     <span
                         class="block bg-linear-to-b from-amber-300 from-10% to-amber-700 bg-clip-text font-header font-black text-3xl sm:text-4xl text-transparent leading-none">R</span>
                 </a>
@@ -30,26 +30,28 @@
                     {{ end }}
                 </ul>
                 {{/* `display: contents` below `sm` dissolves this wrapper so each
-                     child can take its own order and row: switcher and toggle
-                     stay in the bar, the CTA drops into the panel — without a
-                     second copy of it in the markup. */}}
+                child can take its own order and row: switcher and toggle
+                stay in the bar, the CTA drops into the panel — without a
+                second copy of it in the markup. */}}
                 <div class="max-sm:contents sm:order-3 sm:flex sm:items-center sm:gap-2 sm:justify-self-end">
                     {{ partial "components/lang-switcher.html" . }}
                     {{/* `whitespace-nowrap` because the two `1fr` rails are forced
-                         equal: without it a two-word label ("Rekrut saya") wraps
-                         and grows the island. `basis-full` gives it its own row
-                         in the open panel; `.site-cta` is what main.css shows and
-                         hides alongside the links. */}}
-                    <a href="{{ "contact/" | relURL }}"
+                    equal: without it a two-word label ("Rekrut saya") wraps
+                    and grows the island. `basis-full` gives it its own row
+                    in the open panel; `.site-cta` is what main.css shows and
+                    hides alongside the links. */}}
+                    <a href="{{ " contact/" | relURL }}"
                         class="site-cta btn-accent inline-block whitespace-nowrap text-sm px-3 py-3 sm:px-4 sm:py-1.5 max-sm:order-4 max-sm:basis-full max-sm:mt-2 max-sm:text-center">{{
                         i18n "hire_me" }}</a>
                     {{/* `-me-2` spends the island's own `px-4` on the tap target:
-                         44px of touch area without a 44px gap before the edge. */}}
+                    44px of touch area without a 44px gap before the edge. */}}
                     <button type="button"
-                        class="site-nav-toggle link-quiet -me-2 inline-flex items-center justify-center p-3 max-sm:order-2 sm:hidden"
-                        aria-controls="site-menu" aria-expanded="false" aria-label="{{ i18n "nav_menu" }}">
-                        <span class="icon-open inline-flex">{{ partial "components/icon.html" (dict "name" "menu" "class" "size-5") }}</span>
-                        <span class="icon-close inline-flex">{{ partial "components/icon.html" (dict "name" "close" "class" "size-5") }}</span>
+                        class="site-nav-toggle link-quiet -me-2 inline-flex items-center justify-center p-3 max-sm:order-2 sm:hidden cursor-pointer"
+                        aria-controls="site-menu" aria-expanded="false" aria-label="{{ i18n " nav_menu" }}">
+                        <span class="icon-open inline-flex">{{ partial "components/icon.html" (dict "name" "menu"
+                            "class" "size-5") }}</span>
+                        <span class="icon-close inline-flex">{{ partial "components/icon.html" (dict "name" "close"
+                            "class" "size-5") }}</span>
                     </button>
                 </div>
             </nav>

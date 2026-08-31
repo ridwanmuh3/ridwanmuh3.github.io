@@ -4,10 +4,10 @@
 {{ with $items }}
 <section class="flow">
     {{ partial "components/section-head.html" (dict
-        "title" ($s.title | default "// Skills")
-        "body" $s.body) }}
+    "title" ($s.title | default "// Skills")
+    "body" $s.body) }}
     <div class="mt-8">
-        <ul class="flex gap-3 flex-wrap justify-center">
+        <ul class="flex gap-3 flex-wrap ">
             {{ range . }}
             {{ partial "components/skill-chip.html" . }}
             {{ end }}

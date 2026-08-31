@@ -141,7 +141,7 @@
     {{partial "components/header.html" .}}
     {{/* The shell is identical on every route, so <main> is the only thing the
         cross-document view transition should animate. */}}
-        <main id="main" class="w-full max-w-2xl mx-auto gutter" style="view-transition-name: page">
+        <main id="main" class="w-full max-w-2xl mx-auto gutter">
             {{ block "main" . }}{{ end }}
         </main>
         {{partial "components/footer.html" .}}

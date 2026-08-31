@@ -490,43 +490,6 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* --- Continuity between pages -------------------------------------------- */
-
-/* The header island, the footer and the page background are identical on every
-   route, so cross-fading them is invisible; only <main> carries a direction,
-   which is what tells the visitor a new page arrived rather than the same one
-   redrawing. Unsupported browsers get an ordinary navigation. */
-@view-transition {
-    navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation-duration: 180ms;
-}
-
-::view-transition-old(page) {
-    animation: page-exit 140ms var(--ease-state) both;
-}
-
-::view-transition-new(page) {
-    animation: page-enter var(--dur-view) var(--ease-out-expo) both;
-}
-
-@keyframes page-exit {
-    to {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-}
-
-@keyframes page-enter {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-}
-
 /* --- The work history ---------------------------------------------------- */
 
 .timeline {
@@ -778,26 +741,5 @@ h1, h2, h3, h4, h5, p, li, a {
     .press-row:active {
         transform: none;
     }
-
-    ::view-transition-old(page) {
-        animation: page-fade-out 120ms linear both;
-    }
-
-    ::view-transition-new(page) {
-        animation: page-fade-in 120ms linear both;
-    }
-
-    @keyframes page-fade-out {
-        to {
-            opacity: 0;
-        }
-    }
-
-    @keyframes page-fade-in {
-        from {
-            opacity: 0;
-        }
-    }
-
 
 }
