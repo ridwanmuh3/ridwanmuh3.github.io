@@ -1,6 +1,6 @@
 +++
 date = '2026-08-02T15:38:49+07:00'
-draft = false
+draft = true
 title = 'Hello World'
 summary = 'A placeholder post, kept so the blog list and the article page both have something real to render.'
 +++

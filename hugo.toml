@@ -50,10 +50,7 @@ bio = "Backend engineer working with Go, PostgreSQL, and Redis on Linux and Goog
 name = 'Projects'
 pageRef = '/projects'
 weight = 10
-[[languages.en.menus.main]]
-name = 'Blogs'
-pageRef = '/blogs'
-weight = 20
+
 [[languages.en.menus.main]]
 name = 'Contact'
 pageRef = '/contact'
@@ -72,10 +69,7 @@ bio = "Backend engineer dengan Go, PostgreSQL, dan Redis pada Linux dan Google C
 name = 'Proyek'
 pageRef = '/projects'
 weight = 10
-[[languages.id.menus.main]]
-name = 'Blog'
-pageRef = '/blogs'
-weight = 20
+
 [[languages.id.menus.main]]
 name = 'Kontak'
 pageRef = '/contact'

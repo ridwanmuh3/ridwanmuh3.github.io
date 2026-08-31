@@ -1,6 +1,6 @@
 +++
 date = '2026-08-02T15:42:51+07:00'
-draft = false
+draft = true
 title = 'Hello Mars'
 summary = 'A second placeholder post, so the blog list renders as a list rather than a single row.'
 +++
