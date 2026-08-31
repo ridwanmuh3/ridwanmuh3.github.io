@@ -1,44 +1,18 @@
 [hero]
-tagline = "Go, PostgreSQL, dan Redis di Linux dan Google Cloud. Riset kriptografi terapan, dan dasbor inventori yang dipakai dalam operasional harian."
-
-[about]
-title = "// Tentang"
-body = """
-Saya mengembangkan layanan backend dengan Go, PostgreSQL, dan Redis, di atas Linux \
-dan Google Cloud. Pengalaman saya mencakup dua peran: riset kriptografi terapan di \
-Universitas Siliwangi, dan dasbor inventori serta keuangan yang dioperasikan dapur \
-katering setiap hari. Saya mengutamakan antarmuka yang ringkas, penanganan kesalahan \
-yang eksplisit, dan kode yang mudah dibaca serta ditelaah.
-"""
+tagline = "Riset kriptografi terapan dan perangkat lunak produksi, keduanya dalam penggunaan aktif."
 
 [skills]
 title = "// Keahlian"
-body = """
-Go dan Fiber untuk layanan, PostgreSQL untuk data yang harus konsisten, Redis untuk \
-data yang harus cepat, dengan Linux dan Google Cloud sebagai fondasi platform.
-"""
 
 [projects]
-title = "// Proyek Unggulan"
-body = """
-Pekerjaan yang saya rancang dan kembangkan sendiri. Setiap entri menjelaskan \
-permasalahan yang ditangani beserta teknologi yang digunakan.
-"""
+title = "// Proyek"
 
 [experiences]
 title = "// Pengalaman Kerja"
-body = """
-Dua peran profesional sejauh ini: riset kriptografi terapan, dan sistem inventori \
-yang dipakai dalam operasional harian.
-"""
 
 [cta]
 title = "// Mari Bekerja Sama"
-body = """
-Saya sedang mencari peran backend penuh waktu di Indonesia. Bidang yang paling saya \
-kuasai adalah perancangan API, perancangan skema dan kueri basis data, serta \
-penerapan komponen kriptografi pada layanan backend.
-"""
+body = "Saya sedang mencari peran backend penuh waktu di Indonesia."
 cta_label = "Hubungi saya"
 cta_href = "/contact/"
 
@@ -47,21 +21,12 @@ cta_href = "/contact/"
 
 [pages.projects]
 title = "Proyek"
-body = """
-Tulisan mengenai proyek, terbaru lebih dahulu.
-"""
+body = "Tulisan mengenai proyek, terbaru lebih dahulu."
 
 [pages.blogs]
 title = "Blog"
-body = """
-Catatan seputar rekayasa backend: permasalahan yang saya temui, keputusan yang perlu \
-saya tinjau ulang, dan kesimpulan yang layak dicatat.
-"""
+body = "Catatan seputar rekayasa backend: permasalahan yang saya temui, keputusan yang perlu saya tinjau ulang, dan kesimpulan yang layak dicatat."
 
 [pages.contact]
 title = "Kontak"
-body = """
-WhatsApp dan LinkedIn adalah cara tercepat untuk menghubungi saya. Keterangan singkat \
-mengenai permasalahan dan teknologi yang digunakan sudah cukup untuk memulai. Umumnya \
-saya membalas dalam satu hingga dua hari.
-"""
+body = "WhatsApp dan LinkedIn adalah cara tercepat untuk menghubungi saya. Keterangan singkat mengenai permasalahan dan teknologi yang digunakan sudah cukup untuk memulai. Umumnya saya membalas dalam satu hingga dua hari."

@@ -97,6 +97,11 @@ disableWatch = true
 source = 'hugo_stats.json'
 target = 'assets/notwatching/hugo_stats.json'
 
+[sitemap]
+changefreq = 'weekly'
+priority = 0.5
+filename = 'sitemap.xml'
+
 [caches]
 [caches.images]
 dir = ':cacheDir/images'

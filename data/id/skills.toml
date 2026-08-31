@@ -37,7 +37,7 @@ tone = "color"
 [[skill]]
 name = "Github"
 confident = "80%"
-slug = "github"
+slug = "brand-github"
 tone = "mono"
 
 [[skill]]

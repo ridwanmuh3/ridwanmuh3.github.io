@@ -9,8 +9,95 @@
     <meta name="description" content="{{ . | plainify | truncate 160 }}">
     {{ end }}
     <link rel="canonical" href="{{ .Permalink }}">
+
+    {{/* ── Favicon ──────────────────────────────────────────────────── */}}
+    {{ with resources.Get "icons/favicon.ico" }}
+    <link rel="icon" type="image/x-icon" href="{{ .RelPermalink }}">
+    {{ end }}
+    {{ with resources.Get "icons/ridwan-logo.webp" }}
+    <link rel="icon" type="image/webp" sizes="32x32" href="{{ .RelPermalink }}">
+    <link rel="apple-touch-icon" href="{{ .RelPermalink }}">
+    {{ end }}
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    {{/* google search verification*/}}
+    <meta name="google-site-verification" content="S6QL3ok0KCtKcwEidk2wfChTP68VLTgBpiy0yW1AG1E" />
+
+    {{/* ── OpenGraph ────────────────────────────────────────────────── */}}
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+    <meta property="og:title"
+        content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+    {{ with or .Description .Summary site.Params.bio }}
+    <meta property="og:description" content="{{ . | plainify | truncate 200 }}">
+    {{ end }}
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:locale" content="{{ site.Language.Locale | default " en_US" }}">
+    {{ with resources.Get "images/ridwan.webp" }}
+    {{ $img := .Fill "1200x630 webp q80 center" }}
+    <meta property="og:image" content="{{ $img.Permalink }}">
+    <meta property="og:image:width" content="{{ $img.Width }}">
+    <meta property="og:image:height" content="{{ $img.Height }}">
+    <meta property="og:image:alt" content="{{ site.Params.fullname }}">
+    {{ end }}
+
+    {{/* ── Twitter Card ─────────────────────────────────────────────── */}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title"
+        content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+    {{ with or .Description .Summary site.Params.bio }}
+    <meta name="twitter:description" content="{{ . | plainify | truncate 200 }}">
+    {{ end }}
+    {{ with resources.Get "images/ridwan.webp" }}
+    {{ $img := .Fill "1200x630 webp q80 center" }}
+    <meta name="twitter:image" content="{{ $img.Permalink }}">
+    {{ end }}
+    {{ with site.Params.author }}
+    <meta name="twitter:site" content="@{{ . }}">
+    <meta name="twitter:creator" content="@{{ . }}">
+    {{ end }}
+
+    {{/* ── JSON-LD Structured Data ───────────────────────────────────── */}}
+    {{ if .IsHome }}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": {{ site.Params.fullname }},
+        "url": {{ site.Home.Permalink }},
+        "jobTitle": {{ site.Params.role }},
+        "description": {{ site.Params.bio }},
+        "sameAs": [
+            {{ range $i, $s := (index (index hugo.Data site.Language.Lang).socials).social }}
+            {{- if $i }},{{ end }}
+            {{ $s.href }}
+            {{- end }}
+        ]
+    }
+    </script>
+    {{ else if .IsPage }}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": {{ .Title }},
+        "url": {{ .Permalink }},
+        {{ with .Date }}"datePublished": "{{ .Format "2006-01-02" }}",{{ end }}
+        {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02" }}",{{ end }}
+        "author": {
+            "@type": "Person",
+            "name": {{ site.Params.fullname }},
+            "url": {{ site.Home.Permalink }}
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": {{ site.Params.fullname }}
+        }
+    }
+    </script>
+    {{ end }}
     {{/* Self-hosted and same-origin, so preloading only has to shorten the swap
-         window — there is no connection to negotiate. */}}
+    window — there is no connection to negotiate. */}}
     {{ with resources.Get "fonts/geist-latin-var.woff2" }}
     <link rel="preload" href="{{ .RelPermalink }}" as="font" type="font/woff2" crossorigin>
     {{ end }}
@@ -25,8 +112,8 @@
     <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
     {{ end }}
     {{/* Scripting off means nothing can open the disclosure panel, so lay its
-         contents out permanently and drop the button. `.site-cta` is in there
-         too — without it that visitor loses the CTA entirely. */}}
+    contents out permanently and drop the button. `.site-cta` is in there
+    too — without it that visitor loses the CTA entirely. */}}
     <noscript>
         <style>
             @media (width < 40rem) {
@@ -48,67 +135,64 @@
 
 <body class="dark">
     <a href="#main"
-        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:btn-accent focus:px-4 focus:py-3 focus:text-sm">{{ i18n
+        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:btn-accent focus:px-4 focus:py-3 focus:text-sm">{{
+        i18n
         "skip_to_content" }}</a>
     {{partial "components/header.html" .}}
     {{/* The shell is identical on every route, so <main> is the only thing the
-         cross-document view transition should animate. */}}
-    <main id="main" class="w-full max-w-2xl mx-auto gutter" style="view-transition-name: page">
-        {{ block "main" . }}{{ end }}
-    </main>
-    {{partial "components/footer.html" .}}
-    {{/* `aria-expanded` is the whole state — CSS reads the attribute, so there is
-         no class to keep in step with what assistive tech is told. The bar is
-         sticky, and a panel closable only by finding the button again is a trap
-         on a phone, hence Escape and tap-outside. */}}
-    <script>
-        (() => {
-            const nav = document.querySelector('.site-nav');
-            const toggle = nav?.querySelector('.site-nav-toggle');
-            if (!toggle) return;
-            const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
-            const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
-            toggle.addEventListener('click', () => {
-                const open = !isOpen();
-                setOpen(open);
-                {{/* The links precede the button in the DOM, so tabbing on would
-                     walk past the panel that was just opened. */}}
-                if (open) nav.querySelector('.site-menu a')?.focus();
-            });
-            document.addEventListener('click', (e) => {
-                if (isOpen() && !nav.contains(e.target)) setOpen(false);
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key !== 'Escape' || !isOpen()) return;
-                setOpen(false);
-                toggle.focus();
-            });
-        })();
-    </script>
-    {{/* Stops the skills loop when nobody can see it — scrolled away or in a
-         backgrounded tab. */}}
-    <script>
-        (() => {
-            const rows = [...document.querySelectorAll('.marquee')];
-            if (!rows.length) return;
-            const onScreen = new WeakSet();
-            const sync = (el) => { el.dataset.paused = String(document.hidden || !onScreen.has(el)); };
-            const syncAll = () => rows.forEach(sync);
-            if ('IntersectionObserver' in window) {
+        cross-document view transition should animate. */}}
+        <main id="main" class="w-full max-w-2xl mx-auto gutter" style="view-transition-name: page">
+            {{ block "main" . }}{{ end }}
+        </main>
+        {{partial "components/footer.html" .}}
+        {{/* `aria-expanded` is the whole state — CSS reads the attribute, so there is
+        no class to keep in step with what assistive tech is told. The bar is
+        sticky, and a panel closable only by finding the button again is a trap
+        on a phone, hence Escape and tap-outside. */}}
+        <script>
+            (() => {
+                const nav = document.querySelector('.site-nav');
+                const toggle = nav?.querySelector('.site-nav-toggle');
+                if (!toggle) return;
+                const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+                const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
+                toggle.addEventListener('click', () => {
+                    const open = !isOpen();
+                    setOpen(open);
+                    {
+                        {/* The links precede the button in the DOM, so tabbing on would
+                     walk past the panel that was just opened. */}
+                    }
+                    if (open) nav.querySelector('.site-menu a')?.focus();
+                });
+                document.addEventListener('click', (e) => {
+                    if (isOpen() && !nav.contains(e.target)) setOpen(false);
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Escape' || !isOpen()) return;
+                    setOpen(false);
+                    toggle.focus();
+                });
+            })();
+        </script>
+        {{/* Timeline dots: activate like radio buttons when they scroll into view. */}}
+        <script>
+            (() => {
+                const dots = document.querySelectorAll('.timeline-dot');
+                if (!dots.length) return;
+                if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    dots.forEach(d => d.classList.add('is-active'));
+                    return;
+                }
                 const io = new IntersectionObserver((entries) => {
                     for (const e of entries) {
-                        e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target);
-                        sync(e.target);
+                        if (e.isIntersecting) e.target.classList.add('is-active');
                     }
-                }, { rootMargin: '96px' });
-                rows.forEach((r) => io.observe(r));
-            } else {
-                rows.forEach((r) => onScreen.add(r));
-                syncAll();
-            }
-            document.addEventListener('visibilitychange', syncAll);
-        })();
-    </script>
+                }, { threshold: 0.5 });
+                dots.forEach(d => io.observe(d));
+            })();
+        </script>
+
 </body>
 
 </html>

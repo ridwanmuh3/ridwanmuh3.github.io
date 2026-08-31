@@ -8,14 +8,14 @@
         "body" $s.body) }}
     {{/* The rail is drawn by `.timeline` rather than a border, because it is two
          lines: the unlit full span, and the lit one that tracks reading. */}}
-    <ol class="timeline mt-8 ml-1 pl-6 space-y-8">
+    <ol class="timeline mt-8 pl-8 space-y-8">
         {{ range . }}
         {{ $e := . }}
         {{ with .name }}
         <li class="relative">
             {{/* Colour and ring live in `.timeline-dot`: the ring is a
                  box-shadow the ignite keyframes must own, or they erase it. */}}
-            <span class="timeline-dot absolute -left-[1.8125rem] top-2 size-2.5 rounded-full"></span>
+            <span class="timeline-dot"></span>
             <div class="space-y-1">
                 <h3 class="type-title text-ink text-balance">{{ $e.name }}</h3>
                 {{ with delimit (slice $e.company $e.duration | complement (slice "" nil)) " · " }}
@@ -28,8 +28,7 @@
             {{ with $e.keypoints }}
             <ul class="mt-4 flex gap-2 flex-wrap">
                 {{ range . }}
-                <li class="px-3 py-2 type-label surface-raised rounded-lg text-ink-body max-w-full">{{
-                    . }}</li>
+                {{ partial "components/pill.html" . }}
                 {{ end }}
             </ul>
             {{ end }}

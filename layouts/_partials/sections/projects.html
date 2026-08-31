@@ -34,8 +34,7 @@
             {{ with $p.skills }}
             <ul class="mt-4 flex gap-2 flex-wrap">
                 {{ range . }}
-                <li class="px-3 py-2 type-label surface-raised rounded-lg text-ink-body max-w-full">{{
-                    . }}</li>
+                {{ partial "components/pill.html" . }}
                 {{ end }}
             </ul>
             {{ end }}

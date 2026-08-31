@@ -466,72 +466,21 @@ h1, h2, h3, h4, h5, p, li, a {
     --dur-press: 110ms;
     --dur-state: 200ms;
     --dur-view: 380ms;
-    --dur-focal: 760ms;
-}
-
-/* --- Focal moment: the dual signature ------------------------------------
-   Two arcs close the ring in one pass, then leave — the research this site
-   leads with is a *dual* signature scheme. Runs once at load, never on scroll.
-
-   The portrait is excluded from the entrance: it is the LCP element, and fading
-   it in would postpone the largest paint by the length of the animation. */
-.sig-sweep {
-    position: absolute;
-    inset: 0;
-    /* Path data starts at 3 o'clock; rotating the whole ring puts the two
-       start points at 12 and 6 so they meet on the horizontal. */
-    transform: rotate(-90deg);
-    pointer-events: none;
-}
-
-.sig-arc {
-    fill: none;
-    stroke: var(--color-accent);
-    stroke-width: 1.25;
-    stroke-linecap: round;
-    /* pathLength normalises the circumference to 100, so "50" is exactly half
-       the ring at any rendered size. Gap 100 keeps the pattern to a single
-       dash; offset 50 parks that dash entirely before the start, so the arc
-       begins at nothing and grows rather than sliding into place. */
-    stroke-dasharray: 50 100;
-    stroke-dashoffset: 50;
-    transform-origin: 50% 50%;
-    animation:
-        sig-trace var(--dur-focal) var(--ease-out-expo) 80ms both,
-        sig-clear 300ms var(--ease-state) calc(80ms + var(--dur-focal)) both;
-}
-
-.sig-arc-b {
-    transform: rotate(180deg);
-}
-
-@keyframes sig-trace {
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-/* The ring is the moment, not a permanent ornament: it hands the portrait back
-   to its resting 1px border and gets out of the way. */
-@keyframes sig-clear {
-    to {
-        opacity: 0;
-    }
 }
 
 /* Identity, then role, then the ways to reach him — the order a recruiter
-   reads them in. Total delay is capped at 200ms so the last item has settled
-   well inside the first second. */
+   reads them in. Total delay capped at 160ms so the last item settles
+   inside the first half-second. */
 .hero-stage > * {
-    animation: arrive var(--dur-view) var(--ease-out-expo) both;
+    animation: arrive 320ms var(--ease-out-expo) both;
 }
 
 .hero-stage > *:nth-child(2) {
-    animation-delay: 110ms;
+    animation-delay: 80ms;
 }
 
 .hero-stage > *:nth-child(3) {
-    animation-delay: 200ms;
+    animation-delay: 160ms;
 }
 
 @keyframes arrive {
@@ -582,25 +531,19 @@ h1, h2, h3, h4, h5, p, li, a {
 
 .timeline {
     position: relative;
-}
-
-.timeline::before,
-.timeline::after {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: 0;
-    width: 1px;
-}
-
-/* The unlit rail: the full span of the history, always present. */
-.timeline::before {
-    background-color: var(--color-line);
+    /* The unlit rail: 1px column at the leading edge. */
+    border-inline-start: 1px solid var(--color-line);
 }
 
 /* The lit rail grows as the reader moves down, so the line reports reading
    progress through the history instead of decorating the margin. */
 .timeline::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
     background-image: linear-gradient(to bottom, --alpha(var(--color-accent) / 20%), var(--color-accent));
     transform-origin: top;
     animation: rail-draw linear both;
@@ -614,25 +557,41 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* Each role's marker ignites as the reader reaches it. The zinc-950 ring is
-   part of the keyframes rather than a utility because a box-shadow cannot be
-   half-owned: the glow would otherwise erase it. */
+/* Each role's marker ignites as the reader reaches it — radio-button style:
+   a hollow ring that fills and glows when the entry scrolls into view.
+   JS adds `.is-active` via IntersectionObserver; CSS transitions handle
+   the smooth fill. Zero-width element with a centered pseudo for
+   sub-pixel-smooth circles. */
 .timeline-dot {
-    animation: dot-ignite linear both;
-    animation-timeline: view();
-    animation-range: cover 25% cover 42%;
+    position: absolute;
+    left: -0.4375rem;
+    top: 0.25rem;
+    width: 0;
+    height: 0;
 }
 
-@keyframes dot-ignite {
-    from {
-        background-color: var(--color-line-raised);
-        box-shadow: 0 0 0 4px var(--color-page);
-    }
+.timeline-dot::before {
+    content: "";
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    transform: translate(-50%, 0);
+    /* Unselected: hollow ring, like an empty radio button. */
+    background-color: var(--color-page);
+    border: 1.5px solid var(--color-line-raised);
+    box-shadow: none;
+    transition:
+        background-color 400ms var(--ease-out-expo),
+        border-color 400ms var(--ease-out-expo),
+        box-shadow 500ms var(--ease-out-expo);
+}
 
-    to {
-        background-color: var(--color-accent);
-        box-shadow: 0 0 0 4px var(--color-page), 0 0 12px 2px --alpha(var(--color-accent) / 28%);
-    }
+/* Selected: filled dot with soft glow. */
+.timeline-dot.is-active::before {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-page), 0 0 8px 1px --alpha(var(--color-accent) / 30%);
 }
 
 /* --- The rule above the ask completes ------------------------------------- */
@@ -840,55 +799,9 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* Skills marquee. Two identical groups translated by exactly one group width
-   (-50%), so the loop point is invisible. Hovering pauses it. */
-.marquee {
-    overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
-.marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
-    will-change: transform;
-}
-
-/* Play the scroll backwards, which flips the travel direction from
-   right-to-left to left-to-right. */
-.marquee-ltr .marquee-track {
-    animation-direction: reverse;
-}
-
-.marquee:hover .marquee-track {
-    animation-play-state: paused;
-}
-
-/* An endless loop has no business running where nobody can see it. The flag is
-   set by the observer in baseof.html for offscreen and backgrounded states;
-   `will-change` is retired with it, since a permanent compositor layer for a
-   stopped animation is pure cost. */
-.marquee[data-paused="true"] .marquee-track {
-    animation-play-state: paused;
-    will-change: auto;
-}
-
-/* One group is a copy of the row's chips; making it the flex row means the
-   chips flow horizontally, and the trailing padding equals the internal gap
-   so the duplicate groups line up seamlessly at the -50% wrap point. */
-.marquee-group {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding-inline-end: 1rem;
-}
-
-@keyframes marquee-scroll {
-    to {
-        transform: translateX(-50%);
-    }
-}
+/* Devicon marks keep their brand colours as-is: the fine outlines (the Go
+   gopher's black lines, Redis' highlight) sit inside each logo's light
+   parts, so no grayscale pass is applied. */
 
 /* Devicon marks keep their brand colours as-is: the fine outlines (the Go
    gopher's black lines, Redis' highlight) sit inside each logo's light
@@ -905,12 +818,6 @@ h1, h2, h3, h4, h5, p, li, a {
         scroll-behavior: auto;
     }
 
-    /* The signature ring is pure authorship, so it simply does not happen. */
-    .sig-arc {
-        animation: none;
-        opacity: 0;
-    }
-
     .hero-stage > *,
     .card-arrive {
         animation: none;
@@ -923,10 +830,11 @@ h1, h2, h3, h4, h5, p, li, a {
         transform: none;
     }
 
-    .timeline-dot {
-        animation: none;
+    .timeline-dot::before {
         background-color: var(--color-accent);
-        box-shadow: 0 0 0 4px var(--color-page);
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 3px var(--color-page);
+        transition: none;
     }
 
     .press:active,
@@ -954,27 +862,5 @@ h1, h2, h3, h4, h5, p, li, a {
         }
     }
 
-    /* Stopped, the track would be wider than its clipped container and the
-       later chips unreachable. Wrap instead, and drop the edge mask and the
-       duplicate group — both exist only to hide a loop seam. */
-    .marquee {
-        overflow: visible;
-        mask-image: none;
-        -webkit-mask-image: none;
-    }
 
-    .marquee-track {
-        animation: none;
-        width: auto;
-    }
-
-    .marquee-group {
-        flex-wrap: wrap;
-        justify-content: center;
-        padding-inline-end: 0;
-    }
-
-    .marquee-track > [aria-hidden="true"] {
-        display: none;
-    }
 }

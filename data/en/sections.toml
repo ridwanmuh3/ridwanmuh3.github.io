@@ -1,44 +1,18 @@
 [hero]
-tagline = "Go, PostgreSQL, and Redis on Linux and Google Cloud. Applied cryptography research, and an inventory dashboard in daily operational use."
-
-[about]
-title = "// About"
-body = """
-I develop backend services in Go, with PostgreSQL and Redis, on Linux and Google \
-Cloud. My experience covers two roles: applied cryptography research at Siliwangi \
-University, and an inventory and finance dashboard operated daily by a catering \
-kitchen. I prefer small interfaces, explicit error handling, and code that stays \
-straightforward to read and review.
-"""
+tagline = "Applied cryptography research and production software, both in active use."
 
 [skills]
 title = "// Skills"
-body = """
-Go and Fiber for services, PostgreSQL where data must remain consistent, Redis where \
-it must be fast, with Linux and Google Cloud as the underlying platform.
-"""
 
 [projects]
-title = "// Featured Projects"
-body = """
-Work I designed and implemented myself. Each entry states the problem addressed and \
-the technologies involved.
-"""
+title = "// Projects"
 
 [experiences]
-title = "// Work Experiences"
-body = """
-Two professional roles to date: research on applied cryptography, and an inventory \
-system in daily operational use.
-"""
+title = "// Experience"
 
 [cta]
 title = "// Let's Work Together"
-body = """
-I am currently seeking a full-time backend engineering role in Indonesia. My \
-strongest areas are API design, database schema and query work, and applying \
-cryptographic components within backend services.
-"""
+body = "I am seeking a full-time backend engineering role in Indonesia."
 cta_label = "Contact me"
 cta_href = "/contact/"
 
@@ -47,21 +21,12 @@ cta_href = "/contact/"
 
 [pages.projects]
 title = "Projects"
-body = """
-Project write-ups, most recent first.
-"""
+body = "Project write-ups, most recent first."
 
 [pages.blogs]
 title = "Blogs"
-body = """
-Notes on backend engineering: problems I have run into, decisions I have had to \
-revisit, and conclusions worth recording.
-"""
+body = "Notes on backend engineering: problems I have run into, decisions I have had to revisit, and conclusions worth recording."
 
 [pages.contact]
 title = "Contact"
-body = """
-WhatsApp and LinkedIn are the fastest ways to reach me. A brief note describing the \
-problem and the stack involved is enough to begin. I generally reply within one to \
-two days.
-"""
+body = "WhatsApp and LinkedIn are the fastest ways to reach me. A brief note describing the problem and the stack involved is enough to begin. I generally reply within one to two days."

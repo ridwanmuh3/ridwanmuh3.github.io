@@ -1,15 +1,15 @@
 {{ $d := index hugo.Data site.Language.Lang }}
 {{ $hero := $d.sections.hero }}
 {{/* `hero-gap` is the whole top margin — anything larger pushes the portrait
-     and name off a phone's first screen, the one that decides. */}}
+and name off a phone's first screen, the one that decides. */}}
 <section class="hero-gap flex items-center justify-center">
     <div class="hero-stage max-w-md w-full flex items-center flex-col justify-center gap-6">
         <div
             class="relative size-40 sm:size-58 rounded-full overflow-hidden shrink-0 border border-line bg-surface flex items-center justify-center">
             {{/* `ridwan-avatar.jpeg` is the head-and-shoulders crop of the
-                 full-length `ridwan.jpeg`. Baked into the asset rather than
-                 done here as offsets, so swapping the photo is one file. */}}
-            {{ with resources.Get "images/ridwan-avatar.jpeg" }}
+            full-length `ridwan.jpeg`. Baked into the asset rather than
+            done here as offsets, so swapping the photo is one file. */}}
+            {{ with resources.Get "images/ridwan-avatar.webp" }}
             {{ $sm := .Fill "320x320 webp q80 center" }}
             {{ $md := .Fill "480x480 webp q80 center" }}
             {{ $lg := .Fill "696x696 webp q80 center" }}
@@ -22,16 +22,10 @@
             <span class="font-header font-black text-5xl text-ink-faint" aria-hidden="true">{{ substr
                 site.Params.fullname 0 1 }}</span>
             {{ end }}
-            {{/* Two arcs closing the ring in one pass — the dual signature this
-                 portfolio leads with. Outside the image branch so it runs over
-                 the fallback initial too. */}}
-            <svg class="sig-sweep size-full" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-                <circle class="sig-arc" cx="50" cy="50" r="49" pathLength="100" />
-                <circle class="sig-arc sig-arc-b" cx="50" cy="50" r="49" pathLength="100" />
-            </svg>
+
         </div>
         {{/* The role line is a subtitle rather than a section head, hence
-             `type-title`; the tagline is what a recruiter scans, hence body. */}}
+        `type-title`; the tagline is what a recruiter scans, hence body. */}}
         <div class="text-center space-y-2">
             <h1 class="type-display text-ink text-balance">{{ .Site.Params.fullname }}</h1>
             {{ with .Site.Params.role }}<h2 class="type-title text-accent text-balance">{{ . }}</h2>{{ end }}

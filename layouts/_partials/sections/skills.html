@@ -7,22 +7,11 @@
         "title" ($s.title | default "// Skills")
         "body" $s.body) }}
     <div class="mt-8">
-        {{/* Two identical groups so the loop point is invisible; the second is
-             hidden from screen readers. */}}
-        <div class="marquee marquee-ltr">
-            <div class="marquee-track">
-                <ul class="marquee-group">
-                    {{ range . }}
-                    {{ partial "components/skill-chip.html" . }}
-                    {{ end }}
-                </ul>
-                <ul class="marquee-group" aria-hidden="true">
-                    {{ range . }}
-                    {{ partial "components/skill-chip.html" . }}
-                    {{ end }}
-                </ul>
-            </div>
-        </div>
+        <ul class="flex gap-3 flex-wrap justify-center">
+            {{ range . }}
+            {{ partial "components/skill-chip.html" . }}
+            {{ end }}
+        </ul>
     </div>
 </section>
 {{ end }}
