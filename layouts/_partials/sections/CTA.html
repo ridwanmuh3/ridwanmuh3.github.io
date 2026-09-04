@@ -1,15 +1,12 @@
 {{ $d := index hugo.Data site.Language.Lang }}
 {{ $s := $d.sections.cta }}
 {{ with $s.body }}
-{{/* `rule-draw` replaces the top border with two: the resting zinc line and the
-     amber one that completes as the ask comes into view. */}}
 <section class="rule-draw flow-lead flow-end pt-10">
     {{ partial "components/section-head.html" (dict
         "title" ($s.title | default "// Let's Work Together")
         "body" .) }}
     {{ with $s.cta_label }}
     <div class="mt-8">
-        {{/* No leading slash — see header.html. An external cta_href passes through. */}}
     {{ $href := $s.cta_href | default "contact/" }}
     {{ if not (hasPrefix $href "http") }}{{ $href = $href | strings.TrimPrefix "/" | relURL }}{{ end }}
     <a href="{{ $href }}" class="btn-accent inline-block px-6 py-4">{{

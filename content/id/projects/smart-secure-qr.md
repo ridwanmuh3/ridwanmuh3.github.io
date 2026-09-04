@@ -2,7 +2,7 @@
 date = '2026-08-02T22:32:12+07:00'
 draft = false
 title = 'Smart Secure QR'
-summary = 'Sementara. Halaman utama menautkan proyek ini sebagai proyek unggulan, jadi tulisan yang sebenarnya harus ada sebelum situs dipublikasikan.'
+summary = 'QR code dengan dua tanda tangan, dari penerbit dan dari timelock. Setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.'
 +++
 
 ## Halo Dunia

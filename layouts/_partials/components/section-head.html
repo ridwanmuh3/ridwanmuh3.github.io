@@ -1,15 +1,3 @@
-{{/* The heading and supporting paragraph that opens every section and list
-     page.
-
-     Params:
-       title   required, the heading text
-       body    optional, the supporting paragraph (plain string)
-       content optional, rendered page content (template.HTML) placed under it
-       level   "h1" or "h2", default "h2" — picks the type role with it, so the
-               level and the size can never disagree.
-
-     Both levels are written as literal tags: html/template escapes a
-     `<{{ $tag }}` into visible text instead of emitting an element. */}}
 <div class="space-y-4">
     {{ if eq (.level | default "h2") "h1" }}
     <h1 class="type-display text-accent w-fit text-balance">{{ .title }}</h1>

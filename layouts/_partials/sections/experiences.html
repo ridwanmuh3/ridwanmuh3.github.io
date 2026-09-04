@@ -6,14 +6,11 @@
     {{ partial "components/section-head.html" (dict
     "title" ($s.title | default "// Work Experiences")
     "body" $s.body) }}
-    {{/* Vertical rail at the leading edge. */}}
     <ol class="timeline mt-8 space-y-8">
         {{ range . }}
         {{ $e := . }}
         {{ with .name }}
         <li class="relative pl-8">
-            {{/* Colour and ring live in `.timeline-dot`: the ring is a
-            box-shadow the ignite keyframes must own, or they erase it. */}}
             <span class="timeline-dot"></span>
             <div class="space-y-1">
                 <h3 class="type-title text-ink text-balance">{{ $e.name }}</h3>

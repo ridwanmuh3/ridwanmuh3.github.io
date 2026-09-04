@@ -5,12 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-    {{ with or .Description .Summary site.Params.bio }}
-    <meta name="description" content="{{ . | plainify | truncate 160 }}">
+    {{ $desc := or .Description .Summary site.Params.bio }}
+    {{ if not .IsPage }}
+    {{ with index hugo.Data site.Language.Lang }}
+    {{ with index .sections.pages $.Section }}
+    {{ with .body }}{{ $desc = . }}{{ end }}
     {{ end }}
+    {{ end }}
+    {{ end }}
+    <meta name="description" content="{{ $desc | plainify | truncate 160 }}">
     <link rel="canonical" href="{{ .Permalink }}">
+    {{ if eq .Kind "404" }}
+    <meta name="robots" content="noindex, nofollow">
+    {{ end }}
 
-    {{/* ── Favicon ──────────────────────────────────────────────────── */}}
     {{ with resources.Get "icons/favicon.ico" }}
     <link rel="icon" type="image/x-icon" href="{{ .RelPermalink }}">
     {{ end }}
@@ -20,16 +28,12 @@
     {{ end }}
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    {{/* google search verification*/}}
     <meta name="google-site-verification" content="S6QL3ok0KCtKcwEidk2wfChTP68VLTgBpiy0yW1AG1E" />
 
-    {{/* ── OpenGraph ────────────────────────────────────────────────── */}}
     <meta property="og:site_name" content="{{ .Site.Title }}">
     <meta property="og:title"
         content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
-    {{ with or .Description .Summary site.Params.bio }}
-    <meta property="og:description" content="{{ . | plainify | truncate 200 }}">
-    {{ end }}
+    <meta property="og:description" content="{{ $desc | plainify | truncate 200 }}">
     <meta property="og:url" content="{{ .Permalink }}">
     <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
     <meta property="og:locale" content="{{ site.Language.Locale | default " en_US" }}">
@@ -41,13 +45,10 @@
     <meta property="og:image:alt" content="{{ site.Params.fullname }}">
     {{ end }}
 
-    {{/* ── Twitter Card ─────────────────────────────────────────────── */}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title"
         content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
-    {{ with or .Description .Summary site.Params.bio }}
-    <meta name="twitter:description" content="{{ . | plainify | truncate 200 }}">
-    {{ end }}
+    <meta name="twitter:description" content="{{ $desc | plainify | truncate 200 }}">
     {{ with resources.Get "images/ridwan.webp" }}
     {{ $img := .Fill "1200x630 webp q80 center" }}
     <meta name="twitter:image" content="{{ $img.Permalink }}">
@@ -57,7 +58,6 @@
     <meta name="twitter:creator" content="@{{ . }}">
     {{ end }}
 
-    {{/* ── JSON-LD Structured Data ───────────────────────────────────── */}}
     {{ if .IsHome }}
     <script type="application/ld+json">
     {
@@ -96,8 +96,6 @@
     }
     </script>
     {{ end }}
-    {{/* Self-hosted and same-origin, so preloading only has to shorten the swap
-    window — there is no connection to negotiate. */}}
     {{ with resources.Get "fonts/geist-latin-var.woff2" }}
     <link rel="preload" href="{{ .RelPermalink }}" as="font" type="font/woff2" crossorigin>
     {{ end }}
@@ -111,9 +109,6 @@
     {{ else }}
     <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
     {{ end }}
-    {{/* Scripting off means nothing can open the disclosure panel, so lay its
-    contents out permanently and drop the button. `.site-cta` is in there
-    too — without it that visitor loses the CTA entirely. */}}
     <noscript>
         <style>
             @media (width < 40rem) {
@@ -135,63 +130,50 @@
 
 <body class="dark">
     <a href="#main"
-        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:btn-accent focus:px-4 focus:py-3 focus:text-sm">{{
-        i18n
-        "skip_to_content" }}</a>
-    {{partial "components/header.html" .}}
-    {{/* The shell is identical on every route, so <main> is the only thing the
-        cross-document view transition should animate. */}}
-        <main id="main" class="w-full max-w-2xl mx-auto gutter">
-            {{ block "main" . }}{{ end }}
-        </main>
-        {{partial "components/footer.html" .}}
-        {{/* `aria-expanded` is the whole state — CSS reads the attribute, so there is
-        no class to keep in step with what assistive tech is told. The bar is
-        sticky, and a panel closable only by finding the button again is a trap
-        on a phone, hence Escape and tap-outside. */}}
-        <script>
-            (() => {
-                const nav = document.querySelector('.site-nav');
-                const toggle = nav?.querySelector('.site-nav-toggle');
-                if (!toggle) return;
-                const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
-                const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
-                toggle.addEventListener('click', () => {
-                    const open = !isOpen();
-                    setOpen(open);
-                    {
-                        {/* The links precede the button in the DOM, so tabbing on would
-                     walk past the panel that was just opened. */}
-                    }
-                    if (open) nav.querySelector('.site-menu a')?.focus();
-                });
-                document.addEventListener('click', (e) => {
-                    if (isOpen() && !nav.contains(e.target)) setOpen(false);
-                });
-                document.addEventListener('keydown', (e) => {
-                    if (e.key !== 'Escape' || !isOpen()) return;
-                    setOpen(false);
-                    toggle.focus();
-                });
-            })();
-        </script>
-        {{/* Timeline dots: activate like radio buttons when they scroll into view. */}}
-        <script>
-            (() => {
-                const dots = document.querySelectorAll('.timeline-dot');
-                if (!dots.length) return;
-                if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    dots.forEach(d => d.classList.add('is-active'));
-                    return;
+        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:btn-accent focus:px-4 focus:py-3 focus:text-sm">{{ i18n "skip_to_content" }}</a>
+    {{ partial "components/header.html" . }}
+    <main id="main" class="w-full max-w-2xl mx-auto gutter">
+        {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "components/footer.html" . }}
+    <script>
+        (() => {
+            const nav = document.querySelector('.site-nav');
+            const toggle = nav?.querySelector('.site-nav-toggle');
+            if (!toggle) return;
+            const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+            const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
+            toggle.addEventListener('click', () => {
+                const open = !isOpen();
+                setOpen(open);
+                if (open) nav.querySelector('.site-menu a')?.focus();
+            });
+            document.addEventListener('click', (e) => {
+                if (isOpen() && !nav.contains(e.target)) setOpen(false);
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape' || !isOpen()) return;
+                setOpen(false);
+                toggle.focus();
+            });
+        })();
+    </script>
+    <script>
+        (() => {
+            const dots = document.querySelectorAll('.timeline-dot');
+            if (!dots.length) return;
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                dots.forEach(d => d.classList.add('is-active'));
+                return;
+            }
+            const io = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    if (e.isIntersecting) e.target.classList.add('is-active');
                 }
-                const io = new IntersectionObserver((entries) => {
-                    for (const e of entries) {
-                        if (e.isIntersecting) e.target.classList.add('is-active');
-                    }
-                }, { threshold: 0.5 });
-                dots.forEach(d => io.observe(d));
-            })();
-        </script>
+            }, { threshold: 0.5 });
+            dots.forEach(d => io.observe(d));
+        })();
+    </script>
 
 </body>
 

@@ -1,8 +1,5 @@
 {{ define "main" }}
 {{ $d := index hugo.Data site.Language.Lang }}
-{{/* `/tags/` and `/categories/` land here with no `sections.pages` entry, so
-     the lookup can miss. `with`, not `cond` — both arms of a `cond` evaluate,
-     so the field read would run on the missing case too. */}}
 {{ $p := index $d.sections.pages .Section }}
 {{ $title := .Title }}
 {{ $body := "" }}
@@ -10,7 +7,6 @@
 {{ $title = .title | default $title }}
 {{ $body = .body | default "" }}
 {{ end }}
-{{/* No max-w here: <main> in baseof.html is already the measured column. */}}
 <section class="flow flow-end">
     {{ partial "components/section-head.html" (dict
         "level" "h1"
@@ -33,8 +29,6 @@
         {{ end }}
     </ul>
     {{ else }}
-    {{/* Empty is normal before the first post ships. Say so and keep the
-         visitor moving. */}}
     <div class="mt-8 p-5 border border-dashed border-line-raised rounded-lg space-y-4">
         <p class="type-body measure">{{ i18n "nothing_published_here" }}</p>
         <p class="type-body measure">

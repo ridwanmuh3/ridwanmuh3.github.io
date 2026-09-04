@@ -1,7 +1,6 @@
 .PHONY: dev build
 
-# Hugo compiles Tailwind itself via css.TailwindCSS in layouts/baseof.html,
-# so there is no separate CSS watcher to run.
+# Hugo compiles Tailwind itself via css.TailwindCSS.
 dev:
 	hugo server -D
 

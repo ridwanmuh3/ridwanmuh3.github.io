@@ -1,5 +1,3 @@
-{{/* Inline an SVG from assets/icons — local files, not a CDN webfont, so a
-     blocked third party can never blank out the contact links. */}}
 {{ $name := .name }}
 {{ $class := .class | default "size-6" }}
 {{ with resources.Get (printf "icons/%s.svg" $name) }}

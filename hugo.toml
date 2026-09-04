@@ -3,33 +3,24 @@ defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = false
 title = 'Ridwan portfolio site'
 
-# English only for now. The Indonesian translation is kept in full (content/id,
-# data/id, i18n/id.toml, [languages.id]) and simply not built — delete this line
-# to bring it back. Must stay above the first [table] header, or TOML reads it
-# as a key of that table.
+# Indonesian is kept in full but not built; delete this line to re-enable it.
+# Must stay above the first [table] header, or TOML reads it as a key of that table.
 disableLanguages = ['id']
+enableRobotsTXT = true
+# Empty until content uses them.
+disableKinds = ['taxonomy', 'term']
 
 [params]
 author = "ridwanmuh3"
 fullname = "Ridwan M. Raihan"
-role = "Backend Engineer"
+role = "Backend Developer"
 
-# Contact form. Both values are public by design; the secrets live only in the
-# Worker (workers/contact/README.md). An empty `endpoint` means no form is
-# rendered and the build warns — point it at http://localhost:8787 to test
-# against `wrangler dev`.
+# Both values are public; secrets live in the Worker. Empty `endpoint` = no form rendered.
 [params.contact]
 endpoint = "https://portfolio-contact.ridwanmuh3.workers.dev"
 turnstileSiteKey = "0x4AAAAAAEK5YpgnLFRwX4pR"
 
-# Blog comments via giscus. Needs a public repo with Discussions enabled and the
-# giscus app installed. The IDs are GraphQL node IDs, not the names beside them:
-#
-#   gh api graphql -f query='query { repository(owner:"ridwanmuh3", name:"portfolio") {
-#     id  discussionCategories(first:20){ nodes { id name } } } }'
-#
-# Empty `repoId` means no comment section, and the build warns. Announcements is
-# announcement-type, so only the maintainer can open a thread.
+# giscus IDs are GraphQL node IDs, not the names beside them. Empty repoId = no comments.
 [params.giscus]
 repo = "ridwanmuh3/portfolio"
 repoId = "R_kgDOTzB6UA"

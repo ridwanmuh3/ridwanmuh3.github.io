@@ -1,6 +1,4 @@
 {{ define "main" }}
-{{/* Cadence on the wrapper, not on <article>: the comment thread and the
-     back-link are not article content and must not inherit its tail margin. */}}
 <div class="flow flow-end">
 <article>
     <header class="space-y-4 pb-8 border-b border-line">
@@ -23,15 +21,11 @@
 
 </article>
 
-{{/* Blogs only — a project write-up is an exhibit, not an invitation to
-     discuss. Opt one post out with `comments = false` in its front matter. */}}
 {{ if and (eq .Section "blogs") (ne .Params.comments false) }}
 {{ partial "components/comments.html" . }}
 {{ end }}
 
 {{ with .Parent }}
-{{/* After the comments: a "Back to Blogs" link reads as the end of the route,
-     so nothing should sit below it. Mirrors the header's `pb-8 border-b`. */}}
 <nav class="mt-8 pt-8 border-t border-line" aria-label="{{ i18n "nav_section" }}">
     <a href="{{ .RelPermalink }}" class="link-accent type-meta">{{ i18n
         "back_to" .Title }}</a>

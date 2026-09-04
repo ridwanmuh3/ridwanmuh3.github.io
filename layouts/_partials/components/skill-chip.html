@@ -1,6 +1,3 @@
-{{/* One icon pill in a skills marquee row. `text-ink` only reaches marks drawn
-     in `currentColor` — the monochrome ones, whose published near-black would
-     otherwise vanish against the chip. Colour marks set their own fills. */}}
 {{ $name := .name }}
 {{ $slug := .slug | default (lower (urlize $name)) }}
 <li class="surface-raised rounded-lg p-3 flex items-center justify-center shrink-0 text-ink"

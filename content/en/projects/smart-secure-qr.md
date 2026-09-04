@@ -2,7 +2,7 @@
 date = '2026-08-02T22:32:12+07:00'
 draft = false
 title = 'Smart Secure QR'
-summary = 'Placeholder. The homepage links here as the flagship project, so this page needs the real write-up before the site goes out.'
+summary = 'QR codes carrying two signatures, one from the issuer and one from a timelock. Each scan verifies where the code originated and rejects it once its validity period has passed.'
 +++
 
 ## Hello World

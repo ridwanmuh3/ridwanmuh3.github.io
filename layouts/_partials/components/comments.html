@@ -1,7 +1,3 @@
-{{/* Blog comments, stored as GitHub Discussions. Reading needs no account; only
-     posting asks for a sign-in. Renders once `params.giscus.repoId` is filled
-     in — giscus matches on GraphQL node IDs, not the names beside them. */}}
-
 {{ $g := site.Params.giscus }}
 {{ with $g.repoId }}
 {{ $term := $.Params.giscus_term | default $.File.ContentBaseName }}
@@ -11,11 +7,6 @@
         "body" (i18n "comments_note")) }}
 
     <div class="mt-8">
-        {{/* `specific` + the content file's base name, not `pathname`, so a page
-             and its future translation share one thread. `strict` because
-             without it giscus falls back to a fuzzy title search and can bind to
-             the wrong discussion. `transparent_dark` lets --color-page through
-             instead of painting GitHub's grey mid-page. */}}
         <script src="https://giscus.app/client.js"
             data-repo="{{ $g.repo }}"
             data-repo-id="{{ . }}"

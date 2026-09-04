@@ -2,13 +2,9 @@
     <div class="border-t border-line">
         <div
             class="mx-auto w-fit pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] space-y-1 text-center text-balance">
-            {{/* The display name, not `params.author` — that is the handle. */}}
             <p class="type-meta">&copy; {{ now.Format "2006" }} {{ .Site.Params.fullname }}. {{ i18n
                 "all_rights_reserved" }}.
             </p>
-            {{/* The anchor sits inside the translated string, as in the empty
-                 states and the 404, so a translator can place the link where
-                 their sentence needs it rather than around a fixed word. */}}
             <p class="type-meta">{{ i18n "powered_by" | safeHTML }}</p>
         </div>
     </div>

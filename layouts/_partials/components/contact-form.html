@@ -1,14 +1,3 @@
-{{/* The message form on /contact/, below the channel list.
-
-     Renders only when `params.contact.endpoint` is set, so a repo without the
-     Worker deployed has no form pointing at nothing.
-
-     JavaScript is required, because Turnstile is; `<noscript>` sends that
-     visitor back to the channels above rather than to a gate they cannot pass.
-
-     Copy rides on data-* attributes because the script is inline and has no
-     access to `i18n`. */}}
-
 {{ $c := site.Params.contact }}
 {{ with $c.endpoint }}
 <section class="mt-8 pt-8 border-t border-line">
@@ -25,13 +14,9 @@
         data-err-email="{{ i18n "contact_invalid_email" }}"
         data-err-message="{{ i18n "contact_invalid_message" }}">
 
-        {{/* Written by the script at page load, never by Hugo: a build-time value
-             on a CDN-cached page is the same for every visitor forever, which
-             makes the Worker's time-on-form check meaningless. */}}
+        {{/* written by the script at page load, or the Worker's time-on-form check is meaningless */}}
         <input type="hidden" name="t" value="">
 
-        {{/* Honeypot — off-screen, out of the AT tree, out of tab order. Only a
-             bot filling every input finds it. */}}
         <div class="sr-only" aria-hidden="true">
             <label for="cf-company">Company</label>
             <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off">
@@ -59,9 +44,6 @@
             <p id="cf-message-error" class="type-meta text-danger" hidden></p>
         </div>
 
-        {{/* `interaction-only` keeps the widget out of the layout unless
-             Cloudflare actually wants a challenge. The token lands in a hidden
-             `cf-turnstile-response` input Turnstile injects into this form. */}}
         <div class="cf-turnstile" data-sitekey="{{ $c.turnstileSiteKey }}" data-theme="dark"
             data-appearance="interaction-only"></div>
 
@@ -74,9 +56,6 @@
         </noscript>
     </form>
 
-    {{/* Outside the form: on success the form is hidden, and a status line
-         nested inside would vanish with the thing it reports on. `role="status"`
-         announces without stealing focus from a visitor who is finished. */}}
     <p class="contact-status type-body mt-4 measure" role="status" aria-live="polite"></p>
 </section>
 
@@ -119,9 +98,6 @@
             status.classList.toggle('text-danger', Boolean(isError));
         };
 
-        /* Mirrors the Worker's rules rather than deferring to native validation:
-           browser bubbles arrive in the browser's language, not the site's. The
-           Worker re-checks everything — this only saves a round trip. */
         const firstInvalid = () => {
             const name = form.elements.name.value.trim();
             const email = form.elements.email.value.trim();
@@ -140,9 +116,6 @@
             const bad = firstInvalid();
             if (bad) return showError(bad);
 
-            /* Turnstile tokens are single-use, so every failure below must reset
-               the widget or the next attempt is rejected for reusing a spent
-               one. */
             const token = form.elements['cf-turnstile-response']?.value ?? '';
             const reset = () => window.turnstile?.reset?.();
 
@@ -167,8 +140,6 @@
                 try { payload = await res.json(); } catch { /* leave null */ }
 
                 if (res.ok && payload?.ok) {
-                    /* The form goes away once it has done its job — an empty one
-                       under a success message invites a second send. */
                     form.hidden = true;
                     setStatus(d.msgSent, false);
                     return;
@@ -181,9 +152,6 @@
                 }
                 reset();
             } catch {
-                /* Offline, DNS, blocked extension — indistinguishable from here,
-                   and the visitor can act on only one thing: the channels above
-                   still work. */
                 setStatus(d.msgError, true);
                 reset();
             } finally {
