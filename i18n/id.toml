@@ -3,6 +3,9 @@
 # baseof.html
 skip_to_content = "Lewati ke konten"
 
+# hero.html
+view_cv = "Lihat CV"
+
 # header.html
 hire_me = "Rekrut saya"
 nav_main = "Navigasi utama"
@@ -19,6 +22,14 @@ nothing_published_here = "Belum ada konten yang diterbitkan di sini."
 empty_blogs = "Tulisan masih dalam proses penyusunan. Sementara itu, karya yang sudah ada dapat dilihat di <a href=\"{{ .url }}\" class=\"link-accent\">halaman proyek</a>."
 empty_other = "Tulisan sedang dipersiapkan. <a href=\"{{ .url }}\" class=\"link-accent\">Halaman utama</a> memuat pekerjaan yang telah diselesaikan sejauh ini."
 
+# bagian halaman utama
+see_more = "Lihat lainnya"
+
+# navigasi halaman list.html
+pagination = "Navigasi halaman"
+pagination_prev = "Sebelumnya"
+pagination_next = "Berikutnya"
+
 # contact/list.html — formulir pesan
 contact_form_title = "// Kirim Pesan"
 contact_form_body = "Langsung masuk ke kotak masuk saya. Semuanya saya baca."
@@ -32,18 +43,16 @@ contact_sent = "Terkirim. Saya akan membalas ke alamat tersebut."
 # Galat per kolom — server hanya mengembalikan nama kolom, bukan kalimat.
 contact_invalid_name = "Mohon isi nama Anda."
 contact_invalid_email = "Alamat email tersebut sepertinya keliru."
-contact_invalid_message = "Mohon tulis sedikit lebih panjang — minimal 10 karakter."
+contact_invalid_message = "Mohon tulis sedikit lebih panjang (minimal 10 karakter)."
 contact_error = "Pesan gagal dikirim. WhatsApp di atas adalah jalur tercepat."
 contact_rate_limited = "Sudah beberapa pesan dalam satu jam. Silakan gunakan WhatsApp di atas."
 contact_needs_js = "Formulir pesan memerlukan JavaScript. Kanal di atas tetap berfungsi tanpanya."
 
 # single.html
 min_read = "menit baca"
+view_project = "Lihat proyek"
 back_to = "Kembali ke {{ . }}"
 nav_section = "Bagian"
-comments = "// Komentar"
-comments_note = "Masuk dengan GitHub hanya diperlukan untuk berkomentar. Membaca tidak perlu apa pun."
-comments_needs_js = "Komentar memerlukan JavaScript. Semuanya juga tersimpan di tab GitHub Discussions repositori ini, yang tetap bisa dibuka tanpanya."
 
 # 404.html
 error_404_title = "// 404 Tidak Ditemukan"

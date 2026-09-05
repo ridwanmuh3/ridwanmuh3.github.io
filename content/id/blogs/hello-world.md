@@ -8,7 +8,7 @@ summary = 'Tulisan sementara, dibuat agar daftar blog dan halaman artikel sama-s
 ## Halo Dunia
 
 Halo dunia. Tulisan ini ada supaya `/blogs/` punya satu entri dan halaman ini
-punya isi — belum ada catatan sungguhan di sini.
+punya isi. Belum ada catatan sungguhan di sini.
 
 Tulisan ini juga memuat setiap elemen yang ditata `prose-article`, sehingga tata
 letak artikel bisa diperiksa tanpa menunggu tulisan pertama yang sebenarnya:

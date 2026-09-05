@@ -14,20 +14,31 @@
         "body" $body
         "content" .Content) }}
 
-    {{ with .Pages }}
+    {{ $paginator := .Paginate .Pages }}
+    {{ with $paginator.Pages }}
     <ul class="mt-8 space-y-4">
         {{ range . }}
+        {{ $item := . }}
         <li>
-            <a href="{{ .RelPermalink }}" class="row-raised block p-4 space-y-1">
-                <span class="type-title block text-ink text-balance">{{ .Title }}</span>
-                {{ if not .Date.IsZero }}
-                <time class="type-meta block" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date |
+            <a href="{{ $item.RelPermalink }}" class="row-raised block p-4 space-y-1">
+                {{ with $item.Params.photo }}
+                {{ with resources.Get (printf "images/projects/%s" .) }}
+                {{ $img := .Fill "640x400 webp q80 center" }}
+                <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
+                    alt="{{ $item.Title }}" loading="lazy"
+                    class="w-full rounded-lg border border-line-raised object-cover">
+                {{ end }}
+                {{ end }}
+                <span class="type-title block text-ink text-balance">{{ $item.Title }}</span>
+                {{ if not $item.Date.IsZero }}
+                <time class="type-meta block" datetime="{{ $item.Date.Format "2006-01-02" }}">{{ $item.Date |
                     time.Format ":date_medium" }}</time>
                 {{ end }}
             </a>
         </li>
         {{ end }}
     </ul>
+    {{ partial "components/pagination.html" $paginator }}
     {{ else }}
     <div class="mt-8 p-5 border border-dashed border-line-raised rounded-lg space-y-4">
         <p class="type-body measure">{{ i18n "nothing_published_here" }}</p>

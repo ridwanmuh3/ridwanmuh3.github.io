@@ -1,22 +1,19 @@
 +++
-date = '2026-08-02T22:32:12+07:00'
-draft = false
 title = 'Smart Secure QR'
-summary = 'QR code dengan dua tanda tangan, dari penerbit dan dari timelock. Setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.'
+date = '2026-02-01'
+draft = false
+description = 'Aplikasi web yang mengamankan QR code dan embedded document dengan tanda tangan digital ganda dan enkripsi berbasis waktu. Setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.'
+photo = 'smart-secure-qr.webp'
+link = 'https://smart-secure-qrcode.netlify.app'
 +++
 
-## Halo Dunia
+Dibangun sebagai proyek asisten riset di Universitas Siliwangi (Feb 2026 - Mar 2026), aplikasi web ini mengamankan QR code dan embedded document dari pemalsuan dan penyalahgunaan.
 
-Halo dunia. Halaman ini masih sementara, supaya kartu proyek di halaman utama
-menuju halaman yang ada, bukan ke 404.
+## Fungsinya
 
-Pekerjaannya sendiri nyata — QR code yang ditandatangani dua kali, oleh penerbit
-dan oleh timelock, sehingga setiap pemindaian memeriksa asal kode dan menolaknya
-setelah masa berlakunya habis. Tulisannya yang belum dibuat.
+- Menerbitkan QR code dan embedded document dengan **tanda tangan digital ganda** dan enkripsi berbasis waktu, sehingga setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.
+- Menyediakan **12 endpoint REST API** untuk alur penerbitan dan verifikasi, diimplementasikan dengan **Nuxt 4**.
 
-### Yang perlu ada di sini
+## Validasi
 
-- Masalah apa yang diselesaikan tanda tangan ganda, dan mengapa satu tanda
-  tangan tidak cukup.
-- Bagaimana timelock disusun, dan apa arti kedaluwarsa dalam praktiknya.
-- Apa yang dibangun dengan Go, dan apa yang disimpan skema PostgreSQL.
+Mekanisme keamanan diuji melalui benchmarking dan pengujian fungsional untuk memastikan perilakunya sesuai rancangan. Tanda tangan, penanganan kedaluwarsa, dan alur verifikasi divalidasi ujung ke ujung.

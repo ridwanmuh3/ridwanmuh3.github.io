@@ -1,13 +1,20 @@
 [[experience]]
 name = "Research Assistant"
 company = "Siliwangi University"
-duration = "Mar 2026 - Jun 2026"
-description = "Implemented the dual-signature scheme behind Smart Secure QR: an issuer signature combined with a timelock."
-keypoints = ["cryptography", "digital signature", "qr code", "timelock encryption"]
+duration = "Feb 2026 - Mar 2026"
+description = "Implemented a web-based research system securing QR codes and embedded documents, built with Nuxt 4 and exposing 12 REST API endpoints for document issuance and verification."
+keypoints = ["dual digital signature", "time-based encryption", "QR code", "embedded document", "REST API"]
 
 [[experience]]
 name = "Full Stack Web Developer"
 company = "SPPG Sinar Asri"
 duration = "Dec 2025 - Mar 2026"
-description = "Built the dashboard used by the kitchen team to track food stock and finances."
-keypoints = ["frontend", "backend"]
+description = "Built a budget and goods management system for the kitchen operations of the SPPG MBG program with a Go, Fiber, GORM, and PostgreSQL backend, 35 REST API endpoints, and role-based access control."
+keypoints = ["Go", "Fiber", "GORM", "PostgreSQL", "role-based access control", "row-level locking", "React", "TanStack Query"]
+
+[[experience]]
+name = "Backend Developer Intern"
+company = "Kantor Pertanahan Kabupaten Pangandaran"
+duration = "Jun 2025 - Aug 2025"
+description = "Built the REST API backend for an archive system with JWT authentication, role-based access control, file search, archive request submission and tracking, and history management using Go, Echo, GORM, and PostgreSQL."
+keypoints = ["Go", "Echo", "GORM", "PostgreSQL", "JWT", "layered architecture", "UML"]

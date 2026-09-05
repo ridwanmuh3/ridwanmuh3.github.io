@@ -1,11 +1,17 @@
 [hero]
-tagline = "Riset kriptografi terapan dan perangkat lunak produksi, keduanya dalam penggunaan aktif."
+tagline = "Lulusan Informatika berfokus backend yang membangun REST API dan aplikasi full-stack, dengan pengalaman riset kriptografi terapan."
 
 [skills]
 title = "// Keahlian"
 
 [projects]
 title = "// Proyek"
+
+[blogs]
+title = "// Blog"
+
+[education]
+title = "// Pendidikan"
 
 [experiences]
 title = "// Pengalaman Kerja"

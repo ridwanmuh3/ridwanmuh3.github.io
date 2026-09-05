@@ -1,0 +1,6 @@
+{{ $d := index hugo.Data site.Language.Lang }}
+{{ $s := $d.sections.education }}
+{{ partial "components/timeline.html" (dict
+    "title" ($s.title | default "// Education")
+    "body" $s.body
+    "items" $d.education.education) }}

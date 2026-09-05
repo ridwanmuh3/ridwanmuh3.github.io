@@ -9,6 +9,9 @@ disableLanguages = ['id']
 enableRobotsTXT = true
 # Empty until content uses them.
 disableKinds = ['taxonomy', 'term']
+[pagination]
+pagersize = 5
+path = 'page'
 
 [params]
 author = "ridwanmuh3"
@@ -20,12 +23,6 @@ role = "Backend Developer"
 endpoint = "https://portfolio-contact.ridwanmuh3.workers.dev"
 turnstileSiteKey = "0x4AAAAAAEK5YpgnLFRwX4pR"
 
-# giscus IDs are GraphQL node IDs, not the names beside them. Empty repoId = no comments.
-[params.giscus]
-repo = "ridwanmuh3/portfolio"
-repoId = "R_kgDOTzB6UA"
-category = "Announcements"
-categoryId = "DIC_kwDOTzB6UM4DC_N4"
 
 [languages]
 [languages.en]
@@ -33,14 +30,19 @@ locale = 'en-US'
 label = 'English'
 weight = 1
 contentDir = 'content/en'
-title = 'Ridwan portfolio site'
+title = 'Ridwan - Backend Developer'
 [languages.en.params]
-bio = "Backend engineer working with Go, PostgreSQL, and Redis on Linux and Google Cloud."
+bio = "Informatics graduate building REST APIs and full-stack applications, with research experience in applied cryptography."
 [languages.en.menus]
 [[languages.en.menus.main]]
 name = 'Projects'
 pageRef = '/projects'
 weight = 10
+
+[[languages.en.menus.main]]
+name = 'Blogs'
+pageRef = '/blogs'
+weight = 20
 
 [[languages.en.menus.main]]
 name = 'Contact'
@@ -54,12 +56,17 @@ weight = 2
 contentDir = 'content/id'
 title = 'Situs portofolio Ridwan'
 [languages.id.params]
-bio = "Backend engineer dengan Go, PostgreSQL, dan Redis pada Linux dan Google Cloud."
+bio = "Lulusan Informatika yang membangun REST API dan aplikasi full-stack, dengan pengalaman riset kriptografi terapan."
 [languages.id.menus]
 [[languages.id.menus.main]]
 name = 'Proyek'
 pageRef = '/projects'
 weight = 10
+
+[[languages.id.menus.main]]
+name = 'Blog'
+pageRef = '/blogs'
+weight = 20
 
 [[languages.id.menus.main]]
 name = 'Kontak'

@@ -3,27 +3,36 @@
 <article>
     <header class="space-y-4 pb-8 border-b border-line">
         <h1 class="type-display text-accent text-balance">{{ .Title }}</h1>
-        {{ with .Params.summary }}
-        <p class="type-body measure">{{ . }}</p>
-        {{ end }}
         <p class="type-meta">
             {{ if not .Date.IsZero }}
             <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_medium" }}</time>
             {{ end }}
-            {{ if and (not .Date.IsZero) .ReadingTime }}<span aria-hidden="true"> &middot; </span>{{ end }}
-            {{ with .ReadingTime }}{{ . }} {{ i18n "min_read" }}{{ end }}
+            {{ with .Params.link }}
+            {{ if hasPrefix . "http" }}
+            <span aria-hidden="true"> &middot; </span>
+            <a href="{{ . }}" target="_blank" rel="noopener" class="link-accent">{{ i18n "view_project" }}</a>
+            {{ end }}
+            {{ end }}
+            {{ if and (not .Params.link) .ReadingTime }}<span aria-hidden="true"> &middot; </span>{{ end }}
+            {{ if and (not .Params.link) .ReadingTime }}<span>{{ .ReadingTime }} {{ i18n "min_read" }}</span>{{ end }}
         </p>
+        {{ with .Params.photo }}
+        {{ with resources.Get (printf "images/projects/%s" .) }}
+        {{ $img := .Fill "1200x630 webp q80 center" }}
+        <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
+            alt="{{ $.Title }} screenshot" class="w-full rounded-lg border border-line-raised object-cover">
+        {{ end }}
+        {{ end }}
+        {{ with or .Params.description .Summary }}
+        <p class="type-body measure">{{ . }}</p>
+        {{ end }}
     </header>
 
     <div class="prose-article mt-8 measure">
         {{ .Content }}
     </div>
-
 </article>
 
-{{ if and (eq .Section "blogs") (ne .Params.comments false) }}
-{{ partial "components/comments.html" . }}
-{{ end }}
 
 {{ with .Parent }}
 <nav class="mt-8 pt-8 border-t border-line" aria-label="{{ i18n "nav_section" }}">

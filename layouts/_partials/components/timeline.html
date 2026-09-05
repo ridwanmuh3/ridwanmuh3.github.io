@@ -1,0 +1,36 @@
+{{ $title := .title | default "// Timeline" }}
+{{ $body := .body | default "" }}
+{{ $items := .items }}
+{{ with $items }}
+<section class="flow">
+    {{ partial "components/section-head.html" (dict
+    "title" $title
+    "body" $body) }}
+    <ol class="timeline mt-8 space-y-8">
+        {{ range . }}
+        {{ $e := . }}
+        {{ with .name }}
+        <li class="relative pl-8">
+            <span class="timeline-dot"></span>
+            <div class="space-y-1">
+                <h3 class="type-title text-ink text-balance">{{ $e.name }}</h3>
+                {{ with delimit (slice $e.company $e.duration | complement (slice "" nil)) " · " }}
+                <p class="type-meta">{{ . }}</p>
+                {{ end }}
+            </div>
+            {{ with $e.description }}
+            <p class="type-body mt-4 measure">{{ . }}</p>
+            {{ end }}
+            {{ with $e.keypoints }}
+            <ul class="mt-4 flex gap-2 flex-wrap">
+                {{ range . }}
+                {{ partial "components/pill.html" . }}
+                {{ end }}
+            </ul>
+            {{ end }}
+        </li>
+        {{ end }}
+        {{ end }}
+    </ol>
+</section>
+{{ end }}

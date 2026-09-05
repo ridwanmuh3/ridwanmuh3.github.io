@@ -1,6 +1,6 @@
 +++
 date = '2026-08-02T15:38:49+07:00'
-draft = true
+draft = false
 title = 'Hello World'
 summary = 'A placeholder post, kept so the blog list and the article page both have something real to render.'
 +++
@@ -8,7 +8,7 @@ summary = 'A placeholder post, kept so the blog list and the article page both h
 ## Hello World
 
 Hello world. This post exists so the `/blogs/` list has an entry and this page
-has a body — nothing here is a real write-up yet.
+has a body. Nothing here is a real write-up yet.
 
 It also stands in for every element `prose-article` styles, so the article
 layout can be checked without waiting for the first real post:

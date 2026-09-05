@@ -77,6 +77,14 @@
     letter-spacing: -0.01em;
 }
 
+@utility type-subtitle {
+    font-family: var(--font-header);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
 @utility type-body {
     font-family: var(--font-body);
     font-size: 1rem;
@@ -152,7 +160,7 @@
 }
 
 @utility hero-gap {
-    margin-block: clamp(1.5rem, 4vh, 4rem) 0;
+    margin-block: clamp(2.5rem, 7vh, 5rem) 0;
 }
 
 html {
@@ -372,6 +380,17 @@ h1, h2, h3, h4, h5, p, li, a {
 
 .hero-stage > *:nth-child(3) {
     animation-delay: 160ms;
+}
+
+.hero-stage > *:nth-child(4) {
+    animation-delay: 240ms;
+}
+
+.hero-avatar {
+    box-shadow:
+        0 0 0 1px color-mix(in oklch, var(--color-accent) 65%, transparent),
+        0 0 0 4px var(--color-page),
+        0 10px 36px -14px rgb(0 0 0 / 0.75);
 }
 
 @keyframes arrive {

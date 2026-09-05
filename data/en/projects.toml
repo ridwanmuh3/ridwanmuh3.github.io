@@ -1,14 +1,27 @@
 [[project]]
 name = "Smart Secure QR"
-skills = ["Go", "Cryptography", "PostgreSQL"]
-duration = "Mar 2026 - Jun 2026"
-description = "QR codes carrying two signatures, one from the issuer and one from a timelock. Each scan verifies where the code originated and rejects it once its validity period has passed."
-url = "/projects/smart-secure-qr/"
+skills = ["Nuxt", "Cryptography", "REST API"]
+duration = "Feb 2026 - Mar 2026"
+description = "Web application securing QR codes and embedded documents with dual digital signatures and time-based encryption. Each scan verifies where the code originated and rejects it once its validity period has passed."
 type = "Research"
+photo = "smart-secure-qr.webp"
+url = "/projects/smart-secure-qr/"
+link = "https://smart-secure-qrcode.netlify.app"
 
 [[project]]
 name = "Inventory Dashboard"
-skills = ["NodeJS", "PostgreSQL", "Redis"]
+skills = ["Go", "Fiber", "PostgreSQL", "React", "TypeScript", "TanStack Query"]
 duration = "Dec 2025 - Mar 2026"
-description = "Inventory and finance dashboard for a catering kitchen. Records ingredient stock and meals prepared alongside the daily expenditure they account for."
+description = "Budget and goods management system for a catering kitchen with 35 REST API endpoints, role-based access control, finance and raw-material inventory modules protected by row-level locking, and analytics dashboards."
 type = "Product"
+photo = "inventory-dashboard.webp"
+url = "/projects/inventory-dashboard/"
+link = "https://github.com/ridwanmuh3?tab=repositories&q=simba"
+
+[[project]]
+name = "ECDSA + ML-DSA on Blockchain"
+duration = "Jun 2026"
+description = "Journal article in ULTIMATICS (SINTA 3) presenting a hybrid ECDSA and ML-DSA signature scheme for transaction authentication on an Ethereum-compatible blockchain, with an oracle as off-chain helper and security tests rejecting forgery, replay, and stripping."
+type = "Publication"
+url = "/projects/ecdsa-ml-dsa/"
+link = "https://github.com/ridwanmuh3/hybrid-signature-eth-poc"

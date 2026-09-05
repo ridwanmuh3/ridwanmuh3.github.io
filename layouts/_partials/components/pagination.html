@@ -1,0 +1,18 @@
+{{ $pag := . }}
+{{ if gt $pag.TotalPages 1 }}
+<nav class="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label="{{ i18n "pagination" }}">
+    {{ with $pag.HasPrev }}
+    <a class="type-meta link-accent" href="{{ $pag.Prev.URL }}" rel="prev">{{ i18n "pagination_prev" }}</a>
+    {{ end }}
+    {{ range $pag.Pagers }}
+    {{ if eq .PageNumber $pag.PageNumber }}
+    <span class="btn-accent px-3 py-2" aria-current="page">{{ .PageNumber }}</span>
+    {{ else }}
+    <a class="row-raised type-meta px-3 py-2 text-ink" href="{{ .URL }}">{{ .PageNumber }}</a>
+    {{ end }}
+    {{ end }}
+    {{ with $pag.HasNext }}
+    <a class="type-meta link-accent" href="{{ $pag.Next.URL }}" rel="next">{{ i18n "pagination_next" }}</a>
+    {{ end }}
+</nav>
+{{ end }}

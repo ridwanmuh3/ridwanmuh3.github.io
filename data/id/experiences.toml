@@ -1,13 +1,20 @@
 [[experience]]
 name = "Asisten Peneliti"
 company = "Universitas Siliwangi"
-duration = "Mar 2026 - Jun 2026"
-description = "Mengimplementasikan skema tanda tangan ganda pada Smart Secure QR: tanda tangan penerbit yang dipadukan dengan timelock."
-keypoints = ["kriptografi", "tanda tangan digital", "qr code", "enkripsi timelock"]
+duration = "Feb 2026 - Mar 2026"
+description = "Mengimplementasikan arsitektur sistem penelitian dosen berbasis aplikasi web menggunakan Nuxt 4 untuk mengamankan QR code dan embedded document, mencakup 12 endpoint REST API untuk proses penerbitan dan verifikasi dokumen."
+keypoints = ["tanda tangan digital ganda", "enkripsi berbasis waktu", "qr code", "embedded document", "REST API"]
 
 [[experience]]
-name = "Pengembang Web Full Stack"
+name = "Fullstack Web Developer"
 company = "SPPG Sinar Asri"
 duration = "Des 2025 - Mar 2026"
-description = "Membangun dasbor yang digunakan tim dapur untuk melacak stok bahan makanan dan keuangan."
-keypoints = ["frontend", "backend"]
+description = "Membangun sistem manajemen anggaran dan barang untuk operasional dapur SPPG Program MBG dengan backend Go, Fiber, GORM, dan PostgreSQL, 35 endpoint REST API, dan autentikasi role-based access control."
+keypoints = ["Go", "Fiber", "GORM", "PostgreSQL", "role-based access control", "row-level locking", "React", "TanStack Query"]
+
+[[experience]]
+name = "Backend Developer Intern"
+company = "Kantor Pertanahan Kabupaten Pangandaran"
+duration = "Jun 2025 - Agu 2025"
+description = "Mengembangkan layanan backend REST API untuk sistem pengarsipan dengan autentikasi JWT, role-based access control, pencarian berkas, pengajuan dan pelacakan permintaan arsip, serta manajemen riwayat menggunakan Go, Echo, GORM, dan PostgreSQL."
+keypoints = ["Go", "Echo", "GORM", "PostgreSQL", "JWT", "arsitektur berlapis", "UML"]

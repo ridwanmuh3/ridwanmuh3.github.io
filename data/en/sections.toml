@@ -1,11 +1,17 @@
 [hero]
-tagline = "Applied cryptography research and production software, both in active use."
+tagline = "Backend-focused informatics graduate building REST APIs and full-stack applications, with research experience in applied cryptography."
 
 [skills]
 title = "// Skills"
 
 [projects]
 title = "// Projects"
+
+[blogs]
+title = "// Blogs"
+
+[education]
+title = "// Education"
 
 [experiences]
 title = "// Experience"

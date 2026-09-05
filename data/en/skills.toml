@@ -3,11 +3,7 @@ name = "Go"
 slug = "go"
 
 [[skill]]
-name = "Fiber"
-slug = "fiber"
-
-[[skill]]
-name = "NodeJS"
+name = "Node.js"
 slug = "nodejs"
 
 [[skill]]
@@ -15,15 +11,23 @@ name = "PostgreSQL"
 slug = "postgresql"
 
 [[skill]]
+name = "Docker"
+slug = "docker"
+
+[[skill]]
 name = "Redis"
 slug = "redis"
+
+[[skill]]
+name = "Linux"
+slug = "linux"
 
 [[skill]]
 name = "Git"
 slug = "git"
 
 [[skill]]
-name = "Github"
+name = "GitHub"
 slug = "brand-github"
 
 [[skill]]
@@ -31,8 +35,8 @@ name = "Google Cloud Platform"
 slug = "googlecloud"
 
 [[skill]]
-name = "Linux"
-slug = "linux"
+name = "Fiber"
+slug = "fiber"
 
 [[skill]]
 name = "Postman"
