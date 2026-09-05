@@ -1,5 +1,5 @@
 [hero]
-tagline = "Lulusan Informatika berfokus backend yang membangun REST API dan aplikasi full-stack, dengan pengalaman riset kriptografi terapan."
+tagline = "Lulusan Informatika yang berfokus pada backend dan membangun REST API serta aplikasi full-stack, dengan pengalaman riset kriptografi terapan."
 
 [skills]
 title = "// Keahlian"
@@ -18,7 +18,7 @@ title = "// Pengalaman Kerja"
 
 [cta]
 title = "// Mari Bekerja Sama"
-body = "Saya sedang mencari peran backend penuh waktu di Indonesia."
+body = "Saya terbuka untuk peran backend penuh waktu maupun kontrak — hybrid, remote, atau onsite di Indonesia."
 cta_label = "Hubungi saya"
 cta_href = "/contact/"
 
@@ -27,11 +27,11 @@ cta_href = "/contact/"
 
 [pages.projects]
 title = "Proyek"
-body = "Tulisan mengenai proyek, terbaru lebih dahulu."
+body = "Tulisan mengenai proyek, terbaru terlebih dahulu."
 
 [pages.blogs]
 title = "Blog"
-body = "Catatan seputar rekayasa backend: permasalahan yang saya temui, keputusan yang perlu saya tinjau ulang, dan kesimpulan yang layak dicatat."
+body = "Catatan seputar rekayasa backend: permasalahan yang saya temui, keputusan yang harus saya tinjau ulang, dan kesimpulan yang layak dicatat."
 
 [pages.contact]
 title = "Kontak"

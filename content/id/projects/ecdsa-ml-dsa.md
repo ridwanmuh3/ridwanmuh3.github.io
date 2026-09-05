@@ -2,7 +2,7 @@
 title = 'ECDSA + ML-DSA di Blockchain'
 date = '2026-06-01'
 draft = false
-description = 'Artikel jurnal (SINTA 3) di ULTIMATICS yang menyajikan skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain Ethereum-compatible, dengan oracle sebagai off-chain helper dan uji keamanan yang menolak pemalsuan, replay, dan stripping.'
+description = 'Artikel jurnal (SINTA 3) di ULTIMATICS yang menyajikan skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum, dengan oracle sebagai off-chain helper dan uji keamanan yang menolak pemalsuan, replay, dan stripping.'
 link = 'https://github.com/ridwanmuh3/hybrid-signature-eth-poc'
 +++
 
@@ -10,7 +10,7 @@ Artikel jurnal peer-reviewed yang diterbitkan di **ULTIMATICS: Jurnal Teknik Inf
 
 ## Isi artikel
 
-Menyajikan proof-of-concept skema tanda tangan hibrida **ECDSA + ML-DSA** untuk autentikasi transaksi pada blockchain Ethereum-compatible, menggunakan oracle sebagai off-chain helper.
+Menyajikan proof-of-concept skema tanda tangan hibrida **ECDSA + ML-DSA** untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum, menggunakan oracle sebagai off-chain helper.
 
 ## Hasil
 

@@ -1,8 +1,8 @@
 +++
-title = 'Dasbor Inventori'
+title = 'Inventory Dashboard'
 date = '2025-12-01'
 draft = false
-description = 'Sistem manajemen anggaran dan barang untuk dapur katering dengan 35 endpoint REST API, role-based access control, modul keuangan dan inventaris bahan baku berlapis row-level locking, serta dasbor analitik.'
+description = 'Sistem manajemen anggaran dan barang untuk dapur katering dengan 35 endpoint REST API, role-based access control, modul keuangan dan inventaris bahan baku yang dilindungi row-level locking, serta dasbor analitik.'
 photo = 'inventory-dashboard.webp'
 link = 'https://github.com/ridwanmuh3?tab=repositories&q=simba'
 +++

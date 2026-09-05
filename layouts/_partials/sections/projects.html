@@ -16,7 +16,7 @@
             {{ $img := .Fill "800x400 webp q80 center" }}
             <a href="{{ if hasPrefix $p.url "http" }}{{ $p.url }}{{ else }}{{ $p.url | strings.TrimPrefix "/" | relURL }}{{ end }}" tabindex="-1" aria-hidden="true" {{ if hasPrefix $p.url "http" }}rel="noopener" {{ end }}>
                 <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
-                    alt="{{ $p.name }} screenshot" loading="lazy"
+                    alt="{{ i18n "project_screenshot" $p.name }}" loading="lazy"
                     class="mb-5 w-full rounded-lg border border-line-raised object-cover">
             </a>
             {{ end }}

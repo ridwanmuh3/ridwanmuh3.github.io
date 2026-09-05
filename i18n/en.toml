@@ -54,6 +54,9 @@ view_project = "View project"
 back_to = "Back to {{ . }}"
 nav_section = "Section"
 
+# Project images (projects.html, single.html)
+project_screenshot = "Screenshot of {{ . }}"
+
 # 404.html
 error_404_title = "// 404 Not Found"
 error_404_body = "This page has been moved or never existed. Nothing is at fault on your end."

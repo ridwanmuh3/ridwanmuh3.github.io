@@ -9,10 +9,10 @@ url = "/projects/smart-secure-qr/"
 link = "https://smart-secure-qrcode.netlify.app"
 
 [[project]]
-name = "Dasbor Inventori"
+name = "Inventory Dashboard"
 skills = ["Go", "Fiber", "PostgreSQL", "React", "TypeScript", "TanStack Query"]
 duration = "Des 2025 - Mar 2026"
-description = "Sistem manajemen anggaran dan barang untuk dapur katering dengan 35 endpoint REST API, role-based access control, modul keuangan dan inventaris bahan baku berlapis row-level locking, serta dasbor analitik."
+description = "Sistem manajemen anggaran dan barang untuk dapur katering dengan 35 endpoint REST API, role-based access control, modul keuangan dan inventaris bahan baku yang dilindungi row-level locking, serta dasbor analitik."
 type = "Produk"
 photo = "inventory-dashboard.webp"
 url = "/projects/inventory-dashboard/"
@@ -21,7 +21,7 @@ link = "https://github.com/ridwanmuh3?tab=repositories&q=simba"
 [[project]]
 name = "ECDSA + ML-DSA di Blockchain"
 duration = "Jun 2026"
-description = "Artikel jurnal (SINTA 3) di ULTIMATICS yang menyajikan skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain Ethereum-compatible, dengan oracle sebagai off-chain helper dan uji keamanan yang menolak pemalsuan, replay, dan stripping."
+description = "Artikel jurnal (SINTA 3) di ULTIMATICS yang menyajikan skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum, dengan oracle sebagai off-chain helper dan uji keamanan yang menolak pemalsuan, replay, dan stripping."
 type = "Publikasi"
 url = "/projects/ecdsa-ml-dsa/"
 link = "https://github.com/ridwanmuh3/hybrid-signature-eth-poc"

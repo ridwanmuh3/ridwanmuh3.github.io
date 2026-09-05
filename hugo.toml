@@ -3,9 +3,8 @@ defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = false
 title = 'Ridwan portfolio site'
 
-# Indonesian is kept in full but not built; delete this line to re-enable it.
-# Must stay above the first [table] header, or TOML reads it as a key of that table.
-disableLanguages = ['id']
+# disableLanguages = ['id'] re-hides Indonesian if ever needed again; if so,
+# keep it above the first [table] header, or TOML reads it as a key of that table.
 enableRobotsTXT = true
 # Empty until content uses them.
 disableKinds = ['taxonomy', 'term']

@@ -2,14 +2,14 @@
 name = "Asisten Peneliti"
 company = "Universitas Siliwangi"
 duration = "Feb 2026 - Mar 2026"
-description = "Mengimplementasikan arsitektur sistem penelitian dosen berbasis aplikasi web menggunakan Nuxt 4 untuk mengamankan QR code dan embedded document, mencakup 12 endpoint REST API untuk proses penerbitan dan verifikasi dokumen."
-keypoints = ["tanda tangan digital ganda", "enkripsi berbasis waktu", "qr code", "embedded document", "REST API"]
+description = "Mengimplementasikan sistem penelitian berbasis web yang mengamankan QR code dan embedded document menggunakan Nuxt 4, dengan 12 endpoint REST API untuk proses penerbitan dan verifikasi dokumen."
+keypoints = ["tanda tangan digital ganda", "enkripsi berbasis waktu", "QR code", "embedded document", "REST API"]
 
 [[experience]]
-name = "Fullstack Web Developer"
+name = "Full Stack Web Developer"
 company = "SPPG Sinar Asri"
 duration = "Des 2025 - Mar 2026"
-description = "Membangun sistem manajemen anggaran dan barang untuk operasional dapur SPPG Program MBG dengan backend Go, Fiber, GORM, dan PostgreSQL, 35 endpoint REST API, dan autentikasi role-based access control."
+description = "Membangun sistem manajemen anggaran dan barang untuk operasional dapur program SPPG MBG dengan backend Go, Fiber, GORM, dan PostgreSQL, 35 endpoint REST API, serta role-based access control."
 keypoints = ["Go", "Fiber", "GORM", "PostgreSQL", "role-based access control", "row-level locking", "React", "TanStack Query"]
 
 [[experience]]

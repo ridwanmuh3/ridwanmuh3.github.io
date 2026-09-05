@@ -20,7 +20,7 @@
         {{ with resources.Get (printf "images/projects/%s" .) }}
         {{ $img := .Fill "1200x630 webp q80 center" }}
         <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
-            alt="{{ $.Title }} screenshot" class="w-full rounded-lg border border-line-raised object-cover">
+            alt="{{ i18n "project_screenshot" $.Title }}" class="w-full rounded-lg border border-line-raised object-cover">
         {{ end }}
         {{ end }}
         {{ with or .Params.description .Summary }}
