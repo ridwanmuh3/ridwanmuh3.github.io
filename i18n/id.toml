@@ -57,6 +57,15 @@ nav_section = "Bagian"
 # Gambar proyek (projects.html, single.html)
 project_screenshot = "Tangkapan layar {{ . }}"
 
+# Penampil tangkapan layar (components/lightbox.html)
+image_enlarge = "Ketuk untuk memperbesar: {{ . }}"
+image_viewer = "Penampil tangkapan layar"
+image_close = "Tutup penampil"
+image_zoom = "Perbesar"
+image_zoom_in = "Perbesar"
+image_zoom_out = "Perkecil"
+image_fit = "Pas"
+
 # 404.html
 error_404_title = "// 404 Tidak Ditemukan"
 error_404_body = "Halaman ini mungkin telah dipindahkan atau memang tidak pernah ada. Ini bukan kesalahan Anda."

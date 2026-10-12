@@ -11,7 +11,9 @@ Built as a research assistant project at Universitas Siliwangi (Feb 2026 - Mar 2
 
 ## What it does
 
-- Issues QR codes and embedded documents with a **dual digital signature** and time-based encryption, so each scan verifies where the code originated and rejects it once its validity period has passed.
+Documents leave the system carrying a **dual digital signature** and an expiry the server enforces, so the three things a scan has to establish — integrity, authentication, and temporal validity — are all settled before the document behind the code is trusted.
+
+- Issues QR codes and embedded documents with the dual signature and time-based encryption, so each scan verifies where the code originated and rejects it once its validity period has passed.
 - Exposes **12 REST API endpoints** covering the issuance and verification flow, implemented with **Nuxt 4**.
 
 ## Validation

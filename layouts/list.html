@@ -19,17 +19,20 @@
     <ul class="mt-8 space-y-4">
         {{ range . }}
         {{ $item := . }}
-        <li>
-            <a href="{{ $item.RelPermalink }}" class="row-raised block p-4 space-y-1">
-                {{ with $item.Params.photo }}
-                {{ with resources.Get (printf "images/projects/%s" .) }}
-                {{ $img := .Fill "640x400 webp q80 center" }}
-                <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
-                    alt="{{ $item.Title }}" loading="lazy"
-                    class="w-full rounded-lg border border-line-raised object-cover">
-                {{ end }}
-                {{ end }}
-                <span class="type-title block text-ink text-balance">{{ $item.Title }}</span>
+        <li class="row-raised block overflow-hidden">
+            {{ with $item.Params.photo }}
+            {{ partial "components/project-shot.html" (dict
+                "photo" .
+                "alt" (i18n "project_screenshot" $item.Title)
+                "caption" $item.Title
+                "fill" "640x400 webp q80 center"
+                "fill2x" "1280x800 webp q80 center"
+                "sizes" "(min-width: 672px) 640px, 100vw"
+                "frame" false) }}
+            {{ end }}
+            <a href="{{ $item.RelPermalink }}" class="group block p-4 space-y-1">
+                <span class="type-title block text-ink text-balance transition-colors group-hover:text-accent">{{
+                    $item.Title }}</span>
                 {{ if not $item.Date.IsZero }}
                 <time class="type-meta block" datetime="{{ $item.Date.Format "2006-01-02" }}">{{ $item.Date |
                     time.Format ":date_medium" }}</time>

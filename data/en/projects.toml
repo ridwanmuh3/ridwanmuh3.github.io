@@ -9,19 +9,30 @@ url = "/projects/smart-secure-qr/"
 link = "https://smart-secure-qrcode.netlify.app"
 
 [[project]]
+name = "Post-Quantum FN-DSA JWT"
+skills = ["Golang", "Fiber", "gRPC", "Post-Quantum Cryptography", "PostgreSQL", "k6"]
+duration = "Feb 2026 - Jul 2026"
+description = "Post-quantum authentication for a Go microservices task API: FN-DSA-512 JWT signing benchmarked with k6. Precomputation cut issuance latency 24.5%, but under stress both methods matched and cryptography stayed below 0.3% of total latency."
+type = "Project"
+url = "/projects/fndsa-jwt/"
+link = "https://github.com/ridwanmuh3/tasktify"
+
+[[project]]
 name = "Inventory Dashboard"
 skills = ["Go", "Fiber", "PostgreSQL", "React", "TypeScript", "TanStack Query"]
 duration = "Dec 2025 - Mar 2026"
-description = "Budget and goods management system for a catering kitchen with 35 REST API endpoints, role-based access control, finance and raw-material inventory modules protected by row-level locking, and analytics dashboards."
+description = "Multi-tenant budget and goods management system for a catering kitchen, with 35 REST API endpoints, role-based access control, row-level locking on the finance and raw-material inventory modules, and analytics dashboards."
 type = "Product"
-photo = "inventory-dashboard.webp"
+photo = "sppg-app.webp"
 url = "/projects/inventory-dashboard/"
 link = "https://github.com/ridwanmuh3?tab=repositories&q=simba"
 
 [[project]]
 name = "ECDSA + ML-DSA on Blockchain"
-duration = "Jun 2026"
-description = "Journal article in ULTIMATICS (SINTA 3) presenting a hybrid ECDSA and ML-DSA signature scheme for transaction authentication on an Ethereum-compatible blockchain, with an oracle as off-chain helper and security tests rejecting forgery, replay, and stripping."
+skills = ["Solidity", "Golang", "React", "Foundry", "Viem", "MetaMask"]
+duration = "Dec 2025 - Jun 2026"
+description = "Journal article in ULTIMATICS (SINTA 3) and the proof of concept behind it: a hybrid ECDSA and ML-DSA signature scheme for transaction authentication on an Ethereum-compatible blockchain, with post-quantum signing handled off-chain by an oracle."
 type = "Publication"
+photo = "pqc-blockchain.webp"
 url = "/projects/ecdsa-ml-dsa/"
 link = "https://github.com/ridwanmuh3/hybrid-signature-eth-poc"

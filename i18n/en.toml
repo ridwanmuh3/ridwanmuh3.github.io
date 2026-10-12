@@ -57,6 +57,15 @@ nav_section = "Section"
 # Project images (projects.html, single.html)
 project_screenshot = "Screenshot of {{ . }}"
 
+# Screenshot viewer (components/lightbox.html)
+image_enlarge = "Tap to enlarge: {{ . }}"
+image_viewer = "Screenshot viewer"
+image_close = "Close viewer"
+image_zoom = "Zoom"
+image_zoom_in = "Zoom in"
+image_zoom_out = "Zoom out"
+image_fit = "Fit"
+
 # 404.html
 error_404_title = "// 404 Not Found"
 error_404_body = "This page has been moved or never existed. Nothing is at fault on your end."

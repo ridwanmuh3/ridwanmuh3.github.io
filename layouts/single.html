@@ -17,11 +17,14 @@
             {{ if and (not .Params.link) .ReadingTime }}<span>{{ .ReadingTime }} {{ i18n "min_read" }}</span>{{ end }}
         </p>
         {{ with .Params.photo }}
-        {{ with resources.Get (printf "images/projects/%s" .) }}
-        {{ $img := .Fill "1200x630 webp q80 center" }}
-        <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
-            alt="{{ i18n "project_screenshot" $.Title }}" class="w-full rounded-lg border border-line-raised object-cover">
-        {{ end }}
+        {{ partial "components/project-shot.html" (dict
+            "photo" .
+            "alt" (i18n "project_screenshot" $.Title)
+            "caption" $.Title
+            "fill" "1200x750 webp q80 center"
+            "fill2x" "1600x1000 webp q80 center"
+            "sizes" "(min-width: 672px) 672px, 100vw"
+            "priority" true) }}
         {{ end }}
         {{ with or .Params.description .Summary }}
         <p class="type-body measure">{{ . }}</p>

@@ -37,7 +37,7 @@
     <meta property="og:url" content="{{ .Permalink }}">
     <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
     <meta property="og:locale" content="{{ site.Language.Locale | default " en_US" }}">
-    {{ with resources.Get "images/ridwan.webp" }}
+    {{ with resources.Get "images/ridwan-avatar.webp" }}
     {{ $img := .Fill "1200x630 webp q80 center" }}
     <meta property="og:image" content="{{ $img.Permalink }}">
     <meta property="og:image:width" content="{{ $img.Width }}">
@@ -49,7 +49,7 @@
     <meta name="twitter:title"
         content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
     <meta name="twitter:description" content="{{ $desc | plainify | truncate 200 }}">
-    {{ with resources.Get "images/ridwan.webp" }}
+    {{ with resources.Get "images/ridwan-avatar.webp" }}
     {{ $img := .Fill "1200x630 webp q80 center" }}
     <meta name="twitter:image" content="{{ $img.Permalink }}">
     {{ end }}
@@ -136,6 +136,10 @@
         {{ block "main" . }}{{ end }}
     </main>
     {{ partial "components/footer.html" . }}
+    {{/* Screenshot viewer: needed only where project images are rendered. */}}
+    {{ if or .IsHome (eq .Section "projects") }}
+    {{ partial "components/lightbox.html" . }}
+    {{ end }}
     <script>
         (() => {
             const nav = document.querySelector('.site-nav');

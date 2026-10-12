@@ -11,7 +11,9 @@ Dibangun sebagai proyek asisten riset di Universitas Siliwangi (Feb 2026 - Mar 2
 
 ## Fungsinya
 
-- Menerbitkan QR code dan embedded document dengan **tanda tangan digital ganda** dan enkripsi berbasis waktu, sehingga setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.
+Dokumen keluar dari sistem dengan **tanda tangan digital ganda** dan masa berlaku yang ditegakkan server, sehingga tiga hal yang harus dipastikan setiap pemindaian — integritas, autentikasi, dan validitas temporal — semuanya selesai sebelum dokumen di balik kode itu dipercaya.
+
+- Menerbitkan QR code dan embedded document dengan tanda tangan ganda dan enkripsi berbasis waktu, sehingga setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis.
 - Menyediakan **12 endpoint REST API** untuk alur penerbitan dan verifikasi, diimplementasikan dengan **Nuxt 4**.
 
 ## Validasi

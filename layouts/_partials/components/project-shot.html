@@ -1,0 +1,39 @@
+{{/* Project screenshot as a lightbox trigger.
+
+     Params: photo (file name), alt (string), caption (string),
+             fill / fill2x (Hugo fill specs for the 1x and 2x card crops),
+             sizes, priority, frame.
+
+     The card shows a cropped preview; the dialog gets the uncropped, width-bounded
+     original so tapping it reveals the whole screen. Every screen is cropped to the
+     same ratio so the cards stay a uniform height. */}}
+{{ $photo := .photo }}
+{{ $alt := .alt }}
+{{ $caption := .caption | default .alt }}
+{{ $fill := .fill | default "800x450 webp q80 center" }}
+{{ $fill2x := .fill2x | default "1600x900 webp q80 center" }}
+{{ $sizes := .sizes | default "(min-width: 672px) 672px, 100vw" }}
+{{ $priority := .priority }}
+{{ $frame := .frame | default true }}
+{{ with resources.Get (printf "images/projects/%s" $photo) }}
+{{/* Hugo's Resize upscales when the target is wider than the source, so only
+     bound the big ones; a smaller original is already the best bitmap there is. */}}
+{{ $full := . }}
+{{ if gt .Width 2400 }}
+{{ with .Resize "2400x webp q85" }}
+{{ $full = . }}
+{{ end }}
+{{ end }}
+{{ $thumb := .Fill $fill }}
+{{ $thumb2x := .Fill $fill2x }}
+<button type="button" class="shot group relative block w-full cursor-zoom-in overflow-hidden{{ if $frame }} rounded-lg border border-line-raised{{ end }}"
+    data-lightbox-src="{{ $full.RelPermalink }}" data-lightbox-alt="{{ $alt }}" data-lightbox-caption="{{ $caption }}"
+    aria-label="{{ i18n "image_enlarge" $caption }}">
+    <img src="{{ $thumb.RelPermalink }}" srcset="{{ $thumb.RelPermalink }} {{ $thumb.Width }}w, {{ $thumb2x.RelPermalink }} {{ $thumb2x.Width }}w" sizes="{{ $sizes }}"
+        width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="" class="shot__img w-full object-cover"
+        {{ if $priority }}fetchpriority="high"{{ else }}loading="lazy" decoding="async"{{ end }}>
+    <span class="shot-zoom" aria-hidden="true">
+        {{ partial "components/icon.html" (dict "name" "zoom-in" "class" "size-4") }}
+    </span>
+</button>
+{{ end }}
