@@ -25,7 +25,9 @@
             <p class="type-body text-balance">{{ . }}</p>
             {{ end }}
         </div>
-        {{ with resources.Get "files/CV_RidwanMRaihan.pdf" }}
+        {{/* Each language's CV lives in its own dir under files/; the filenames
+             are identical, so the language selects the dir. */}}
+        {{ with resources.Get (printf "files/%s/cv-ridwan-muhammad-raihan.pdf" site.Language.Lang) }}
         <a href="{{ .RelPermalink }}" target="_blank" rel="noopener"
             class="btn-accent inline-block px-6 py-4">{{ i18n "view_cv" }}</a>
         {{ end }}

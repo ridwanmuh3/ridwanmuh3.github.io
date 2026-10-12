@@ -80,6 +80,12 @@ source = 'assets/notwatching/hugo_stats\.json'
 target = 'css'
 
 [module]
+# NOTE: do NOT give assets/files/en and assets/files/id their own per-language
+# mounts targeting the same `assets/files` dir. Hugo publishes assets to a
+# language-independent path, so both mounts collapse onto one output file and
+# the second one silently overwrites the first (verified: EN CV disappeared,
+# the ID CV was served on the EN homepage too). Distinct source filenames are
+# what keep the two PDFs from colliding.
 [[module.mounts]]
 source = 'assets'
 target = 'assets'
