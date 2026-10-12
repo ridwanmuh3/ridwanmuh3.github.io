@@ -1,7 +1,7 @@
 baseURL = 'https://example.org/'
 defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = false
-title = 'Ridwan portfolio site'
+title = 'Ridwan - Backend Developer'
 
 # disableLanguages = ['id'] re-hides Indonesian if ever needed again; if so,
 # keep it above the first [table] header, or TOML reads it as a key of that table.
@@ -53,7 +53,7 @@ locale = 'id-ID'
 label = 'Bahasa Indonesia'
 weight = 2
 contentDir = 'content/id'
-title = 'Situs portofolio Ridwan'
+title = 'Ridwan - Backend Developer'
 [languages.id.params]
 bio = "Lulusan Informatika yang membangun REST API dan aplikasi full-stack, dengan pengalaman riset kriptografi terapan."
 [languages.id.menus]
@@ -87,6 +87,12 @@ target = 'assets'
 disableWatch = true
 source = 'hugo_stats.json'
 target = 'assets/notwatching/hugo_stats.json'
+
+# Hugo 0.163+ requires external binaries to be whitelisted. The Tailwind CLI
+# is spawned from node_modules, so `tailwindcss` is added to the exec policy
+# alongside the defaults.
+[security.exec]
+allow = ['^(dart-)?sass$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']
 
 [sitemap]
 changefreq = 'weekly'
