@@ -1,26 +1,30 @@
 {{ $d := index hugo.Data site.Language.Lang }}
 {{ $s := $d.sections.projects }}
 {{ $items := $d.projects.project }}
+{{/* The home page is a teaser: three newest by date, everything else stays on
+     the projects list. */}}
 {{ with $items }}
 <section class="flow-lead">
     {{ partial "components/section-head.html" (dict
     "title" ($s.title | default "// Featured Projects")
     "body" $s.body) }}
     <div class="mt-8 space-y-4">
-        {{ range . }}
+        {{ range first 3 (sort . "date" "desc") }}
         {{ $p := . }}
         {{ with .name }}
         <article class="card-arrive surface-raised rounded-lg p-5">
-            {{ with $p.photo }}
             <div class="mb-5">
+                {{ with $p.photo }}
                 {{ partial "components/project-shot.html" (dict
                     "photo" .
                     "alt" (i18n "project_screenshot" $p.name)
                     "caption" $p.name
                     "fill" "800x450 webp q80 center"
                     "fill2x" "1600x900 webp q80 center") }}
+                {{ else }}
+                {{ partial "components/project-placeholder.html" (dict "name" $p.name "mark" $p.mark) }}
+                {{ end }}
             </div>
-            {{ end }}
             <div class="space-y-1">
                 <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
                     <h3 class="type-title text-ink text-balance min-w-0">

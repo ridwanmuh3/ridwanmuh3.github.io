@@ -11,7 +11,7 @@ hire_me = "Hire me"
 nav_main = "Main navigation"
 nav_home = "{{ . }}, home"
 nav_menu = "Menu"
-lang_switch = "Change language"
+lang_switch_to = "Switch to {{ . }}"
 
 # footer.html
 all_rights_reserved = "All rights reserved"

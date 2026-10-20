@@ -1,20 +1,24 @@
+{{/* Compact language switch.
+
+     One chip instead of a full list: it shows the language you would land on,
+     which keeps the header from carrying two labels for a two-locale site.
+     Falls back to the other site's home when the current page has no translation. */}}
 {{ if gt (len hugo.Sites) 1 }}
 {{ $current := site.Language.Lang }}
 {{ $homes := dict }}
 {{ range hugo.Sites }}{{ $homes = merge $homes (dict .Language.Lang .Home) }}{{ end }}
-<div class="flex items-center gap-1 max-sm:order-2" role="group" aria-label="{{ i18n "lang_switch" }}">
-    {{ range hugo.Sites }}
-    {{ $code := .Language.Lang }}
-    {{ $label := .Language.Label }}
-    {{ $target := index $homes $code }}
-    {{ range $.Translations }}{{ if eq .Language.Lang $code }}{{ $target = . }}{{ end }}{{ end }}
-    {{ if eq $code $current }}
-    <span class="px-2 py-1 text-xs font-header font-semibold text-accent" aria-current="true"
-        title="{{ $label }}">{{ $code | upper }}</span>
-    {{ else }}
-    <a href="{{ $target.RelPermalink }}" class="link-quiet px-2 py-1 text-xs font-header"
-        title="{{ $label }}" hreflang="{{ $code }}">{{ $code | upper }}</a>
-    {{ end }}
-    {{ end }}
-</div>
+{{ range hugo.Sites }}
+{{ if ne .Language.Lang $current }}
+{{ $code := .Language.Lang }}
+{{ $label := .Language.Label }}
+{{ $target := index $homes $code }}
+{{ range $.Translations }}{{ if eq .Language.Lang $code }}{{ $target = . }}{{ end }}{{ end }}
+<a href="{{ $target.RelPermalink }}" hreflang="{{ $code }}"
+    class="lang-switch inline-flex items-center gap-1.5 rounded-md border border-line-raised px-2 py-1 font-header text-xs text-ink-muted transition-colors hover:border-accent hover:text-accent max-sm:order-2"
+    title="{{ i18n "lang_switch_to" $label }}" aria-label="{{ i18n "lang_switch_to" $label }}">
+    {{ partial "components/icon.html" (dict "name" "arrows-exchange" "class" "size-3.5") }}
+    <span aria-hidden="true">{{ $code | upper }}</span>
+</a>
+{{ end }}
+{{ end }}
 {{ end }}

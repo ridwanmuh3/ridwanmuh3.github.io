@@ -2,7 +2,7 @@
 title = 'Smart Secure QR'
 date = '2026-02-01'
 draft = false
-description = 'Web application securing QR codes and embedded documents with dual digital signatures and time-based encryption. Each scan verifies where the code originated and rejects it once its validity period has passed.'
+description = 'Web application securing QR codes and embedded documents with a digital signature and time-based encryption. Each scan verifies where the code originated and rejects it once its validity period has passed.'
 photo = 'smart-secure-qr.webp'
 link = 'https://smart-secure-qrcode.netlify.app'
 +++
@@ -11,9 +11,9 @@ Built as a research assistant project at Universitas Siliwangi (Feb 2026 - Mar 2
 
 ## What it does
 
-Documents leave the system carrying a **dual digital signature** and an expiry the server enforces, so the three things a scan has to establish — integrity, authentication, and temporal validity — are all settled before the document behind the code is trusted.
+Documents leave the system carrying a **digital signature** and an expiry the server enforces. A scan checks integrity, authenticity, and expiry before the document behind the code is shown.
 
-- Issues QR codes and embedded documents with the dual signature and time-based encryption, so each scan verifies where the code originated and rejects it once its validity period has passed.
+- Issues QR codes and embedded documents with a digital signature and time-based encryption, so each scan verifies where the code originated and rejects it once its validity period has passed.
 - Exposes **12 REST API endpoints** covering the issuance and verification flow, implemented with **Nuxt 4**.
 
 ## Validation

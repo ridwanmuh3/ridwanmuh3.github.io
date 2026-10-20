@@ -2,6 +2,7 @@
 title = 'Post-Quantum FN-DSA JWT'
 date = '2026-07-01'
 draft = false
+mark = 'PQ'
 description = 'Post-quantum authentication for a Go microservices task API: FN-DSA-512 JWT signing benchmarked with k6. Precomputation cut issuance latency 24.5%, but under stress both methods matched and cryptography stayed below 0.3% of total latency.'
 link = 'https://github.com/ridwanmuh3/tasktify'
 +++
@@ -35,6 +36,6 @@ Aggregated across 20 runs, precomputation reduced token issuance latency by **24
 
 At 10, 30, and 50 virtual users the two methods performed nearly identically. Cryptographic processing accounted for **less than 0.3% of total latency** — bcrypt processing and PostgreSQL access dominated.
 
-That is the result worth keeping. FN-DSA-512 is the most expensive operation in the request path by a wide margin, and at 0.3% of latency it still does not register. Precomputation is a real, measurable win, and it optimises a stage that was never the bottleneck.
+That is the result worth keeping. FN-DSA-512 is the most expensive operation in the request path by a wide margin, and at 0.3% of latency it still does not register. Precomputation is a measurable gain, and it optimises a stage that was never the bottleneck.
 
 The repository also ships known-answer (KAT) and adversarial test passes for the FN-DSA implementation alongside the benchmark scripts.

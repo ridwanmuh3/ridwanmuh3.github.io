@@ -3,7 +3,7 @@ name = "Asisten Peneliti"
 company = "Universitas Siliwangi"
 duration = "Feb 2026 - Mar 2026"
 description = "Mengimplementasikan sistem penelitian berbasis web yang mengamankan QR code dan embedded document menggunakan Nuxt 4, dengan 12 endpoint REST API untuk proses penerbitan dan verifikasi dokumen."
-keypoints = ["tanda tangan digital ganda", "enkripsi berbasis waktu", "QR code", "embedded document", "REST API"]
+keypoints = ["tanda tangan digital", "enkripsi berbasis waktu", "QR code", "embedded document", "REST API"]
 
 [[experience]]
 name = "Full Stack Web Developer"

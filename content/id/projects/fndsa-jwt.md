@@ -2,7 +2,8 @@
 title = 'FN-DSA JWT Post-Kuantum'
 date = '2026-07-01'
 draft = false
-description = 'Autentikasi post-kuantum untuk task API microservice Go: penandatanganan JWT FN-DSA-512 yang diuji dengan k6. Precomputation menurunkan latensi penerbitan 24,5%, namun saat diuji beban, kedua metode setara dan proses kriptografi hanya 0,3% dari latensi keseluruhan.'
+mark = 'PQ'
+description = 'Autentikasi post-kuantum untuk task API microservice Go. Token JWT ditandatangani dengan FN-DSA-512, lalu diuji memakai k6: precomputation memangkas latensi penerbitan 24,5%, tetapi saat pengujian beban kedua metode setara dan proses kriptografi hanya 0,3% dari latensi keseluruhan.'
 link = 'https://github.com/ridwanmuh3/tasktify'
 +++
 
@@ -35,6 +36,6 @@ Digabungkan dari 20 kali pengujian, precomputation menurunkan latensi penerbitan
 
 Pada 10, 30, dan 50 pengguna virtual, kedua metode menghasilkan performa yang nyaris sama. Proses kriptografi hanya menyumbang **kurang dari 0,3% dari latensi keseluruhan** — bcrypt dan akses PostgreSQL yang mendominasi.
 
-Inilah hasil yang layak disimpan. FN-DSA-512 adalah operasi termahal dalam alur request dengan selisih yang jauh, dan pada 0,3% dari latensi ia tetap tidak terasa. Precomputation adalah kemenangan yang nyata dan terukur, sekaligus mengoptimalkan tahap yang memang tidak pernah menjadi bottleneck.
+Inilah hasil yang layak disimpan. FN-DSA-512 adalah operasi termahal dalam alur request dengan selisih yang jauh, dan pada 0,3% dari latensi ia tetap tidak terasa. Precomputation memberi pengurangan yang terukur, sekaligus mengoptimalkan tahap yang memang tidak pernah menjadi *bottleneck*.
 
 Repositori ini juga menyertakan pengujian known-answer (KAT) dan adversarial untuk implementasi FN-DSA, berdampingan dengan skrip benchmark.

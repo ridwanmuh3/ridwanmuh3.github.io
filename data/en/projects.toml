@@ -1,8 +1,12 @@
+# Home page shows the three most recent entries by date. Everything listed here
+# stays on /projects/.
+
 [[project]]
 name = "Smart Secure QR"
 skills = ["Nuxt", "Cryptography", "REST API"]
 duration = "Feb 2026 - Mar 2026"
-description = "Web application securing QR codes and embedded documents with dual digital signatures and time-based encryption. Each scan verifies where the code originated and rejects it once its validity period has passed."
+date = "2026-02-01"
+description = "Web application securing QR codes and embedded documents with a digital signature and time-based encryption. Each scan verifies where the code originated and rejects it once its validity period has passed."
 type = "Research"
 photo = "smart-secure-qr.webp"
 url = "/projects/smart-secure-qr/"
@@ -12,8 +16,10 @@ link = "https://smart-secure-qrcode.netlify.app"
 name = "Post-Quantum FN-DSA JWT"
 skills = ["Golang", "Fiber", "gRPC", "Post-Quantum Cryptography", "PostgreSQL", "k6"]
 duration = "Feb 2026 - Jul 2026"
+date = "2026-07-01"
 description = "Post-quantum authentication for a Go microservices task API: FN-DSA-512 JWT signing benchmarked with k6. Precomputation cut issuance latency 24.5%, but under stress both methods matched and cryptography stayed below 0.3% of total latency."
 type = "Project"
+mark = "PQ"
 url = "/projects/fndsa-jwt/"
 link = "https://github.com/ridwanmuh3/tasktify"
 
@@ -21,6 +27,7 @@ link = "https://github.com/ridwanmuh3/tasktify"
 name = "Inventory Dashboard"
 skills = ["Go", "Fiber", "PostgreSQL", "React", "TypeScript", "TanStack Query"]
 duration = "Dec 2025 - Mar 2026"
+date = "2025-12-01"
 description = "Multi-tenant budget and goods management system for a catering kitchen, with 35 REST API endpoints, role-based access control, row-level locking on the finance and raw-material inventory modules, and analytics dashboards."
 type = "Product"
 photo = "sppg-app.webp"
@@ -31,8 +38,20 @@ link = "https://github.com/ridwanmuh3?tab=repositories&q=simba"
 name = "ECDSA + ML-DSA on Blockchain"
 skills = ["Solidity", "Golang", "React", "Foundry", "Viem", "MetaMask"]
 duration = "Dec 2025 - Jun 2026"
+date = "2026-06-01"
 description = "Journal article in ULTIMATICS (SINTA 3) and the proof of concept behind it: a hybrid ECDSA and ML-DSA signature scheme for transaction authentication on an Ethereum-compatible blockchain, with post-quantum signing handled off-chain by an oracle."
 type = "Publication"
 photo = "pqc-blockchain.webp"
 url = "/projects/ecdsa-ml-dsa/"
 link = "https://github.com/ridwanmuh3/hybrid-signature-eth-poc"
+
+[[project]]
+name = "CinX — Cinema Ticketing Platform"
+skills = ["Vue 3", "NestJS", "gRPC", "PostgreSQL", "Redis", "RabbitMQ", "Xendit"]
+duration = "Sep 2026 - Oct 2026"
+date = "2026-09-01"
+description = "Cinema ticketing built as a distributed system: five-minute seat holds backed by Redis locks and a database unique constraint, asynchronous Xendit payments, event-driven ticket issuance, and refunds that follow the money instead of flipping a status flag."
+type = "Project"
+mark = "CX"
+url = "/projects/cinx/"
+link = "https://github.com/ridwanmuh3/cinx"

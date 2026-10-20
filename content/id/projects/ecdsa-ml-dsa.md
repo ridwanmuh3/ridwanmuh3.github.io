@@ -2,7 +2,7 @@
 title = 'ECDSA + ML-DSA di Blockchain'
 date = '2026-06-01'
 draft = false
-description = 'Artikel jurnal di ULTIMATICS (SINTA 3) dan proof of concept di balik thereof: skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum, dengan penandatanganan post-kuantum ditangani di luar rantai oleh oracle.'
+description = 'Artikel jurnal di ULTIMATICS (SINTA 3) beserta proof of concept di baliknya: skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum. Penandatanganan post-kuantum dikerjakan off-chain oleh oracle.'
 photo = 'pqc-blockchain.webp'
 link = 'https://github.com/ridwanmuh3/hybrid-signature-eth-poc'
 +++

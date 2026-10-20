@@ -2,10 +2,10 @@
     <div class="mx-auto max-w-2xl w-full gutter">
         <div class="header-island surface-raised w-full rounded-lg">
             <nav class="site-nav flex flex-wrap items-center gap-x-3 px-4 py-2 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:gap-x-4"
-                aria-label="{{ i18n " nav_main" }}">
+                aria-label="{{ i18n "nav_main" }}">
                 {{/* no leading slash: relURL must stay a no-op-free relative path under /portfolio/ */}}
                 <a href="{{ site.Home.RelPermalink }}" class="order-1 max-sm:me-auto sm:justify-self-start"
-                    aria-label="{{ i18n " nav_home" .Site.Params.fullname }}">
+                    aria-label="{{ i18n "nav_home" .Site.Params.fullname }}">
                     <span
                         class="block bg-linear-to-b from-amber-300 from-10% to-amber-700 bg-clip-text font-header font-black text-3xl sm:text-4xl text-transparent leading-none">R</span>
                 </a>
@@ -24,7 +24,7 @@
                         i18n "hire_me" }}</a>
                     <button type="button"
                         class="site-nav-toggle link-quiet -me-2 inline-flex items-center justify-center p-3 max-sm:order-2 sm:hidden cursor-pointer"
-                        aria-controls="site-menu" aria-expanded="false" aria-label="{{ i18n " nav_menu" }}">
+                        aria-controls="site-menu" aria-expanded="false" aria-label="{{ i18n "nav_menu" }}">
                         <span class="icon-open inline-flex">{{ partial "components/icon.html" (dict "name" "menu"
                             "class" "size-5") }}</span>
                         <span class="icon-close inline-flex">{{ partial "components/icon.html" (dict "name" "close"

@@ -11,7 +11,7 @@ hire_me = "Rekrut saya"
 nav_main = "Navigasi utama"
 nav_home = "{{ . }}, beranda"
 nav_menu = "Menu"
-lang_switch = "Ganti bahasa"
+lang_switch_to = "Ganti ke {{ . }}"
 
 # footer.html
 all_rights_reserved = "Hak cipta dilindungi undang-undang"

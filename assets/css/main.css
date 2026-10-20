@@ -360,6 +360,25 @@ h1, h2, h3, h4, h5, p, li, a {
         font-weight: 600;
         color: var(--color-ink);
     }
+
+    /* Fact tables open with a deliberately blank header row; drop the empty band
+       above the first real row. */
+    & thead:not(:has(th:not(:empty))) {
+        display: none;
+    }
+}
+
+/* Mermaid: the render hook emits <pre class="mermaid"> and the script in
+   baseof.html replaces it with an SVG. Centre it and keep it inside the column. */
+.prose-article .mermaid {
+    display: flex;
+    justify-content: center;
+    padding: 1.25rem 1rem;
+}
+
+.prose-article .mermaid svg {
+    max-width: 100%;
+    height: auto;
 }
 
 :root {

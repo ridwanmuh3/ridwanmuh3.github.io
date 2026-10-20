@@ -3,7 +3,7 @@ name = "Research Assistant"
 company = "Siliwangi University"
 duration = "Feb 2026 - Mar 2026"
 description = "Implemented a web-based research system securing QR codes and embedded documents, built with Nuxt 4 and exposing 12 REST API endpoints for document issuance and verification."
-keypoints = ["dual digital signature", "time-based encryption", "QR code", "embedded document", "REST API"]
+keypoints = ["digital signature", "time-based encryption", "QR code", "embedded document", "REST API"]
 
 [[experience]]
 name = "Full Stack Web Developer"

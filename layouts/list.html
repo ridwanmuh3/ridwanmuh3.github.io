@@ -29,6 +29,8 @@
                 "fill2x" "1280x800 webp q80 center"
                 "sizes" "(min-width: 672px) 640px, 100vw"
                 "frame" false) }}
+            {{ else }}
+            {{ partial "components/project-placeholder.html" (dict "name" $item.Title "mark" $item.Params.mark "frame" false) }}
             {{ end }}
             <a href="{{ $item.RelPermalink }}" class="group block p-4 space-y-1">
                 <span class="type-title block text-ink text-balance transition-colors group-hover:text-accent">{{

@@ -1,8 +1,12 @@
+# Beranda menampilkan tiga entri terbaru berdasarkan tanggal. Semua proyek di
+# sini tetap muncul di /projects/.
+
 [[project]]
 name = "Smart Secure QR"
 skills = ["Nuxt", "Kriptografi", "REST API"]
 duration = "Feb 2026 - Mar 2026"
-description = "Aplikasi web yang mengamankan QR code dan embedded document dengan tanda tangan digital ganda dan enkripsi berbasis waktu. Setiap pemindaian memverifikasi asal kode dan menolaknya setelah masa berlakunya habis."
+date = "2026-02-01"
+description = "Aplikasi web yang mengamankan QR code dan embedded document dengan tanda tangan digital dan enkripsi berbasis waktu. Setiap pemindaian memeriksa asal dokumen dan menolak kode yang masa berlakunya sudah habis."
 type = "Riset"
 photo = "smart-secure-qr.webp"
 url = "/projects/smart-secure-qr/"
@@ -12,8 +16,10 @@ link = "https://smart-secure-qrcode.netlify.app"
 name = "FN-DSA JWT Post-Kuantum"
 skills = ["Golang", "Fiber", "gRPC", "Kriptografi Post-Kuantum", "PostgreSQL", "k6"]
 duration = "Feb 2026 - Jul 2026"
-description = "Autentikasi post-kuantum untuk task API microservice Go: penandatanganan JWT FN-DSA-512 yang diuji dengan k6. Precomputation menurunkan latensi penerbitan 24,5%, namun saat diuji beban, kedua metode setara dan proses kriptografi hanya 0,3% dari latensi keseluruhan."
+date = "2026-07-01"
+description = "Autentikasi post-kuantum untuk task API microservice Go. Token JWT ditandatangani dengan FN-DSA-512, lalu diuji memakai k6: precomputation memangkas latensi penerbitan 24,5%, tetapi saat pengujian beban kedua metode setara dan proses kriptografi hanya 0,3% dari latensi keseluruhan."
 type = "Proyek"
+mark = "PQ"
 url = "/projects/fndsa-jwt/"
 link = "https://github.com/ridwanmuh3/tasktify"
 
@@ -21,7 +27,8 @@ link = "https://github.com/ridwanmuh3/tasktify"
 name = "Inventory Dashboard"
 skills = ["Go", "Fiber", "PostgreSQL", "React", "TypeScript", "TanStack Query"]
 duration = "Des 2025 - Mar 2026"
-description = "Sistem manajemen anggaran dan barang multi-tenant untuk dapur katering, dengan 35 endpoint REST API, role-based access control, row-level locking pada modul keuangan dan inventaris bahan baku, serta dasbor analitik."
+date = "2025-12-01"
+description = "Sistem manajemen anggaran dan barang multi-tenant untuk dapur katering: satu deployment melayani banyak dapur sekaligus. Tersedia 35 endpoint REST API, role-based access control, row-level locking pada modul keuangan dan inventaris bahan baku, serta dasbor analitik."
 type = "Produk"
 photo = "sppg-app.webp"
 url = "/projects/inventory-dashboard/"
@@ -31,8 +38,20 @@ link = "https://github.com/ridwanmuh3?tab=repositories&q=simba"
 name = "ECDSA + ML-DSA di Blockchain"
 skills = ["Solidity", "Golang", "React", "Foundry", "Viem", "MetaMask"]
 duration = "Des 2025 - Jun 2026"
-description = "Artikel jurnal di ULTIMATICS (SINTA 3) dan proof of concept di balik thereof: skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum, dengan penandatanganan post-kuantum ditangani di luar rantai oleh oracle."
+date = "2026-06-01"
+description = "Artikel jurnal di ULTIMATICS (SINTA 3) beserta proof of concept di baliknya: skema tanda tangan hibrida ECDSA dan ML-DSA untuk autentikasi transaksi pada blockchain yang kompatibel dengan Ethereum. Penandatanganan post-kuantum dikerjakan off-chain oleh oracle."
 type = "Publikasi"
 photo = "pqc-blockchain.webp"
 url = "/projects/ecdsa-ml-dsa/"
 link = "https://github.com/ridwanmuh3/hybrid-signature-eth-poc"
+
+[[project]]
+name = "CinX — Platform Pemesanan Tiket Bioskop"
+skills = ["Vue 3", "NestJS", "gRPC", "PostgreSQL", "Redis", "RabbitMQ", "Xendit"]
+duration = "Sep 2026 - Okt 2026"
+date = "2026-09-01"
+description = "Platform pemesanan tiket bioskop yang dibangun sebagai sistem terdistribusi. Kursi di-hold lima menit dengan lock Redis dan unique constraint di database. Pembayaran Xendit berjalan asinkron, tiket terbit lewat event, dan dana baru dikembalikan setelah penyedia memastikan uang benar-benar kembali."
+type = "Proyek"
+mark = "CX"
+url = "/projects/cinx/"
+link = "https://github.com/ridwanmuh3/cinx"

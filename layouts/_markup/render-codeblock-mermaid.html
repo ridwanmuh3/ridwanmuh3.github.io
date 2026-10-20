@@ -1,0 +1,7 @@
+{{/* Mermaid diagrams.
+
+     The fenced block becomes a <pre class="mermaid"> that baseof.html renders with
+     Mermaid, so the diagram source is still readable when JavaScript is off.
+     Printed as-is: the template engine escapes it exactly once, and Mermaid reads
+     the text content. A second escaping pass would corrupt the diagram source. */}}
+<pre class="mermaid">{{ .Inner }}</pre>
