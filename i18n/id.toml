@@ -65,6 +65,8 @@ image_zoom = "Perbesar"
 image_zoom_in = "Perbesar"
 image_zoom_out = "Perkecil"
 image_fit = "Pas"
+diagram_zoom = "Perbesar diagram"
+media_viewer = "Penampil gambar dan diagram"
 
 # 404.html
 error_404_title = "// 404 Tidak Ditemukan"

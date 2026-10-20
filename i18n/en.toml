@@ -65,6 +65,8 @@ image_zoom = "Zoom"
 image_zoom_in = "Zoom in"
 image_zoom_out = "Zoom out"
 image_fit = "Fit"
+diagram_zoom = "Enlarge diagram"
+media_viewer = "Image and diagram viewer"
 
 # 404.html
 error_404_title = "// 404 Not Found"

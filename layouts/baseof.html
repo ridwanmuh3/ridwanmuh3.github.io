@@ -137,7 +137,7 @@
     </main>
     {{ partial "components/footer.html" . }}
     {{/* Screenshot viewer: needed only where project images are rendered. */}}
-    {{ if or .IsHome (eq .Section "projects") }}
+    {{ if or .IsHome (eq .Section "projects") (and .IsPage (strings.Contains .RawContent "```mermaid")) }}
     {{ partial "components/lightbox.html" . }}
     {{ end }}
     {{/* Diagrams: render-codeblock-mermaid.html emits a <pre class="mermaid">, so the
@@ -178,12 +178,25 @@
                 loopTextColor: '#d4d4d8',
                 noteBkgColor: '#27272a',
                 noteBorderColor: '#3f3f46',
-                noteTextColor: '#e4e4e7',
-                attributeBackgroundColorOdd: '#18181b',
-                attributeBackgroundColorEven: '#27272a'
+                noteTextColor: '#e4e4e7'
             }
         });
         await mermaid.run();
+        document.querySelectorAll('.prose-article .mermaid svg').forEach((svg) => {
+            const pre = svg.closest('.mermaid');
+            if (!pre) return;
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'mermaid-zoom';
+            button.setAttribute('aria-label', {{ i18n "diagram_zoom" | jsonify | safeJS }});
+            svg.replaceWith(button);
+            button.append(svg);
+            button.addEventListener('click', () => {
+                const dialog = document.querySelector('[data-lightbox-dialog]');
+                dialog.querySelector('[data-lightbox-img]').hidden = true;
+                dialog.dispatchEvent(new CustomEvent('diagram-open', { detail: { button, svg } }));
+            });
+        });
     </script>
     {{ end }}
     <script>

@@ -381,6 +381,33 @@ h1, h2, h3, h4, h5, p, li, a {
     height: auto;
 }
 
+.mermaid .row-rect-odd > path:first-child,
+.lightbox__diagram .row-rect-odd > path:first-child {
+    fill: var(--color-surface) !important;
+}
+
+.mermaid .row-rect-even > path:first-child,
+.lightbox__diagram .row-rect-even > path:first-child {
+    fill: var(--color-surface-hover) !important;
+}
+
+.mermaid .node .label,
+.lightbox__diagram .node .label {
+    color: var(--color-ink) !important;
+}
+
+.mermaid-zoom {
+    display: block;
+    max-width: 100%;
+    cursor: zoom-in;
+    border-radius: 0.5rem;
+}
+
+.mermaid-zoom:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
 :root {
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-state: cubic-bezier(0.4, 0, 0.2, 1);
@@ -622,6 +649,27 @@ h1, h2, h3, h4, h5, p, li, a {
     box-shadow: none;
     cursor: zoom-out;
 }
+
+.lightbox__diagram {
+    width: min(100%, 80rem);
+    color: var(--color-ink);
+}
+
+.lightbox__diagram[hidden] {
+    display: none;
+}
+
+.lightbox__diagram svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+}
+
+.lightbox__diagram.is-zoomed {
+    max-width: none;
+}
+
 
 .lightbox__bar {
     flex: 0 0 auto;
