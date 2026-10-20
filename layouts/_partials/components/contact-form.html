@@ -1,10 +1,6 @@
 {{ $c := site.Params.contact }}
 {{ with $c.endpoint }}
-<section class="mt-8 pt-8 border-t border-line">
-    {{ partial "components/section-head.html" (dict
-        "title" (i18n "contact_form_title")
-        "body" (i18n "contact_form_body")) }}
-
+<section>
     <form class="contact-form mt-8 space-y-4 measure" novalidate action="{{ . }}" method="post"
         data-msg-sent="{{ i18n "contact_sent" }}"
         data-msg-error="{{ i18n "contact_error" }}"

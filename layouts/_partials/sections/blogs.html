@@ -6,13 +6,13 @@
         "title" ($s.title | default "// Blog")
         "body" $s.body) }}
     {{ with $posts }}
-    <div class="mt-8 space-y-4">
+    <div class="mt-8 grid gap-4 lg:grid-cols-2">
         {{ range first 3 . }}
-        <a href="{{ .RelPermalink }}" class="card-arrive row-raised block p-5">
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+        <a href="{{ .RelPermalink }}" class="card-arrive row-raised block h-full p-5">
+            <div class="flex flex-col gap-1">
                 <h3 class="type-title text-ink text-balance min-w-0">{{ .Title }}</h3>
                 {{ if not .Date.IsZero }}
-                <time class="type-meta sm:text-nowrap" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_medium" }}</time>
+                <time class="type-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_medium" }}</time>
                 {{ end }}
             </div>
             {{ with .Summary }}

@@ -1,15 +1,15 @@
 {{ $d := index hugo.Data site.Language.Lang }}
 {{ $s := $d.sections.projects }}
 {{ $items := $d.projects.project }}
-{{/* The home page is a teaser: three newest by date, everything else stays on
+{{/* The home page is a teaser: four newest by date, everything else stays on
      the projects list. */}}
 {{ with $items }}
 <section class="flow-lead">
     {{ partial "components/section-head.html" (dict
     "title" ($s.title | default "// Featured Projects")
     "body" $s.body) }}
-    <div class="mt-8 space-y-4">
-        {{ range first 3 (sort . "date" "desc") }}
+    <div class="mt-8 grid gap-4 lg:grid-cols-2">
+        {{ range first 4 (sort . "date" "desc") }}
         {{ $p := . }}
         {{ with .name }}
         <article class="card-arrive surface-raised rounded-lg p-5">
@@ -20,13 +20,14 @@
                     "alt" (i18n "project_screenshot" $p.name)
                     "caption" $p.name
                     "fill" "800x450 webp q80 center"
-                    "fill2x" "1600x900 webp q80 center") }}
+                    "fill2x" "1600x900 webp q80 center"
+                    "sizes" "(min-width: 1024px) 440px, (min-width: 672px) 640px, 100vw") }}
                 {{ else }}
                 {{ partial "components/project-placeholder.html" (dict "name" $p.name "mark" $p.mark) }}
                 {{ end }}
             </div>
             <div class="space-y-1">
-                <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                <div class="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between lg:gap-3">
                     <h3 class="type-title text-ink text-balance min-w-0">
                         {{ with $p.url }}
                         <a class="link-quiet text-ink" href="{{ if hasPrefix . " http" }}{{ . }}{{ else }}{{ . |
@@ -36,26 +37,28 @@
                         {{ $p.name }}
                         {{ end }}
                     </h3>
-                    <div class="flex items-baseline gap-3 shrink-0">
-                        {{ with $p.duration }}
-                        <span class="type-meta sm:text-nowrap">{{ . }}</span>
-                        {{ end }}
+                    <div class="flex flex-col gap-1 lg:items-end lg:text-right lg:shrink-0">
                         {{ with $p.link }}
                         {{ if hasPrefix . "http" }}
                         <a class="type-meta link-accent" href="{{ . }}" target="_blank" rel="noopener">{{ i18n
                             "view_project" }}</a>
                         {{ end }}
                         {{ end }}
+                        {{ with $p.duration }}
+                        <span class="type-meta sm:text-nowrap">{{ . }}</span>
+                        {{ end }}
                     </div>
                 </div>
-                {{ with $p.type }}<p class="type-meta text-accent">{{ . }}</p>{{ end }}
             </div>
             {{ with $p.description }}
             <p class="type-body mt-4 measure">{{ . }}</p>
             {{ end }}
-            {{ with $p.skills }}
+            {{ if or $p.type $p.skills }}
             <ul class="mt-4 flex gap-2 flex-wrap">
-                {{ range . }}
+                {{ with $p.type }}
+                <li class="px-3 py-2 type-label surface-raised rounded-lg text-accent max-w-full">{{ . }}</li>
+                {{ end }}
+                {{ range $p.skills }}
                 {{ partial "components/pill.html" . }}
                 {{ end }}
             </ul>

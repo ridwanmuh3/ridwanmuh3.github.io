@@ -14,25 +14,6 @@
         "body" $body
         "content" .Content) }}
 
-    {{ with $d.socials.social }}
-    <ul class="mt-8 space-y-4">
-        {{ range . }}
-        {{ if and .href .icon }}
-        <li>
-            <a href="{{ .href }}" rel="me noopener"
-                class="row-raised group flex items-center gap-4 p-4 text-ink-body">
-                {{ partial "components/icon.html" (dict "name" .icon "class" "size-6 text-ink-muted group-hover:text-accent transition-colors") }}
-                <span class="type-title text-ink min-w-0">{{ .label | default .icon }}</span>
-                <span class="ms-auto">
-                    {{ partial "components/icon.html" (dict "name" "arrow-up-right" "class" "size-4 text-ink-faint group-hover:text-accent transition-colors") }}
-                </span>
-            </a>
-        </li>
-        {{ end }}
-        {{ end }}
-    </ul>
-    {{ end }}
-
     {{ partial "components/contact-form.html" . }}
 </section>
 {{ end }}

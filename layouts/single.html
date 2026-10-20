@@ -23,15 +23,15 @@
             "caption" $.Title
             "fill" "1200x750 webp q80 center"
             "fill2x" "1600x1000 webp q80 center"
-            "sizes" "(min-width: 672px) 672px, 100vw"
+            "sizes" "(min-width: 1024px) 1024px, 100vw"
             "priority" true) }}
         {{ end }}
         {{ with or .Params.description .Summary }}
-        <p class="type-body measure">{{ . }}</p>
+        <p class="type-body measure lg:max-w-[75ch]">{{ . }}</p>
         {{ end }}
     </header>
 
-    <div class="prose-article mt-8 measure">
+    <div class="prose-article mt-8 measure lg:max-w-[75ch]">
         {{ .Content }}
     </div>
 </article>

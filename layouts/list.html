@@ -16,9 +16,20 @@
 
     {{ $paginator := .Paginate .Pages }}
     {{ with $paginator.Pages }}
-    <ul class="mt-8 space-y-4">
+    <ul class="mt-8 grid gap-4 lg:grid-cols-2">
         {{ range . }}
         {{ $item := . }}
+        {{ if eq $.Section "blogs" }}
+        <li>
+            <a href="{{ $item.RelPermalink }}" class="row-raised block h-full p-5">
+                <h2 class="type-title text-ink text-balance">{{ $item.Title }}</h2>
+                {{ if not $item.Date.IsZero }}
+                <time class="type-meta block mt-1" datetime="{{ $item.Date.Format "2006-01-02" }}">{{ $item.Date | time.Format ":date_medium" }}</time>
+                {{ end }}
+                {{ with $item.Summary }}<p class="type-body mt-3">{{ . }}</p>{{ end }}
+            </a>
+        </li>
+        {{ else }}
         <li class="row-raised block overflow-hidden">
             {{ with $item.Params.photo }}
             {{ partial "components/project-shot.html" (dict
@@ -27,7 +38,7 @@
                 "caption" $item.Title
                 "fill" "640x400 webp q80 center"
                 "fill2x" "1280x800 webp q80 center"
-                "sizes" "(min-width: 672px) 640px, 100vw"
+                "sizes" "(min-width: 1024px) 480px, (min-width: 672px) 640px, 100vw"
                 "frame" false) }}
             {{ else }}
             {{ partial "components/project-placeholder.html" (dict "name" $item.Title "mark" $item.Params.mark "frame" false) }}
@@ -41,6 +52,7 @@
                 {{ end }}
             </a>
         </li>
+        {{ end }}
         {{ end }}
     </ul>
     {{ partial "components/pagination.html" $paginator }}
