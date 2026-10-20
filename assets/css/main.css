@@ -407,7 +407,7 @@ h1, h2, h3, h4, h5, p, li, a {
 
 .hero-avatar {
     box-shadow:
-        0 0 0 3px color-mix(in oklch, var(--color-accent) 65%, transparent),
+        0 0 0 3px var(--color-accent),
         0 0 0 6px var(--color-page),
         0 10px 36px -14px rgb(0 0 0 / 0.75);
 }
