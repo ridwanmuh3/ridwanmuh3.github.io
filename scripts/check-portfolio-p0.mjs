@@ -11,11 +11,11 @@ for (const prefix of ['', 'id/']) {
     ? /Saya membangun REST API dan layanan backend dengan Go, NestJS, dan PostgreSQL\./
     : /I build REST APIs and backend services with Go, NestJS, and PostgreSQL\./);
   const groups = [...home.matchAll(/<ul class="skills-list[^\"]*">([\s\S]*?)<\/ul>/g)];
-  assert.equal(groups.length, 5);
+  assert.equal(groups.length, 6);
   assert.match(groups[0][1], /<li[^>]*>Echo<\/li>/);
   assert.match(groups[2][1], /<li[^>]*>JWT<\/li>/);
   assert.doesNotMatch(groups.map((group) => group[1]).join(''), /<img|<svg|ECDSA|ML-DSA|FN-DSA/);
-  assert.equal((home.match(/<h3 class="type-label text-ink-muted mb-3">/g) ?? []).length, 5);
+  assert.equal((home.match(/<h3 class="type-label text-ink-muted mb-3">/g) ?? []).length, 6);
   assert.equal((list.match(/line-clamp-2/g) ?? []).length, 5);
   assert.match(detail, /MermaidScript/);
   assert.match(detail, prefix ? /<dt class="type-meta">Periode<\/dt>/ : /<dt class="type-meta">Timeline<\/dt>/);
