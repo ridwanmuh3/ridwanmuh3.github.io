@@ -514,35 +514,19 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* Longhands, not the `animation` shorthand: the minifier folds
-   `animation-timeline` into the shorthand, which Chromium rejects. */
+/* Homepage reveal for project cards, blog cards, and skill groups. Longhands,
+   not the `animation` shorthand: the minifier folds `animation-timeline` into
+   the shorthand, which Chromium rejects. `cover` spans the viewport, so content
+   stays hidden until it is well inside the viewport instead of peeking in. */
 .card-arrive {
     animation-name: card-arrive;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: view();
-    animation-range: entry 20% entry 100%;
-}
-
-@keyframes card-arrive {
-    from {
-        opacity: 0.35;
-        transform: translateY(12px);
-    }
-}
-
-/* Skills stay hidden until the group is well inside the viewport, then rise
-   and fade like a project card. `cover` spans the viewport, so the reveal
-   starts later than the short `entry` range would. */
-.skill-arrive {
-    animation-name: skill-arrive;
     animation-timing-function: linear;
     animation-fill-mode: both;
     animation-timeline: view();
     animation-range: cover 15% cover 35%;
 }
 
-@keyframes skill-arrive {
+@keyframes card-arrive {
     from {
         opacity: 0;
         transform: translateY(12px);
@@ -888,8 +872,7 @@ html.lightbox-open {
     }
 
     .hero-stage > *,
-    .card-arrive,
-    .skill-arrive {
+    .card-arrive {
         animation: none;
     }
 
