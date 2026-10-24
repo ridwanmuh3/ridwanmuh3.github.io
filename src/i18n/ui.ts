@@ -9,7 +9,7 @@ const en = {
 
   viewCv: 'View CV',
 
-  hireMe: 'Hire me',
+  contactMe: 'Contact me',
   navMain: 'Main navigation',
   navHome: '{name}, home',
   navMenu: 'Menu',
@@ -83,7 +83,7 @@ const id: Record<UIKey, string> = {
 
   viewCv: 'Lihat CV',
 
-  hireMe: 'Rekrut saya',
+  contactMe: 'Hubungi saya',
   navMain: 'Navigasi utama',
   navHome: '{name}, beranda',
   navMenu: 'Menu',
