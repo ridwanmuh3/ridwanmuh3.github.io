@@ -1,5 +1,7 @@
 // @ts-check
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, renameSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
@@ -58,6 +60,31 @@ function readContentDates() {
 }
 
 const contentDates = readContentDates();
+
+/**
+ * `@astrojs/sitemap` always emits `sitemap-index.xml` plus `sitemap-N.xml`.
+ * With a single chunk, collapse it into the conventional `/sitemap.xml` so
+ * crawlers and Search Console get one universal URL. If the site ever grows
+ * past one chunk, leave the index intact instead of dropping URLs.
+ */
+function singleSitemap() {
+  return {
+    name: 'single-sitemap',
+    hooks: {
+      'astro:build:done': (
+        /** @type {{ dir: URL; logger: import('astro').AstroIntegrationLogger }} */
+        { dir, logger },
+      ) => {
+        const out = fileURLToPath(dir);
+        const chunks = readdirSync(out).filter((file) => /^sitemap-\d+\.xml$/.test(file));
+        if (chunks.length !== 1) return;
+        renameSync(join(out, chunks[0]), join(out, 'sitemap.xml'));
+        rmSync(join(out, 'sitemap-index.xml'), { force: true });
+        logger.info('`sitemap.xml` created (index removed)');
+      },
+    },
+  };
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -177,6 +204,7 @@ export default defineConfig({
       },
       filter: (page) => !isRedirectPath(new URL(page).pathname),
     }),
+    singleSitemap(),
   ],
 
   vite: {

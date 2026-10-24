@@ -41,4 +41,4 @@ Disallow: /
 User-agent: YouBot
 Disallow: /
 
-Sitemap: https://ridwanmuh3.github.io/sitemap-index.xml
+Sitemap: https://ridwanmuh3.github.io/sitemap.xml
