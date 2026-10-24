@@ -54,6 +54,7 @@ export const id = {
     { label: 'Platform & Peralatan', items: [
       { name: 'Docker' }, { name: 'Linux' }, { name: 'Git' },
       { name: 'GitHub' }, { name: 'Google Cloud Platform' }, { name: 'Postman' },
+      { name: 'opencode' }, { name: '9router' },
     ] },
   ],
 
