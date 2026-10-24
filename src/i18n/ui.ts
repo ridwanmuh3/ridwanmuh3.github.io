@@ -58,7 +58,6 @@ const en = {
   projectType: 'Type',
   projectTimeline: 'Timeline',
   projectStack: 'Stack',
-  techStack: 'Tech stack',
   gpa: 'GPA',
   present: 'Present',
 
@@ -135,7 +134,6 @@ const id: Record<UIKey, string> = {
   projectType: 'Jenis',
   projectTimeline: 'Periode',
   projectStack: 'Teknologi',
-  techStack: 'Teknologi',
   gpa: 'IPK',
   present: 'Sekarang',
 

@@ -1,5 +1,4 @@
 ---
-import Pill from './Pill.astro';
 import SectionHead from './SectionHead.astro';
 import { t } from '../i18n/ui';
 import { formatMonth } from '../lib/format';
@@ -57,11 +56,6 @@ const heading = title.replace(/^\/\/\s*/, '');
               </p>
             </div>
             {item.description && <p class="type-body mt-4">{item.description}</p>}
-            {item.keypoints && item.keypoints.length > 0 && (
-              <ul class="mt-4 flex gap-2 flex-wrap" aria-label={t(lang, 'techStack')}>
-                {item.keypoints.map((keypoint) => <Pill text={keypoint} />)}
-              </ul>
-            )}
           </li>
         ))}
       </ol>
