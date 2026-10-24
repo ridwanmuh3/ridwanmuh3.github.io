@@ -1,21 +1,27 @@
 ---
 import Pill from './Pill.astro';
 import SectionHead from './SectionHead.astro';
+import { t } from '../i18n/ui';
+import { formatMonth } from '../lib/format';
 
+import type { Lang } from '../config';
 import type { TimelineItem } from '../data/types';
 
 /**
- * Education and experience list: left rail, dot activated by the timeline
- * IntersectionObserver (ported in Fase 6).
+ * Education and experience list. `timeline` keeps the rail + dot for
+ * chronological roles; `compact` drops the rail for a single credential.
  */
 interface Props {
+  lang: Lang;
   title: string;
   body?: string;
   items: TimelineItem[];
+  variant?: 'timeline' | 'compact';
 }
 
-const { title, body, items } = Astro.props;
+const { lang, title, body, items, variant = 'timeline' } = Astro.props;
 const rows = items.filter((item) => item.name);
+const heading = title.replace(/^\/\/\s*/, '');
 ---
 
 {
@@ -23,26 +29,37 @@ const rows = items.filter((item) => item.name);
     <section class="flow max-w-[40rem] mx-auto">
       {/* 40rem = the header island's visible width (42rem minus 1rem gutter each side). */}
       <SectionHead title={title} body={body} />
-      <ol class="timeline mt-8 space-y-8">
+      <ol
+        class:list={['timeline mt-8 space-y-8', { 'timeline-compact': variant === 'compact' }]}
+        aria-label={heading}
+      >
         {rows.map((item) => (
-          <li class="relative pl-8">
-            <span class="timeline-dot" />
+          <li class={variant === 'compact' ? '' : 'relative pl-8'}>
+            {variant !== 'compact' && <span class="timeline-dot" />}
             <div class="space-y-1">
-              <h3 class="type-title text-ink text-balance">{item.name}</h3>
-              {(item.company || item.duration) && (
-                <p class="type-meta">
-                  {[item.company, item.duration].filter(Boolean).join(' · ')}
-                </p>
-              )}
+              <h3 class="type-title text-ink">{item.name}</h3>
+              <p class="type-meta">
+                {item.company}
+                {item.company && <span aria-hidden="true"> · </span>}
+                <time datetime={item.start}>{formatMonth(item.start, lang)}</time>
+                {' – '}
+                {item.end ? (
+                  <time datetime={item.end}>{formatMonth(item.end, lang)}</time>
+                ) : (
+                  t(lang, 'present')
+                )}
+                {item.gpa && (
+                  <span class="whitespace-nowrap">
+                    {' · '}
+                    {t(lang, 'gpa')} {item.gpa}
+                  </span>
+                )}
+              </p>
             </div>
-            {item.description && (
-              <p class="type-body mt-4">{item.description}</p>
-            )}
+            {item.description && <p class="type-body mt-4">{item.description}</p>}
             {item.keypoints && item.keypoints.length > 0 && (
-              <ul class="mt-4 flex gap-2 flex-wrap">
-                {item.keypoints.map((keypoint) => (
-                  <Pill text={keypoint} />
-                ))}
+              <ul class="mt-4 flex gap-2 flex-wrap" aria-label={t(lang, 'techStack')}>
+                {item.keypoints.map((keypoint) => <Pill text={keypoint} />)}
               </ul>
             )}
           </li>

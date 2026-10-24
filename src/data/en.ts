@@ -79,60 +79,41 @@ export const en = {
     {
       name: 'Bachelor of Informatics (S1)',
       company: 'Universitas Siliwangi',
-      duration: 'Aug 2022 - Jul 2026',
+      start: '2022-08',
+      end: '2026-07',
+      gpa: '3.74/4.00',
       description:
         'Focused on the Computer Networks, Security, and Digital Forensics (JKF) track, especially cryptography.',
-      keypoints: ['Informatics', 'GPA 3.74/4.00'],
     },
   ],
 
   experiences: [
     {
       name: 'Research Assistant',
-      company: 'Siliwangi University',
-      duration: 'Feb 2026 - Mar 2026',
+      company: 'Universitas Siliwangi',
+      start: '2026-02',
+      end: '2026-03',
       description:
         'Implemented a web-based research system securing QR codes and embedded documents, built with Nuxt 4 and exposing 12 REST API endpoints for document issuance and verification.',
-      keypoints: [
-        'digital signature',
-        'time-based encryption',
-        'QR code',
-        'embedded document',
-        'REST API',
-      ],
+      keypoints: ['digital signature', 'time-based encryption'],
     },
     {
       name: 'Full Stack Web Developer',
       company: 'SPPG Sinar Asri',
-      duration: 'Dec 2025 - Mar 2026',
+      start: '2025-12',
+      end: '2026-03',
       description:
         'Built a budget and goods management system for the kitchen operations of the SPPG MBG program with a Go, Fiber, GORM, and PostgreSQL backend, 35 REST API endpoints, and role-based access control.',
-      keypoints: [
-        'Go',
-        'Fiber',
-        'GORM',
-        'PostgreSQL',
-        'role-based access control',
-        'row-level locking',
-        'React',
-        'TanStack Query',
-      ],
+      keypoints: ['row-level locking', 'React', 'TanStack Query'],
     },
     {
       name: 'Backend Developer Intern',
       company: 'Kantor Pertanahan Kabupaten Pangandaran',
-      duration: 'Jun 2025 - Aug 2025',
+      start: '2025-06',
+      end: '2025-08',
       description:
         'Built the REST API backend for an archive system with JWT authentication, role-based access control, file search, archive request submission and tracking, and history management using Go, Echo, GORM, and PostgreSQL.',
-      keypoints: [
-        'Go',
-        'Echo',
-        'GORM',
-        'PostgreSQL',
-        'JWT',
-        'layered architecture',
-        'UML',
-      ],
+      keypoints: ['layered architecture', 'UML'],
     },
   ],
 

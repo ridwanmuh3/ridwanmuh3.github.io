@@ -3,6 +3,7 @@ import Pill from './Pill.astro';
 import ProjectPlaceholder from './ProjectPlaceholder.astro';
 import ProjectShot from './ProjectShot.astro';
 import { t } from '../i18n/ui';
+import { enDash } from '../lib/format';
 import { localizeHref } from '../lib/url';
 
 import type { Lang } from '../config';
@@ -70,7 +71,7 @@ const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
             </a>
           )
         }
-        {project.duration && <span class="type-meta sm:text-nowrap">{project.duration}</span>}
+        {project.duration && <span class="type-meta sm:text-nowrap">{enDash(project.duration)}</span>}
       </div>
     </div>
   </div>

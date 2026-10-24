@@ -18,7 +18,12 @@ export interface SkillGroup {
 export interface TimelineItem {
   name: string;
   company?: string;
-  duration?: string;
+  /** ISO year-month, e.g. `2022-08`. */
+  start: string;
+  /** ISO year-month; omitted when the role is ongoing. */
+  end?: string;
+  /** Education-only credential shown beside the dates. */
+  gpa?: string;
   description?: string;
   keypoints?: string[];
 }

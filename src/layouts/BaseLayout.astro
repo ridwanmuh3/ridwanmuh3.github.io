@@ -90,6 +90,12 @@ if (kind === 'home') {
     jobTitle: siteConfig.role,
     description: locale.bio,
     sameAs: content.socials.map((social) => social.href),
+    alumniOf: content.education
+      .filter((entry) => entry.company)
+      .map((entry) => ({ '@type': 'CollegeOrUniversity', name: entry.company })),
+    hasOccupation: content.experiences
+      .filter((entry) => entry.name)
+      .map((entry) => ({ '@type': 'Occupation', name: entry.name })),
   };
 } else if (kind === 'article' && headline) {
   jsonLd = {
@@ -213,15 +219,10 @@ if (kind === 'home') {
       (() => {
         const dots = document.querySelectorAll('.timeline-dot');
         if (!dots.length) return;
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          dots.forEach((d) => d.classList.add('is-active'));
-          return;
-        }
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const io = new IntersectionObserver(
           (entries) => {
-            for (const e of entries) {
-              if (e.isIntersecting) e.target.classList.add('is-active');
-            }
+            for (const e of entries) e.target.classList.toggle('is-active', e.isIntersecting);
           },
           { threshold: 0.5 },
         );

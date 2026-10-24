@@ -35,11 +35,18 @@ const { sections, education, experiences } = getContent(lang);
   lightbox
 >
   <Hero lang={lang} />
-  <Timeline title={sections.education.title ?? '// Education'} body={sections.education.body} items={education} />
   <Timeline
+    lang={lang}
     title={sections.experiences.title ?? '// Work Experiences'}
     body={sections.experiences.body}
     items={experiences}
+  />
+  <Timeline
+    lang={lang}
+    variant="compact"
+    title={sections.education.title ?? '// Education'}
+    body={sections.education.body}
+    items={education}
   />
   <ProjectsSection lang={lang} />
   <SkillsSection lang={lang} />

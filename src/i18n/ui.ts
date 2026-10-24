@@ -58,6 +58,9 @@ const en = {
   projectType: 'Type',
   projectTimeline: 'Timeline',
   projectStack: 'Stack',
+  techStack: 'Tech stack',
+  gpa: 'GPA',
+  present: 'Present',
 
   imageEnlarge: 'Tap to enlarge: {title}',
   imageViewer: 'Screenshot viewer',
@@ -132,6 +135,9 @@ const id: Record<UIKey, string> = {
   projectType: 'Jenis',
   projectTimeline: 'Periode',
   projectStack: 'Teknologi',
+  techStack: 'Teknologi',
+  gpa: 'IPK',
+  present: 'Sekarang',
 
   imageEnlarge: 'Ketuk untuk memperbesar: {title}',
   imageViewer: 'Penampil tangkapan layar',

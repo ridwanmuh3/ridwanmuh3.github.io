@@ -79,10 +79,11 @@ export const id = {
     {
       name: 'Sarjana Informatika (S1)',
       company: 'Universitas Siliwangi',
-      duration: 'Agu 2022 - Jul 2026',
+      start: '2022-08',
+      end: '2026-07',
+      gpa: '3.74/4.00',
       description:
         'Berfokus pada kelompok keahlian Jaringan Komputer, Keamanan dan Forensik Digital (JKF), khususnya kriptografi.',
-      keypoints: ['Informatika', 'IPK 3.74/4.00'],
     },
   ],
 
@@ -90,49 +91,29 @@ export const id = {
     {
       name: 'Asisten Peneliti',
       company: 'Universitas Siliwangi',
-      duration: 'Feb 2026 - Mar 2026',
+      start: '2026-02',
+      end: '2026-03',
       description:
         'Mengimplementasikan sistem penelitian berbasis web yang mengamankan QR code dan embedded document menggunakan Nuxt 4, dengan 12 endpoint REST API untuk proses penerbitan dan verifikasi dokumen.',
-      keypoints: [
-        'tanda tangan digital',
-        'enkripsi berbasis waktu',
-        'QR code',
-        'embedded document',
-        'REST API',
-      ],
+      keypoints: ['tanda tangan digital', 'enkripsi berbasis waktu'],
     },
     {
       name: 'Full Stack Web Developer',
       company: 'SPPG Sinar Asri',
-      duration: 'Des 2025 - Mar 2026',
+      start: '2025-12',
+      end: '2026-03',
       description:
         'Membangun sistem manajemen anggaran dan barang untuk operasional dapur program SPPG MBG dengan backend Go, Fiber, GORM, dan PostgreSQL, 35 endpoint REST API, serta role-based access control.',
-      keypoints: [
-        'Go',
-        'Fiber',
-        'GORM',
-        'PostgreSQL',
-        'role-based access control',
-        'row-level locking',
-        'React',
-        'TanStack Query',
-      ],
+      keypoints: ['row-level locking', 'React', 'TanStack Query'],
     },
     {
       name: 'Backend Developer Intern',
       company: 'Kantor Pertanahan Kabupaten Pangandaran',
-      duration: 'Jun 2025 - Agu 2025',
+      start: '2025-06',
+      end: '2025-08',
       description:
         'Mengembangkan layanan backend REST API untuk sistem pengarsipan dengan autentikasi JWT, role-based access control, pencarian berkas, pengajuan dan pelacakan permintaan arsip, serta manajemen riwayat menggunakan Go, Echo, GORM, dan PostgreSQL.',
-      keypoints: [
-        'Go',
-        'Echo',
-        'GORM',
-        'PostgreSQL',
-        'JWT',
-        'arsitektur berlapis',
-        'UML',
-      ],
+      keypoints: ['arsitektur berlapis', 'UML'],
     },
   ],
 

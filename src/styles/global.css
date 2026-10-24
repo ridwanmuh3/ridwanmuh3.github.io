@@ -453,6 +453,11 @@ h1, h2, h3, h4, h5, p, li, a {
     border-inline-start: 1px solid var(--color-line);
 }
 
+/* A single credential does not need a chronology rail. */
+.timeline-compact {
+    border-inline-start: 0;
+}
+
 .timeline-dot {
     position: absolute;
     left: 0;
@@ -882,9 +887,9 @@ html.lightbox-open {
     }
 
     .timeline-dot::before {
-        background-color: var(--color-accent);
-        border-color: var(--color-accent);
-        box-shadow: 0 0 0 2px var(--color-page);
+        background-color: var(--color-page);
+        border-color: var(--color-line-raised);
+        box-shadow: none;
         transition: none;
     }
 
