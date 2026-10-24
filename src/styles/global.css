@@ -514,8 +514,12 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
+/* Longhands, not the `animation` shorthand: the minifier folds
+   `animation-timeline` into the shorthand, which Chromium rejects. */
 .card-arrive {
-    animation: card-arrive linear both;
+    animation-name: card-arrive;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: view();
     animation-range: entry 20% entry 100%;
 }
@@ -524,27 +528,6 @@ h1, h2, h3, h4, h5, p, li, a {
     from {
         opacity: 0.35;
         transform: translateY(12px);
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-        .skills-reveal li {
-            animation: skill-in 1s linear both;
-            animation-range: cover 10% cover 40%;
-        }
-
-        /* Keep timeline separate: CSS minifier otherwise merges it into invalid animation shorthand. */
-        .skills-reveal > li {
-            animation-timeline: view();
-        }
-    }
-}
-
-@keyframes skill-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
     }
 }
 

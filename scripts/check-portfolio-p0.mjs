@@ -10,7 +10,7 @@ for (const prefix of ['', 'id/']) {
   assert.match(home, prefix
     ? /Saya membangun REST API dan layanan backend dengan Go, NestJS, dan PostgreSQL\./
     : /I build REST APIs and backend services with Go, NestJS, and PostgreSQL\./);
-  const groups = [...home.matchAll(/<ul class="skills-reveal[^\"]*">([\s\S]*?)<\/ul>/g)];
+  const groups = [...home.matchAll(/<ul class="skills-list[^\"]*">([\s\S]*?)<\/ul>/g)];
   assert.equal(groups.length, 5);
   assert.match(groups[0][1], /<li[^>]*>Echo<\/li>/);
   assert.match(groups[2][1], /<li[^>]*>JWT<\/li>/);

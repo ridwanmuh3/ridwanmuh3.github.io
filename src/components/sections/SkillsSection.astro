@@ -20,9 +20,9 @@ const { sections, skills } = getContent(lang);
       <SectionHead title={sections.skills.title ?? '// Skills'} body={sections.skills.body} />
       <div class="mt-8 grid gap-x-8 gap-y-7 md:grid-cols-2">
         {skills.map((group) => (
-          <div>
+          <div class="card-arrive">
             <h3 class="type-label text-ink-muted mb-3">{group.label}</h3>
-            <ul class="skills-reveal flex gap-2 flex-wrap">
+            <ul class="skills-list flex gap-2 flex-wrap">
               {group.items.map((skill) => <SkillChip name={skill.name} />)}
             </ul>
           </div>
