@@ -20,7 +20,8 @@ const rows = items.filter((item) => item.name);
 
 {
   rows.length > 0 && (
-    <section class="flow">
+    <section class="flow max-w-[40rem] mx-auto">
+      {/* 40rem = the header island's visible width (42rem minus 1rem gutter each side). */}
       <SectionHead title={title} body={body} />
       <ol class="timeline mt-8 space-y-8">
         {rows.map((item) => (
@@ -35,7 +36,7 @@ const rows = items.filter((item) => item.name);
               )}
             </div>
             {item.description && (
-              <p class="type-body mt-4 max-w-2xl">{item.description}</p>
+              <p class="type-body mt-4">{item.description}</p>
             )}
             {item.keypoints && item.keypoints.length > 0 && (
               <ul class="mt-4 flex gap-2 flex-wrap">
