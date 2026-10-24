@@ -1,0 +1,33 @@
+---
+import SectionHead from '../SectionHead.astro';
+import SkillChip from '../SkillChip.astro';
+import { getContent } from '../../data/index';
+
+import type { Lang } from '../../config';
+
+/** Grouped skills, plain text labels. */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { sections, skills } = getContent(lang);
+---
+
+{
+  skills.length > 0 && (
+    <section class="flow">
+      <SectionHead title={sections.skills.title ?? '// Skills'} body={sections.skills.body} />
+      <div class="mt-8 grid gap-x-8 gap-y-7 md:grid-cols-2">
+        {skills.map((group) => (
+          <div>
+            <h3 class="type-label text-ink-muted mb-3">{group.label}</h3>
+            <ul class="skills-reveal flex gap-2 flex-wrap">
+              {group.items.map((skill) => <SkillChip name={skill.name} />)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

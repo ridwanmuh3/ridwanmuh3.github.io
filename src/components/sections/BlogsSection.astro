@@ -1,0 +1,60 @@
+---
+import BlogCard from '../BlogCard.astro';
+import SectionHead from '../SectionHead.astro';
+import { getContent } from '../../data/index';
+import { entryHref, getLocalizedEntries, sortByDateDesc } from '../../lib/content';
+import { t } from '../../i18n/ui';
+import { localizeHref } from '../../lib/url';
+
+import type { Lang } from '../../config';
+
+/**
+ * Home blog teaser: the three newest posts, or the empty-state box when the
+ * section has nothing published yet (Hugo's sections/blogs.html).
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { sections } = getContent(lang);
+
+const posts = sortByDateDesc(await getLocalizedEntries('blog', lang)).slice(0, 3);
+---
+
+<section class="flow-lead">
+  <SectionHead title={sections.blogs.title ?? '// Blog'} body={sections.blogs.body} />
+  {
+    posts.length > 0 ? (
+      <>
+        <div class="mt-8 grid gap-4 lg:grid-cols-2">
+          {posts.map((entry) => (
+            <BlogCard
+              lang={lang}
+              href={entryHref(lang, 'blog', entry.id)}
+              title={entry.data.title}
+              date={entry.data.date}
+              summary={entry.data.summary}
+            />
+          ))}
+        </div>
+        <div class="w-full flex justify-center pt-8">
+          <a
+            class="btn-accent w-fit inline-block whitespace-nowrap text-sm px-3 py-3 sm:px-4 sm:py-1.5 max-sm:order-4 max-sm:basis-full max-sm:mt-2 max-sm:text-center cursor-pointer"
+            href={localizeHref(lang, '/blogs/')}
+          >
+            {t(lang, 'seeMore')}
+          </a>
+        </div>
+      </>
+    ) : (
+      <div class="mt-8 p-5 border border-dashed border-line-raised rounded-lg space-y-4">
+        <p class="type-body measure">{t(lang, 'nothingPublishedHere')}</p>
+        <p
+          class="type-body measure"
+          set:html={t(lang, 'emptyBlogs', { url: localizeHref(lang, '/projects/') })}
+        />
+      </div>
+    )
+  }
+</section>

@@ -1,0 +1,27 @@
+---
+import { formatDate, formatDateISO } from '../lib/format';
+
+import type { Lang } from '../config';
+
+/**
+ * Home blog teaser card: title, date, summary on a raised row.
+ * Summaries are Markdown in source but always plain text in this content.
+ */
+interface Props {
+  lang: Lang;
+  href: string;
+  title: string;
+  date: Date;
+  summary?: string;
+}
+
+const { lang, href, title, date, summary } = Astro.props;
+---
+
+<a href={href} class="card-arrive row-raised block h-full p-5">
+  <div class="flex flex-col gap-1">
+    <h3 class="type-title text-ink text-balance min-w-0">{title}</h3>
+    <time class="type-meta" datetime={formatDateISO(date)}>{formatDate(date, lang)}</time>
+  </div>
+  {summary && <p class="type-body mt-3 measure">{summary}</p>}
+</a>

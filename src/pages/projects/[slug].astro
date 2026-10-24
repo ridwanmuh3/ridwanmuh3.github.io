@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+
+import { isPublished, slugFromId } from '../../lib/content';
+import ProjectDetail from '../../views/ProjectDetail.astro';
+
+import type { CollectionEntry } from 'astro:content';
+
+/** `/projects/<slug>/` for English (root locale). */
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', isPublished);
+  return entries
+    .filter((entry) => entry.id.startsWith('en/'))
+    .map((entry) => ({ params: { slug: slugFromId(entry.id) }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+
+const { entry } = Astro.props;
+---
+
+<ProjectDetail entry={entry} lang="en" />

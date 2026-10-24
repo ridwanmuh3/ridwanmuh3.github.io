@@ -1,0 +1,23 @@
+---
+import { getLocalizedEntries, sortByDateDesc } from '../../../../lib/content';
+import { PAGE_SIZE } from '../../../../lib/pagination';
+import BlogsList from '../../../../views/BlogsList.astro';
+import { DEFAULT_LOCALE, locales } from '../../../../config';
+
+/** `/id/blogs/page/N/` for N ≥ 2; page 1 lives at the list root. */
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales.filter((locale) => locale !== DEFAULT_LOCALE)) {
+    const entries = sortByDateDesc(await getLocalizedEntries('blog', lang));
+    const totalPages = Math.ceil(entries.length / PAGE_SIZE);
+    for (let number = 2; number <= totalPages; number += 1) {
+      paths.push({ params: { lang, page: String(number) } });
+    }
+  }
+  return paths;
+}
+
+const { lang, page } = Astro.params as { lang: 'id'; page: string };
+---
+
+<BlogsList lang={lang} current={Number(page)} />

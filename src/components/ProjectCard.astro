@@ -1,0 +1,90 @@
+---
+import Pill from './Pill.astro';
+import ProjectPlaceholder from './ProjectPlaceholder.astro';
+import ProjectShot from './ProjectShot.astro';
+import { t } from '../i18n/ui';
+import { localizeHref } from '../lib/url';
+
+import type { Lang } from '../config';
+import type { ProjectCardData } from '../data/types';
+
+/**
+ * Home teaser card: image on top, title + right-hand meta, description, pills.
+ * Class list and hierarchy follow Hugo's sections/projects.html verbatim.
+ */
+interface Props {
+  lang: Lang;
+  project: ProjectCardData;
+}
+
+const { lang, project } = Astro.props;
+const isExternal = project.url?.startsWith('http') ?? false;
+const href = project.url ? (isExternal ? project.url : localizeHref(lang, project.url)) : undefined;
+const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
+---
+
+<article class="card-arrive surface-raised rounded-lg p-5 relative group">
+  <div class="mb-5">
+    {
+      project.photo ? (
+        <ProjectShot
+          lang={lang}
+          photo={project.photo}
+          caption={project.name}
+          alt={shotLabel}
+          sizes="(min-width: 1024px) 440px, (min-width: 672px) 640px, 100vw"
+        />
+      ) : (
+        <ProjectPlaceholder name={project.name} mark={project.mark} />
+      )
+    }
+  </div>
+
+  <div class="space-y-1">
+    <div class="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between lg:gap-3">
+      <h3 class="type-title text-ink text-balance min-w-0">
+        {
+          href ? (
+            <a
+              class="link-quiet card-link text-ink group-hover:text-accent"
+              href={href}
+              {...(isExternal ? { rel: 'noopener' } : {})}
+            >
+              {project.name}
+            </a>
+          ) : (
+            project.name
+          )
+        }
+      </h3>
+      <div class="flex flex-col gap-1 lg:items-end lg:text-right lg:shrink-0">
+        {
+          project.link?.startsWith('http') && (
+            <a
+              class="type-meta link-accent relative z-10"
+              href={project.link}
+              target="_blank"
+              rel="noopener"
+            >
+              {t(lang, 'viewProject')}
+            </a>
+          )
+        }
+        {project.duration && <span class="type-meta sm:text-nowrap">{project.duration}</span>}
+      </div>
+    </div>
+  </div>
+
+  {project.description && <p class="type-body mt-4 measure">{project.description}</p>}
+
+  {
+    (project.type || project.skills.length > 0) && (
+      <ul class="mt-4 flex gap-2 flex-wrap">
+        {project.type && <Pill text={project.type} accent />}
+        {project.skills.map((skill) => (
+          <Pill text={skill} />
+        ))}
+      </ul>
+    )
+  }
+</article>

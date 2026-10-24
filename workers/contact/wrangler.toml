@@ -1,0 +1,14 @@
+name = "portfolio-contact"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+
+# Public config — scheme + host + port, comma-separated.
+[vars]
+CONTACT_TO = "ridwanmuhraihan@gmail.com"
+ALLOWED_ORIGINS = "https://ridwanmuh3.github.io,http://localhost:4321"
+
+[[kv_namespaces]]
+binding = "RATE"
+id = "29d55afc8ecf49668fc9aa3ec57b6146"
+
+# Secrets are not set here — this file is committed. Use `wrangler secret put`.

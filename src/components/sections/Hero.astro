@@ -1,0 +1,90 @@
+---
+import { getImage } from 'astro:assets';
+
+import Icon from '../Icon.astro';
+import { getContent } from '../../data/index';
+import { t } from '../../i18n/ui';
+import { avatar } from '../../lib/images';
+import { siteConfig, type Lang } from '../../config';
+
+/**
+ * Hero: avatar, name, role, tagline, CV link, socials.
+ *
+ * The srcset mirrors Hugo's `Fill` variants (320/480/696). Hugo upscales the
+ * 295 px source for the two larger slots, so the 2x bitmap is a little soft —
+ * that is exactly what the baseline ships.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const content = getContent(lang);
+const cvHref = `/files/${lang}/cv-ridwan-muhammad-raihan.pdf`;
+
+const widths = [320, 480, 696];
+const variants = await Promise.all(
+  widths.map((width) =>
+    getImage({
+      src: avatar,
+      width,
+      height: width,
+      fit: 'cover',
+      position: 'center',
+      format: 'webp',
+      quality: 80,
+    }),
+  ),
+);
+const avatarSrc = variants[variants.length - 1] ?? variants[0];
+---
+
+<section class="hero-gap flex items-center justify-center">
+  <div class="hero-stage max-w-md w-full flex items-center flex-col justify-center gap-6">
+    <div
+      class="hero-avatar relative size-40 sm:size-58 rounded-full overflow-hidden shrink-0 border border-line bg-surface flex items-center justify-center"
+    >
+      <img
+        class="size-full object-cover"
+        src={avatarSrc.src}
+        srcset={variants.map((variant, index) => `${variant.src} ${widths[index]}w`).join(', ')}
+        sizes="(min-width: 640px) 232px, 160px"
+        width={avatarSrc.options.width}
+        height={avatarSrc.options.height}
+        fetchpriority="high"
+        alt=""
+      />
+    </div>
+
+    <div class="text-center space-y-2">
+      <h1 class="type-display font-semibold text-ink text-balance">{siteConfig.fullname}</h1>
+      <p class="type-subtitle text-accent text-balance">{siteConfig.role}</p>
+      {content.hero.tagline && <p class="type-body text-balance">{content.hero.tagline}</p>}
+    </div>
+
+    <a href={cvHref} target="_blank" rel="noopener" class="btn-accent inline-block px-6 py-4">
+      {t(lang, 'viewCv')}
+    </a>
+
+    <ul class="flex gap-4 items-center justify-center flex-wrap">
+      {
+        content.socials.map(
+          (social) =>
+            social.href &&
+            social.icon && (
+              <li>
+                <a
+                  href={social.href}
+                  aria-label={social.label ?? social.icon}
+                  rel="me noopener"
+                  class="row-raised flex items-center justify-center p-3 text-ink-body hover:text-accent"
+                >
+                  <Icon name={social.icon} class="size-6" />
+                </a>
+              </li>
+            ),
+        )
+      }
+    </ul>
+  </div>
+</section>

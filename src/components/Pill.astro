@@ -1,0 +1,16 @@
+---
+/**
+ * Static chip used for skills, keypoints, and project type.
+ * `accent` marks the project-type pill; everything else stays neutral.
+ */
+interface Props {
+  text: string;
+  accent?: boolean;
+}
+
+const { text, accent = false } = Astro.props;
+---
+
+<li class={`px-3 py-2 type-label surface-raised rounded-lg max-w-full ${accent ? 'text-accent' : 'text-ink-body'}`}>
+  {text}
+</li>

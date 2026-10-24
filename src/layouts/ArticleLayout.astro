@@ -1,0 +1,85 @@
+---
+import ProjectShot from '../components/ProjectShot.astro';
+import { t } from '../i18n/ui';
+import { formatDate, formatDateISO } from '../lib/format';
+
+import type { Lang } from '../config';
+
+/**
+ * Article shell for project and blog detail pages (Hugo's `single.html`).
+ *
+ * Meta line: date, then either "View project" (external link) or the reading
+ * time — Hugo shows the reading time only when the entry has no link.
+ */
+interface Props {
+  lang: Lang;
+  title: string;
+  date: Date;
+  link?: string;
+  photo?: string;
+  description?: string;
+  minutes?: number;
+  backHref: string;
+  backTitle: string;
+}
+
+const { lang, title, date, link, photo, description, minutes, backHref, backTitle } = Astro.props;
+const isExternal = link?.startsWith('http') ?? false;
+---
+
+<div class="flow flow-end">
+  <article>
+    <header class="space-y-4 pb-8 border-b border-line">
+      <h1 class="type-display text-accent text-balance">{title}</h1>
+      <p class="type-meta">
+        <time datetime={formatDateISO(date)}>{formatDate(date, lang)}</time>
+        {
+          isExternal && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <a href={link} target="_blank" rel="noopener" class="link-accent">
+                {t(lang, 'viewProject')}
+              </a>
+            </>
+          )
+        }
+        {
+          !isExternal && minutes && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span>
+                {minutes} {t(lang, 'minRead')}
+              </span>
+            </>
+          )
+        }
+      </p>
+
+      {
+        photo && (
+          <ProjectShot
+            lang={lang}
+            photo={photo}
+            caption={title}
+            alt={t(lang, 'projectScreenshot', { title })}
+            fill={{ width: 1200, height: 750 }}
+            fill2x={{ width: 1600, height: 1000 }}
+            sizes="(min-width: 1024px) 1024px, 100vw"
+            priority
+          />
+        )
+      }
+
+      {description && <p class="type-body">{description}</p>}
+      <slot name="facts" />
+    </header>
+
+    <div class="prose-article mt-8">
+      <slot />
+    </div>
+  </article>
+
+  <nav class="mt-8 pt-8 border-t border-line" aria-label={t(lang, 'navSection')}>
+    <a href={backHref} class="link-accent type-meta">{t(lang, 'backTo', { title: backTitle })}</a>
+  </nav>
+</div>

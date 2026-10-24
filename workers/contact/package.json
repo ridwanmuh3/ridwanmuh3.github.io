@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-contact",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker backing the portfolio contact form. Deliberately outside the root npm workspaces: the GitHub Pages build runs `npm ci` at the repo root and has no use for wrangler.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5",
+    "typescript": "^5",
+    "wrangler": "^4"
+  }
+}

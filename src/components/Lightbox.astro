@@ -1,0 +1,229 @@
+---
+import Icon from './Icon.astro';
+import { t } from '../i18n/ui';
+
+import type { Lang } from '../config';
+
+/**
+ * Click-to-enlarge viewer for project screenshots (Hugo's `lightbox.html`).
+ *
+ * One `<dialog>` per page; every `[data-lightbox-src]` button hands it its own
+ * image, so N screenshots cost one dialog and one script. Native dialog carries
+ * the focus trap, the top layer and Escape for free — the script only swaps the
+ * image and drives the zoom levels.
+ *
+ * Emits markup *and* script, so it must be included once per page. Pages with
+ * no screenshot can skip it; the script also no-ops if no trigger is found.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<dialog
+  class="lightbox"
+  data-lightbox-dialog
+  data-lightbox-fit-label={t(lang, 'imageFit')}
+  data-diagram-zoom-label={t(lang, 'diagramZoom')}
+  aria-label={t(lang, 'mediaViewer')}
+>
+  <div class="lightbox__frame" data-lightbox-frame>
+    <div class="lightbox__stage" data-lightbox-stage>
+      <img class="lightbox__img" data-lightbox-img alt="" decoding="async" />
+      <div class="lightbox__diagram" data-lightbox-diagram hidden></div>
+    </div>
+    <div class="lightbox__bar">
+      <p class="lightbox__caption type-meta" data-lightbox-caption></p>
+      <div class="lightbox__controls" role="group" aria-label={t(lang, 'imageZoom')}>
+        <button type="button" data-lightbox-zoom="-1" aria-label={t(lang, 'imageZoomOut')}>
+          <Icon name="minus" class="size-4" />
+        </button>
+        <button
+          type="button"
+          class="lightbox__level type-label"
+          data-lightbox-reset
+          aria-label={t(lang, 'imageFit')}
+        >
+          {t(lang, 'imageFit')}
+        </button>
+        <button type="button" data-lightbox-zoom="1" aria-label={t(lang, 'imageZoomIn')}>
+          <Icon name="plus" class="size-4" />
+        </button>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="lightbox__close" data-lightbox-close aria-label={t(lang, 'imageClose')}>
+    <Icon name="close" class="size-5" />
+  </button>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const triggers = [...document.querySelectorAll('[data-lightbox-src]')];
+    const dialog = document.querySelector('[data-lightbox-dialog]');
+    if (!dialog) return;
+
+    const q = (sel) => dialog.querySelector(sel);
+    const img = q('[data-lightbox-img]');
+    const diagram = q('[data-lightbox-diagram]');
+    const stage = q('[data-lightbox-stage]');
+    const frame = q('[data-lightbox-frame]');
+    const caption = q('[data-lightbox-caption]');
+    const level = q('[data-lightbox-reset]');
+    const closeBtn = q('[data-lightbox-close]');
+    const fitLabel = dialog.dataset.lightboxFitLabel;
+    const root = document.documentElement;
+
+    // 0 = fit the viewport, 1/2/3 = multiples of the image's own pixels.
+    const LEVELS = [0, 1, 2, 3];
+    let step = 0;
+    let trigger = null;
+    let diagramWidth = 0;
+
+    const apply = () => {
+      step = Math.min(Math.max(step, 0), LEVELS.length - 1);
+      const zoom = LEVELS[step];
+      const zoomed = zoom > 0;
+      // Width is left unset while fitting so CSS contain-boxes the image;
+      // past that the img is sized from its own pixels and the stage scrolls.
+      const width = diagramWidth || img.naturalWidth;
+      const media = diagramWidth ? diagram : img;
+      media.style.width = zoomed ? `${Math.round(width * zoom)}px` : '';
+      diagram.classList.toggle('is-zoomed', zoomed && !!diagramWidth);
+      img.classList.toggle('is-zoomed', zoomed);
+      level.textContent = zoomed ? `${zoom * 100}%` : fitLabel;
+      // Re-centre after the new box has been laid out.
+      requestAnimationFrame(() => {
+        stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+        stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
+      });
+    };
+
+    const setStep = (next) => {
+      step = next;
+      apply();
+    };
+
+    const show = (from) => {
+      trigger = from;
+      diagramWidth = 0;
+      diagram.hidden = true;
+      diagram.replaceChildren();
+      diagram.style.width = '';
+      img.hidden = false;
+      const src = from.dataset.lightboxSrc;
+      caption.textContent = from.dataset.lightboxCaption || '';
+      img.alt = from.dataset.lightboxAlt || '';
+      step = 0;
+      if (img.getAttribute('src') !== src) img.src = src;
+      // naturalWidth is only trustworthy once the bitmap exists, and a
+      // fresh src leaves it at 0 until the load lands.
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener('load', () => setStep(0), { once: true });
+      dialog.showModal();
+      root.classList.add('lightbox-open');
+      closeBtn.focus();
+    };
+
+    dialog.addEventListener('diagram-open', ({ detail: { button, svg } }) => {
+      trigger = button;
+      const copy = svg.cloneNode(true);
+      copy.removeAttribute('style');
+      copy.removeAttribute('width');
+      copy.removeAttribute('height');
+      copy.setAttribute('role', 'img');
+      copy.setAttribute('aria-label', button.getAttribute('aria-label'));
+      diagramWidth = svg.viewBox.baseVal.width || svg.getBoundingClientRect().width;
+      diagram.replaceChildren(copy);
+      diagram.hidden = false;
+      img.hidden = true;
+      caption.textContent = button.getAttribute('aria-label');
+      step = 0;
+      dialog.showModal();
+      root.classList.add('lightbox-open');
+      apply();
+      closeBtn.focus();
+    });
+
+    const hide = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    // Warm the full-size bitmap while the pointer or focus is still on the
+    // trigger — the first tap then opens instantly. The decoders are kept in a
+    // set so they cannot be collected out from under the in-flight request.
+    const warmed = new Set();
+    const preload = (from) => {
+      const src = from.dataset.lightboxSrc;
+      if (img.getAttribute('src') === src || warmed.has(src)) return;
+      const warm = new Image();
+      warm.src = src;
+      warmed.add(src);
+    };
+
+    dialog.addEventListener('close', () => {
+      root.classList.remove('lightbox-open');
+      trigger?.focus();
+      trigger = null;
+      diagram.replaceChildren();
+    });
+
+    // One tap-versus-drag discriminator for the whole dialog: a pointer that
+    // travels more than a few pixels is a pan, never a tap. Pointer events
+    // fire before click, so `dragged` is still accurate when click arrives.
+    let start = null;
+    let dragged = false;
+    stage.addEventListener('pointerdown', (e) => {
+      start = { x: e.clientX, y: e.clientY };
+      dragged = false;
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (!start) return;
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > 6) dragged = true;
+    });
+    const dropPointer = () => {
+      start = null;
+    };
+    stage.addEventListener('pointerup', dropPointer);
+    stage.addEventListener('pointercancel', dropPointer);
+
+    // Tapping the image itself toggles fit ↔ 100%.
+    stage.addEventListener('click', (e) => {
+      if (dragged || (!img.naturalWidth && !diagramWidth) || (e.target !== img && !diagram.contains(e.target))) return;
+      setStep(step > 0 ? 0 : 1);
+    });
+
+    // Tap the dimmed edges or press Escape to dismiss.
+    dialog.addEventListener('click', (e) => {
+      if (dragged) return;
+      if (e.target === dialog || e.target === frame || e.target === stage) hide();
+    });
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === '+' || e.key === '=') {
+        setStep(step + 1);
+      } else if (e.key === '-') {
+        setStep(step - 1);
+      } else if (e.key === '0') {
+        setStep(0);
+      } else {
+        return;
+      }
+      e.preventDefault();
+    });
+
+    for (const button of dialog.querySelectorAll('[data-lightbox-zoom]')) {
+      button.addEventListener('click', () => setStep(step + Number(button.dataset.lightboxZoom)));
+    }
+    level.addEventListener('click', () => setStep(0));
+    closeBtn.addEventListener('click', hide);
+
+    for (const from of triggers) {
+      from.addEventListener('click', () => show(from));
+      from.addEventListener('pointerenter', () => preload(from), { passive: true });
+      from.addEventListener('focus', () => preload(from));
+    }
+  })();
+</script>

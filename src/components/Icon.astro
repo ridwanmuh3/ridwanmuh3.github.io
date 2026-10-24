@@ -1,0 +1,32 @@
+---
+/**
+ * Inline SVG icon, equivalent to Hugo's components/icon.html.
+ * The raw SVG is injected so `currentColor` and sizing cascade behave the same.
+ */
+interface Props {
+  name: string;
+  class?: string;
+}
+
+const { name, class: className = 'size-6' } = Astro.props;
+
+const modules = import.meta.glob('../assets/icons/*.svg', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+const icons = Object.fromEntries(
+  Object.entries(modules).map(([path, raw]) => [
+    path.split('/').pop()!.replace(/\.svg$/, ''),
+    raw,
+  ]),
+);
+
+const svg = icons[name];
+if (!svg) {
+  throw new Error(`Icon "${name}" not found in src/assets/icons`);
+}
+---
+
+<span class={`${className} inline-flex shrink-0 [&>svg]:size-full`} aria-hidden="true" set:html={svg} />

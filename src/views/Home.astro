@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogsSection from '../components/sections/BlogsSection.astro';
+import Cta from '../components/sections/Cta.astro';
+import Hero from '../components/sections/Hero.astro';
+import ProjectsSection from '../components/sections/ProjectsSection.astro';
+import SkillsSection from '../components/sections/SkillsSection.astro';
+import Timeline from '../components/Timeline.astro';
+import { getContent } from '../data/index';
+import { localizeHref } from '../lib/url';
+
+import type { Lang } from '../config';
+
+/**
+ * Home (Hugo's `layouts/index.html`): hero, education, experiences,
+ * projects (4), skills, blogs (3), CTA — in that order.
+ *
+ * Shared by the root route (English) and `/id/`; the URL comes from
+ * `localizeHref`, so the view itself never hardcodes a prefix.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const other: Lang = lang === 'en' ? 'id' : 'en';
+const { sections, education, experiences } = getContent(lang);
+---
+
+<BaseLayout
+  lang={lang}
+  kind="home"
+  path={localizeHref(lang, '/')}
+  translation={localizeHref(other, '/')}
+  lightbox
+>
+  <Hero lang={lang} />
+  <Timeline title={sections.education.title ?? '// Education'} body={sections.education.body} items={education} />
+  <Timeline
+    title={sections.experiences.title ?? '// Work Experiences'}
+    body={sections.experiences.body}
+    items={experiences}
+  />
+  <ProjectsSection lang={lang} />
+  <SkillsSection lang={lang} />
+  <BlogsSection lang={lang} />
+  <Cta lang={lang} />
+</BaseLayout>

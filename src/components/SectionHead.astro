@@ -1,0 +1,31 @@
+---
+/**
+ * Heading block shared by every section and list page.
+ *
+ * `level` selects the heading rank: h1 for page-level heads, h2 for sections
+ * inside a page. Optional `body` and default slot both render at `measure`.
+ */
+interface Props {
+  level?: 'h1' | 'h2';
+  title: string;
+  body?: string;
+}
+
+const { level = 'h2', title, body } = Astro.props;
+// Hugo uses `with .content`, so an empty slot must not leave an empty box.
+const contentHtml = Astro.slots.has('default')
+  ? (await Astro.slots.render('default')).trim()
+  : '';
+---
+
+<div class="space-y-4">
+  {
+    level === 'h1' ? (
+      <h1 class="type-display text-accent w-fit text-balance">{title}</h1>
+    ) : (
+      <h2 class="type-section text-accent w-fit text-balance">{title}</h2>
+    )
+  }
+  {body && <p class="type-body measure">{body}</p>}
+  {contentHtml && <div class="type-body measure" set:html={contentHtml} />}
+</div>

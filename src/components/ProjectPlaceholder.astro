@@ -1,0 +1,44 @@
+---
+/**
+ * Cover tile for a project that has no screenshot yet.
+ *
+ * Params mirror Hugo's project-placeholder.html: `name` (shown under the
+ * monogram), `mark` (one or two characters, falls back to the first letter),
+ * `frame` (border and radius, off when the card already draws its own edge).
+ *
+ * Holds the same 16:9 ratio as ProjectShot so a card without an image keeps
+ * the height of its neighbours.
+ */
+interface Props {
+  name: string;
+  mark?: string;
+  frame?: boolean;
+}
+
+const { name, mark, frame = true } = Astro.props;
+const initials = mark ?? name.slice(0, 1).toUpperCase();
+---
+
+<div
+  class:list={[
+    'relative flex aspect-video w-full items-center justify-center overflow-hidden bg-surface',
+    frame && 'rounded-lg border border-line-raised',
+  ]}
+>
+  <span
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0"
+    style="background-image: radial-gradient(120% 140% at 50% 118%, color-mix(in oklch, var(--color-accent) 12%, transparent) 0%, transparent 62%), repeating-linear-gradient(135deg, var(--color-line) 0 1px, transparent 1px 16px);"
+  ></span>
+  <span class="relative flex flex-col items-center gap-3 px-6 text-center">
+    <span
+      aria-hidden="true"
+      class="flex size-16 items-center justify-center rounded-2xl border border-line-raised bg-linear-to-b from-line-raised/40 to-transparent font-header text-xl font-semibold tracking-[0.12em] text-ink-muted select-none sm:size-20 sm:text-2xl"
+    >
+      {initials}
+    </span>
+    <span class="max-w-[20rem] font-header text-xs leading-snug text-ink-muted text-balance">
+      {name}
+    </span>
+  </span>
+</div>

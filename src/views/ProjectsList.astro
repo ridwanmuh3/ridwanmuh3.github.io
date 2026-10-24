@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListLayout from '../layouts/ListLayout.astro';
+import ProjectListCard from '../components/ProjectListCard.astro';
+import { getContent } from '../data/index';
+import { getLocalizedEntries, slugFromId, sortByDateDesc } from '../lib/content';
+import { formatDateISO } from '../lib/format';
+import { PAGE_SIZE, paginate } from '../lib/pagination';
+import { localizeHref } from '../lib/url';
+
+import type { Lang } from '../config';
+import type { ProjectCardData } from '../data/types';
+
+/**
+ * `/projects/` (page 1) and `/projects/page/N/`. Entries drive order and
+ * titles (so drafts stay filtered); the teaser fields come from
+ * `data[lang].projects`, matched on the data `url` — the same pairing Hugo
+ * gets from the shared slug.
+ */
+interface Props {
+  lang: Lang;
+  /** 1 for the list root; N for `/page/N/`. */
+  current?: number;
+}
+
+const { lang, current = 1 } = Astro.props;
+const other: Lang = lang === 'en' ? 'id' : 'en';
+const meta = getContent(lang).pages.projects;
+
+const entries = sortByDateDesc(await getLocalizedEntries('projects', lang));
+const cards = new Map(getContent(lang).projects.map((project) => [project.url, project]));
+const basePath = localizeHref(lang, '/projects/');
+const page = paginate(entries, PAGE_SIZE, basePath, current);
+const path = current === 1 ? basePath : `${basePath}page/${current}/`;
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.body}
+  path={path}
+  translation={localizeHref(other, '/projects/')}
+  lightbox
+>
+  <ListLayout lang={lang} section="projects" page={page}>
+    {
+      page.items.map((entry) => {
+        const slug = slugFromId(entry.id);
+        const card = cards.get(`/projects/${slug}/`);
+        const project: ProjectCardData = {
+          name: entry.data.title,
+          skills: card?.skills ?? [],
+          duration: card?.duration,
+          date: formatDateISO(entry.data.date),
+          description: card?.description,
+          type: card?.type,
+          photo: entry.data.photo,
+          mark: entry.data.mark,
+          link: entry.data.link,
+        };
+        return <ProjectListCard lang={lang} project={project} slug={slug} />;
+      })
+    }
+  </ListLayout>
+</BaseLayout>

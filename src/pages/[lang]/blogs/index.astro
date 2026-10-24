@@ -1,0 +1,14 @@
+---
+import BlogsList from '../../../views/BlogsList.astro';
+import { DEFAULT_LOCALE, locales, type Lang } from '../../../config';
+
+export function getStaticPaths() {
+  return locales
+    .filter((lang) => lang !== DEFAULT_LOCALE)
+    .map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+---
+
+<BlogsList lang={lang} />

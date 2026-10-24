@@ -1,0 +1,33 @@
+---
+import Icon from './Icon.astro';
+import { t } from '../i18n/ui';
+import { localizeHref } from '../lib/url';
+import { siteConfig, type Lang } from '../config';
+
+/**
+ * Compact language switch: one chip showing the language you would land on.
+ * Falls back to the target language's home when the page has no translation
+ * (`href` is filled by the caller when one exists).
+ */
+interface Props {
+  lang: Lang;
+  href?: string;
+}
+
+const { lang, href } = Astro.props;
+const target: Lang = lang === 'en' ? 'id' : 'en';
+const targetHref = href ?? localizeHref(target, '/');
+const label = siteConfig.locales[target].label;
+const switchLabel = t(lang, 'langSwitchTo', { language: label });
+---
+
+<a
+  href={targetHref}
+  hreflang={target}
+  class="lang-switch inline-flex items-center gap-1.5 rounded-md border border-line-raised px-2 py-1 font-header text-xs text-ink-muted transition-colors hover:border-accent hover:text-accent max-sm:order-2"
+  title={switchLabel}
+  aria-label={switchLabel}
+>
+  <Icon name="arrows-exchange" class="size-3.5" />
+  <span aria-hidden="true">{target.toUpperCase()}</span>
+</a>

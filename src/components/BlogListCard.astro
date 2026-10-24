@@ -1,0 +1,27 @@
+---
+import { formatDate, formatDateISO } from '../lib/format';
+
+import type { Lang } from '../config';
+
+/**
+ * Blogs list row (Hugo's `list.html` blogs branch): the title is the heading
+ * rank the list expects, so it renders `h2` here instead of `h3`.
+ */
+interface Props {
+  lang: Lang;
+  href: string;
+  title: string;
+  date: Date;
+  summary?: string;
+}
+
+const { lang, href, title, date, summary } = Astro.props;
+---
+
+<li>
+  <a href={href} class="row-raised block h-full p-5">
+    <h2 class="type-title text-ink text-balance">{title}</h2>
+    <time class="type-meta block mt-1" datetime={formatDateISO(date)}>{formatDate(date, lang)}</time>
+    {summary && <p class="type-body mt-3">{summary}</p>}
+  </a>
+</li>

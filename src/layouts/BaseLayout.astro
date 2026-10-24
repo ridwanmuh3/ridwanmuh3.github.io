@@ -1,0 +1,232 @@
+---
+import { Font, getImage } from 'astro:assets';
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Lightbox from '../components/Lightbox.astro';
+import MermaidScript from '../components/MermaidScript.astro';
+import { siteConfig, type Lang } from '../config';
+import { en } from '../data/en';
+import { id } from '../data/id';
+import type { SiteContent } from '../data/types';
+import { t } from '../i18n/ui';
+import { truncate } from '../lib/format';
+import { avatar } from '../lib/images';
+import { localizeHref } from '../lib/url';
+import '../styles/global.css';
+
+/**
+ * Page shell, ported 1:1 from Hugo's `layouts/baseof.html`.
+ *
+ * Head order, meta names and truncation lengths follow the Hugo template:
+ * title, description (160), canonical, robots (404 only), icons, theme-color,
+ * verification, Open Graph, Twitter, JSON-LD, font preload, stylesheet,
+ * `<noscript>` menu fallback. Body is `dark`, skip link, header, `main#main`,
+ * footer, then the viewer and the three inline scripts (menu, timeline dot,
+ * mermaid) in the same order as `baseof.html`.
+ */
+interface Props {
+  lang: Lang;
+  /** Page title without the site suffix; omitted on the home page. */
+  title?: string;
+  /** Meta description override; falls back to the language bio. */
+  description?: string;
+  /** Canonical path of this page, e.g. `/blogs/` or `/id/blogs/`. */
+  path: string;
+  kind?: 'home' | 'website' | 'article';
+  /** Article JSON-LD fields; Person is generated for `kind: 'home'`. */
+  headline?: string;
+  datePublished?: string;
+  dateModified?: string;
+  noindex?: boolean;
+  /** Translation URL of this page, for the language switcher. */
+  translation?: string;
+  /** Include the screenshot/diagram viewer (Hugo: home, projects, mermaid). */
+  lightbox?: boolean;
+  /** Load the Mermaid renderer (Hugo: pages whose source has a mermaid block). */
+  mermaid?: boolean;
+}
+
+const {
+  lang,
+  title,
+  description,
+  path,
+  kind = 'website',
+  headline,
+  datePublished,
+  dateModified,
+  noindex = false,
+  translation,
+  lightbox = false,
+  mermaid = false,
+} = Astro.props;
+
+const locale = siteConfig.locales[lang];
+const content: SiteContent = lang === 'en' ? en : id;
+const pageTitle = kind === 'home' || !title ? siteConfig.title : `${title} | ${siteConfig.title}`;
+const pageDescription = truncate(description ?? locale.bio, 160);
+const ogDescription = truncate(description ?? locale.bio, 200);
+const canonical = new URL(path, siteConfig.url).href;
+
+const ogImage = await getImage({
+  src: avatar,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  position: 'center',
+  format: 'webp',
+  quality: 80,
+});
+const ogImageUrl = new URL(ogImage.src, siteConfig.url).href;
+
+let jsonLd: Record<string, unknown> | undefined;
+if (kind === 'home') {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: siteConfig.fullname,
+    url: new URL(localizeHref(lang, '/'), siteConfig.url).href,
+    jobTitle: siteConfig.role,
+    description: locale.bio,
+    sameAs: content.socials.map((social) => social.href),
+  };
+} else if (kind === 'article' && headline) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline,
+    url: canonical,
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    author: {
+      '@type': 'Person',
+      name: siteConfig.fullname,
+      url: new URL(localizeHref(lang, '/'), siteConfig.url).href,
+    },
+    publisher: { '@type': 'Person', name: siteConfig.fullname },
+  };
+}
+---
+
+<!doctype html>
+<html lang={locale.htmlLang}>
+  <head>
+    {kind === 'home' && <meta name="generator" content={Astro.generator} />}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <link rel="icon" type="image/webp" sizes="32x32" href="/icons/ridwan-logo.webp" />
+    <link rel="apple-touch-icon" href="/icons/ridwan-logo.webp" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta
+      name="google-site-verification"
+      content="S6QL3ok0KCtKcwEidk2wfChTP68VLTgBpiy0yW1AG1E"
+    />
+
+    <meta property="og:site_name" content={siteConfig.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={kind === 'article' ? 'article' : 'website'} />
+    <meta property="og:locale" content={locale.ogLocale} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={siteConfig.fullname} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:site" content={`@${siteConfig.author}`} />
+    <meta name="twitter:creator" content={`@${siteConfig.author}`} />
+
+    {jsonLd && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    )}
+
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+
+    <noscript>
+      <style is:inline>
+        @media (width < 40rem) {
+          .site-menu {
+            display: flex;
+          }
+
+          .site-cta {
+            display: block;
+          }
+
+          .site-nav-toggle {
+            display: none;
+          }
+        }
+      </style>
+    </noscript>
+  </head>
+
+  <body class="dark">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:btn-accent focus:px-4 focus:py-3 focus:text-sm"
+      >{t(lang, 'skipToContent')}</a
+    >
+    <Header lang={lang} translation={translation} />
+    <main id="main" class="w-full max-w-2xl lg:max-w-5xl mx-auto gutter">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    {lightbox && <Lightbox lang={lang} />}
+    {mermaid && <MermaidScript />}
+    <script is:inline>
+      (() => {
+        const nav = document.querySelector('.site-nav');
+        const toggle = nav?.querySelector('.site-nav-toggle');
+        if (!toggle) return;
+        const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+        const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
+        toggle.addEventListener('click', () => {
+          const open = !isOpen();
+          setOpen(open);
+          if (open) nav.querySelector('.site-menu a')?.focus();
+        });
+        document.addEventListener('click', (e) => {
+          if (isOpen() && !nav.contains(e.target)) setOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key !== 'Escape' || !isOpen()) return;
+          setOpen(false);
+          toggle.focus();
+        });
+      })();
+    </script>
+    <script is:inline>
+      (() => {
+        const dots = document.querySelectorAll('.timeline-dot');
+        if (!dots.length) return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          dots.forEach((d) => d.classList.add('is-active'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) e.target.classList.add('is-active');
+            }
+          },
+          { threshold: 0.5 },
+        );
+        dots.forEach((d) => io.observe(d));
+      })();
+    </script>
+  </body>
+</html>

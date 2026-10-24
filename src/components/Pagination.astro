@@ -1,0 +1,53 @@
+---
+import { t } from '../i18n/ui';
+
+import type { Lang } from '../config';
+
+/**
+ * Numbered pager. Rendered only when there is more than one page, mirroring
+ * Hugo's `if gt $pag.TotalPages 1`. No `/1/` page is ever emitted: page 1 has
+ * no link here either (Hugo links it, but the URL resolves to the list root).
+ */
+interface Pager {
+  number: number;
+  href: string;
+}
+
+interface Props {
+  lang: Lang;
+  pages: Pager[];
+  current: number;
+  prevHref?: string;
+  nextHref?: string;
+}
+
+const { lang, pages, current, prevHref, nextHref } = Astro.props;
+---
+
+{
+  pages.length > 1 && (
+    <nav class="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label={t(lang, 'pagination')}>
+      {prevHref && (
+        <a class="type-meta link-accent" href={prevHref} rel="prev">
+          {t(lang, 'paginationPrev')}
+        </a>
+      )}
+      {pages.map((page) =>
+        page.number === current ? (
+          <span class="btn-accent px-3 py-2" aria-current="page">
+            {page.number}
+          </span>
+        ) : (
+          <a class="row-raised type-meta px-3 py-2 text-ink" href={page.href}>
+            {page.number}
+          </a>
+        ),
+      )}
+      {nextHref && (
+        <a class="type-meta link-accent" href={nextHref} rel="next">
+          {t(lang, 'paginationNext')}
+        </a>
+      )}
+    </nav>
+  )
+}

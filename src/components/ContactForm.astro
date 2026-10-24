@@ -1,0 +1,224 @@
+---
+import { siteConfig } from '../config';
+import { t } from '../i18n/ui';
+
+import type { Lang } from '../config';
+
+/**
+ * Contact form markup (Hugo's `components/contact-form.html`).
+ *
+ * Only the markup ships in this phase; the submit script, validation and the
+ * Turnstile challenge script are ported in Fase 6. Renders nothing when the
+ * endpoint is empty, exactly like Hugo's `with $c.endpoint`.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { endpoint, turnstileSiteKey } = siteConfig.contact;
+---
+
+{
+  endpoint && (
+    <section>
+      <form
+        class="contact-form space-y-4"
+        novalidate
+        action={endpoint}
+        method="post"
+        data-msg-sent={t(lang, 'contactSent')}
+        data-msg-error={t(lang, 'contactError')}
+        data-msg-rate-limited={t(lang, 'contactRateLimited')}
+        data-msg-sending={t(lang, 'contactSending')}
+        data-err-name={t(lang, 'contactInvalidName')}
+        data-err-email={t(lang, 'contactInvalidEmail')}
+        data-err-message={t(lang, 'contactInvalidMessage')}
+      >
+        {/* written by the script at page load, or the Worker's time-on-form check is meaningless */}
+        <input type="hidden" name="t" value="" />
+
+        <div class="sr-only" aria-hidden="true">
+          <label for="cf-company">Company</label>
+          <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="space-y-2">
+          <label for="cf-name" class="type-label text-ink-muted block">
+            {t(lang, 'contactName')}
+          </label>
+          <input
+            class="field"
+            type="text"
+            id="cf-name"
+            name="name"
+            maxlength="100"
+            autocomplete="name"
+            aria-describedby="cf-name-error"
+            required
+          />
+          <p id="cf-name-error" class="type-meta text-danger" hidden />
+        </div>
+
+        <div class="space-y-2">
+          <label for="cf-email" class="type-label text-ink-muted block">
+            {t(lang, 'contactEmail')}
+          </label>
+          <input
+            class="field"
+            type="email"
+            id="cf-email"
+            name="email"
+            maxlength="254"
+            autocomplete="email"
+            inputmode="email"
+            aria-describedby="cf-email-error"
+            required
+          />
+          <p id="cf-email-error" class="type-meta text-danger" hidden />
+        </div>
+
+        <div class="space-y-2">
+          <label for="cf-message" class="type-label text-ink-muted block">
+            {t(lang, 'contactMessage')}
+          </label>
+          <textarea
+            class="field resize-y min-h-36"
+            id="cf-message"
+            name="message"
+            rows="6"
+            minlength="10"
+            maxlength="5000"
+            placeholder={t(lang, 'contactMessagePlaceholder')}
+            aria-describedby="cf-message-error"
+            required
+          />
+          <p id="cf-message-error" class="type-meta text-danger" hidden />
+        </div>
+
+        <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" data-appearance="interaction-only" />
+
+        <div class="pt-2">
+          <button type="submit" class="contact-submit btn-accent inline-block px-6 py-4">
+            {t(lang, 'contactSend')}
+          </button>
+        </div>
+
+        <noscript>
+          <p class="type-body text-danger">{t(lang, 'contactNeedsJs')}</p>
+        </noscript>
+      </form>
+
+      <p class="contact-status type-body mt-4" role="status" aria-live="polite" />
+    </section>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer is:inline></script>
+    <script is:inline>
+      (() => {
+        const form = document.querySelector('.contact-form');
+        if (!form) return;
+
+        const submit = form.querySelector('.contact-submit');
+        const status = form.parentElement.querySelector('.contact-status');
+        const sendLabel = submit.textContent;
+        const d = form.dataset;
+
+        form.elements.t.value = String(Date.now());
+
+        const errFor = (field) => d[`err${field[0].toUpperCase()}${field.slice(1)}`];
+        const inputOf = (field) => form.elements[field];
+        const errorOf = (field) => form.querySelector(`#cf-${field}-error`);
+
+        const showError = (field) => {
+          inputOf(field).setAttribute('aria-invalid', 'true');
+          const el = errorOf(field);
+          el.textContent = errFor(field);
+          el.hidden = false;
+          inputOf(field).focus();
+        };
+
+        const clearErrors = () => {
+          for (const field of ['name', 'email', 'message']) {
+            inputOf(field).removeAttribute('aria-invalid');
+            const el = errorOf(field);
+            el.textContent = '';
+            el.hidden = true;
+          }
+        };
+
+        const setStatus = (text, isError) => {
+          status.textContent = text;
+          status.classList.toggle('text-danger', Boolean(isError));
+        };
+
+        const firstInvalid = () => {
+          const name = form.elements.name.value.trim();
+          const email = form.elements.email.value.trim();
+          const message = form.elements.message.value.trim();
+          if (name.length < 1 || name.length > 100) return 'name';
+          if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return 'email';
+          if (message.length < 10 || message.length > 5000) return 'message';
+          return null;
+        };
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          clearErrors();
+          setStatus('', false);
+
+          const bad = firstInvalid();
+          if (bad) return showError(bad);
+
+          const token = form.elements['cf-turnstile-response']?.value ?? '';
+          const reset = () => window.turnstile?.reset?.();
+
+          submit.disabled = true;
+          submit.textContent = d.msgSending;
+
+          try {
+            const res = await fetch(form.action, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: form.elements.name.value.trim(),
+                email: form.elements.email.value.trim(),
+                message: form.elements.message.value.trim(),
+                company: form.elements.company.value,
+                t: Number(form.elements.t.value),
+                token,
+              }),
+            });
+
+            let payload = null;
+            try {
+              payload = await res.json();
+            } catch {
+              /* leave null */
+            }
+
+            if (res.ok && payload?.ok) {
+              form.hidden = true;
+              setStatus(d.msgSent, false);
+              return;
+            }
+
+            if (res.status === 422 && payload?.field) {
+              showError(payload.field);
+            } else {
+              setStatus(res.status === 429 ? d.msgRateLimited : d.msgError, true);
+            }
+            reset();
+          } catch {
+            setStatus(d.msgError, true);
+            reset();
+          } finally {
+            if (!form.hidden) {
+              submit.disabled = false;
+              submit.textContent = sendLabel;
+            }
+          }
+        });
+      })();
+    </script>
+  )
+}

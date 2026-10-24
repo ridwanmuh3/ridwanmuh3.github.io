@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { siteConfig } from '../config';
+import { t } from '../i18n/ui';
+import { localizeHref } from '../lib/url';
+
+/**
+ * `/404.html` (V3): one root-only 404 with the English strings — GitHub Pages
+ * never serves a per-folder 404, and the old site behaved the same way.
+ */
+const lang = 'en';
+const nav = siteConfig.locales[lang].nav;
+---
+
+<BaseLayout lang={lang} title="404 Page not found" path="/404.html" noindex>
+  <section class="flow flow-end">
+    <SectionHead level="h1" title={t(lang, 'error404Title')} body={t(lang, 'error404Body')} />
+    <ul class="mt-8 space-y-4">
+      {
+        nav.map((item) => (
+          <li>
+            <a href={localizeHref(lang, item.href)} class="row-raised block p-4">
+              <span class="type-title text-ink">{item.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="type-body mt-8 measure" set:html={t(lang, 'startFromHomepage', { url: localizeHref(lang, '/') })} />
+  </section>
+</BaseLayout>

@@ -1,0 +1,58 @@
+---
+import ProjectPlaceholder from './ProjectPlaceholder.astro';
+import ProjectShot from './ProjectShot.astro';
+import Pill from './Pill.astro';
+import { t } from '../i18n/ui';
+import { formatDate, formatDateISO } from '../lib/format';
+import { localizeHref } from '../lib/url';
+
+import type { Lang } from '../config';
+import type { ProjectCardData } from '../data/types';
+
+/**
+ * Projects list row: image flush at the top of the row, link area below with
+ * title, date, summary and selected tags (`frame` off).
+ */
+interface Props {
+  lang: Lang;
+  project: ProjectCardData;
+  slug: string;
+}
+
+const { lang, project, slug } = Astro.props;
+const href = localizeHref(lang, `/projects/${slug}/`);
+const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
+const date = new Date(`${project.date}T00:00:00Z`);
+---
+
+<li class="row-raised block overflow-hidden">
+  {
+    project.photo ? (
+      <ProjectShot
+        lang={lang}
+        photo={project.photo}
+        caption={project.name}
+        alt={shotLabel}
+        fill={{ width: 640, height: 400 }}
+        fill2x={{ width: 1280, height: 800 }}
+        sizes="(min-width: 1024px) 480px, (min-width: 672px) 640px, 100vw"
+        frame={false}
+      />
+    ) : (
+      <ProjectPlaceholder name={project.name} mark={project.mark} frame={false} />
+    )
+  }
+  <a href={href} class="group block p-4 space-y-2">
+    <span class="type-title block text-ink text-balance transition-colors group-hover:text-accent">
+      {project.name}
+    </span>
+    <time class="type-meta block" datetime={formatDateISO(date)}>{formatDate(date, lang)}</time>
+    {project.description && <span class="type-body line-clamp-2">{project.description}</span>}
+    {(project.type || project.skills.length > 0) && (
+      <ul class="flex flex-wrap gap-2 pt-2" aria-label={lang === 'id' ? 'Kategori dan teknologi' : 'Type and technologies'}>
+        {project.type && <Pill text={project.type} accent />}
+        {project.skills.slice(0, 3).map((skill) => <Pill text={skill} />)}
+      </ul>
+    )}
+  </a>
+</li>

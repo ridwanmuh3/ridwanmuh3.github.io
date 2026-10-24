@@ -1,0 +1,54 @@
+---
+import Pagination from '../components/Pagination.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { getContent } from '../data/index';
+import { t } from '../i18n/ui';
+import { localizeHref } from '../lib/url';
+
+import type { PageSlice } from '../lib/pagination';
+import type { Lang } from '../config';
+
+/**
+ * List shell for `/projects/` and `/blogs/` (Hugo's `list.html`).
+ * The default slot holds the `<li>` grid items; the `content` slot mirrors
+ * Hugo's section `_index.md` body (unused today: those files only carry a title).
+ */
+interface Props {
+  lang: Lang;
+  section: 'projects' | 'blogs';
+  page: PageSlice<unknown>;
+}
+
+const { lang, section, page } = Astro.props;
+const meta = getContent(lang).pages[section];
+const emptyHref = section === 'blogs' ? localizeHref(lang, '/projects/') : localizeHref(lang, '/');
+const emptyKey = section === 'blogs' ? 'emptyBlogs' : 'emptyOther';
+---
+
+<section class="flow flow-end">
+  <SectionHead level="h1" title={meta.title} body={meta.body}>
+    <slot name="content" />
+  </SectionHead>
+
+  {
+    page.items.length > 0 ? (
+      <>
+        <ul class="mt-8 grid gap-4 lg:grid-cols-2">
+          <slot />
+        </ul>
+        <Pagination
+          lang={lang}
+          pages={page.pagers}
+          current={page.current}
+          prevHref={page.prevHref}
+          nextHref={page.nextHref}
+        />
+      </>
+    ) : (
+      <div class="mt-8 p-5 border border-dashed border-line-raised rounded-lg space-y-4">
+        <p class="type-body measure">{t(lang, 'nothingPublishedHere')}</p>
+        <p class="type-body measure" set:html={t(lang, emptyKey, { url: emptyHref })} />
+      </div>
+    )
+  }
+</section>

@@ -1,0 +1,21 @@
+---
+import { t } from '../i18n/ui';
+import { siteConfig, type Lang } from '../config';
+
+/** Footer: copyright line plus the powered-by line (V1: Astro, not Hugo). */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="w-full max-w-2xl lg:max-w-5xl mx-auto gutter">
+  <div class="border-t border-line">
+    <div class="mx-auto w-fit pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] space-y-1 text-center text-balance">
+      <p class="type-meta">© {year} {siteConfig.fullname}. {t(lang, 'allRightsReserved')}.</p>
+      <p class="type-meta" set:html={t(lang, 'poweredBy')} />
+    </div>
+  </div>
+</footer>

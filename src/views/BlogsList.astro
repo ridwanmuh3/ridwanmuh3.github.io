@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListLayout from '../layouts/ListLayout.astro';
+import BlogListCard from '../components/BlogListCard.astro';
+import { getContent } from '../data/index';
+import { entryHref, getLocalizedEntries, sortByDateDesc } from '../lib/content';
+import { PAGE_SIZE, paginate } from '../lib/pagination';
+import { localizeHref } from '../lib/url';
+
+import type { Lang } from '../config';
+
+/** `/blogs/` (page 1) and `/blogs/page/N/`. */
+interface Props {
+  lang: Lang;
+  current?: number;
+}
+
+const { lang, current = 1 } = Astro.props;
+const other: Lang = lang === 'en' ? 'id' : 'en';
+const meta = getContent(lang).pages.blogs;
+
+const entries = sortByDateDesc(await getLocalizedEntries('blog', lang));
+const basePath = localizeHref(lang, '/blogs/');
+const page = paginate(entries, PAGE_SIZE, basePath, current);
+const path = current === 1 ? basePath : `${basePath}page/${current}/`;
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.body}
+  path={path}
+  translation={localizeHref(other, '/blogs/')}
+>
+  <ListLayout lang={lang} section="blogs" page={page}>
+    {
+      page.items.map((entry) => (
+        <BlogListCard
+          lang={lang}
+          href={entryHref(lang, 'blog', entry.id)}
+          title={entry.data.title}
+          date={entry.data.date}
+          summary={entry.data.summary}
+        />
+      ))
+    }
+  </ListLayout>
+</BaseLayout>

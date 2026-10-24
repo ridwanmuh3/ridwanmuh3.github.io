@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+
+import { isPublished, slugFromId } from '../../../lib/content';
+import ProjectDetail from '../../../views/ProjectDetail.astro';
+import { DEFAULT_LOCALE, locales, type Lang } from '../../../config';
+
+import type { CollectionEntry } from 'astro:content';
+
+/** `/id/projects/<slug>/`; the language comes from the content folder. */
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', isPublished);
+  const paths = [];
+  for (const entry of entries) {
+    const lang = entry.id.split('/')[0] as Lang;
+    if (lang === DEFAULT_LOCALE || !locales.includes(lang)) continue;
+    paths.push({ params: { lang, slug: slugFromId(entry.id) }, props: { entry } });
+  }
+  return paths;
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const { entry } = Astro.props;
+---
+
+<ProjectDetail entry={entry} lang={lang} />

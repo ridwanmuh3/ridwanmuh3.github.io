@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+
+import { isPublished, slugFromId } from '../../../lib/content';
+import BlogDetail from '../../../views/BlogDetail.astro';
+import { DEFAULT_LOCALE, locales, type Lang } from '../../../config';
+
+import type { CollectionEntry } from 'astro:content';
+
+/** `/id/blogs/<slug>/`; the language comes from the content folder. */
+export async function getStaticPaths() {
+  const entries = await getCollection('blog', isPublished);
+  const paths = [];
+  for (const entry of entries) {
+    const lang = entry.id.split('/')[0] as Lang;
+    if (lang === DEFAULT_LOCALE || !locales.includes(lang)) continue;
+    paths.push({ params: { lang, slug: slugFromId(entry.id) }, props: { entry } });
+  }
+  return paths;
+}
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const { entry } = Astro.props;
+---
+
+<BlogDetail entry={entry} lang={lang} />
