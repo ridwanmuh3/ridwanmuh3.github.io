@@ -531,6 +531,24 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
+/* Skills stay hidden until the group is well inside the viewport, then rise
+   and fade like a project card. `cover` spans the viewport, so the reveal
+   starts later than the short `entry` range would. */
+.skill-arrive {
+    animation-name: skill-arrive;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: cover 15% cover 35%;
+}
+
+@keyframes skill-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
 /* Project screenshot trigger + click-to-enlarge viewer.
    The card crop is only a preview; the viewer loads the uncropped original, so a
    wide dashboard screenshot stays readable instead of being letterboxed away. */
@@ -870,7 +888,8 @@ html.lightbox-open {
     }
 
     .hero-stage > *,
-    .card-arrive {
+    .card-arrive,
+    .skill-arrive {
         animation: none;
     }
 
