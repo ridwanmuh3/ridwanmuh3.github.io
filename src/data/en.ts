@@ -41,15 +41,14 @@ export const en = {
       { name: 'Nuxt' }, { name: 'React' }, { name: 'Vue' },
     ] },
     { label: 'Data & Messaging', items: [
-      { name: 'PostgreSQL' }, { name: 'Redis' }, { name: 'RabbitMQ' },
+      { name: 'PostgreSQL' }, { name: 'Redis' },
       { name: 'gRPC' }, { name: 'GORM' },
     ] },
     { label: 'Auth & Crypto', items: [
       { name: 'JWT' }, { name: 'Solidity' }, { name: 'Foundry' },
     ] },
-    { label: 'Observability & Testing', items: [
-      { name: 'OpenTelemetry' }, { name: 'Prometheus' }, { name: 'Grafana' },
-      { name: 'k6' }, { name: 'Playwright' }, { name: 'Jest' },
+    { label: 'Performance Testing', items: [
+      { name: 'k6' },
     ] },
     { label: 'Platform & Tooling', items: [
       { name: 'Docker' }, { name: 'Linux' }, { name: 'Git' },

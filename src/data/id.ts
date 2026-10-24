@@ -41,15 +41,14 @@ export const id = {
       { name: 'Nuxt' }, { name: 'React' }, { name: 'Vue' },
     ] },
     { label: 'Data & Messaging', items: [
-      { name: 'PostgreSQL' }, { name: 'Redis' }, { name: 'RabbitMQ' },
+      { name: 'PostgreSQL' }, { name: 'Redis' },
       { name: 'gRPC' }, { name: 'GORM' },
     ] },
     { label: 'Autentikasi & Kripto', items: [
       { name: 'JWT' }, { name: 'Solidity' }, { name: 'Foundry' },
     ] },
-    { label: 'Observabilitas & Pengujian', items: [
-      { name: 'OpenTelemetry' }, { name: 'Prometheus' }, { name: 'Grafana' },
-      { name: 'k6' }, { name: 'Playwright' }, { name: 'Jest' },
+    { label: 'Pengujian Performa', items: [
+      { name: 'k6' },
     ] },
     { label: 'Platform & Peralatan', items: [
       { name: 'Docker' }, { name: 'Linux' }, { name: 'Git' },
