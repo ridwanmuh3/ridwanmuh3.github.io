@@ -1,4 +1,5 @@
 // @ts-check
+import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
@@ -7,6 +8,56 @@ import { satteri } from '@astrojs/markdown-satteri';
 import { isRedirectPath, siteConfig } from './src/config.ts';
 import { mermaidPlugin } from './src/lib/mermaid-plugin.mjs';
 import { chromaMonokai } from './src/lib/monokai-theme.mjs';
+
+/**
+ * Read frontmatter dates at config time so the sitemap can emit a real
+ * `<lastmod>` instead of the build timestamp. The keys are localized paths
+ * (`/projects/cinx/`, `/id/projects/cinx/`), matching sitemap URLs.
+ */
+function readContentDates() {
+  const dates = new Map();
+  const latestBySection = new Map();
+  const contentRoot = new URL('./src/content/', import.meta.url);
+
+  for (const collection of ['blog', 'projects']) {
+    const section = collection === 'blog' ? 'blogs' : 'projects';
+    for (const lang of ['en', 'id']) {
+      const dir = new URL(`${collection}/${lang}/`, contentRoot);
+      let files;
+      try {
+        files = readdirSync(dir);
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        if (!file.endsWith('.md')) continue;
+        const source = readFileSync(new URL(file, dir), 'utf8');
+        if (/^draft\s*=\s*true\b/m.test(source)) continue;
+        const raw = source.match(/^date\s*=\s*['"]?([^'"\n]+)['"]?/m)?.[1]?.trim();
+        if (!raw) continue;
+        const date = new Date(raw);
+        if (Number.isNaN(date.getTime())) continue;
+
+        const slug = file.replace(/\.md$/, '');
+        const prefix = lang === 'en' ? '' : `/${lang}`;
+        const articlePath = `${prefix}/${section}/${slug}/`;
+        const sectionPath = `${prefix}/${section}/`;
+        dates.set(articlePath, date);
+
+        const previous = latestBySection.get(sectionPath);
+        if (!previous || date > previous) latestBySection.set(sectionPath, date);
+      }
+    }
+  }
+
+  const latestOverall = [...dates.values()].reduce(
+    (latest, date) => (date > latest ? date : latest),
+    new Date(0),
+  );
+  return { dates, latestBySection, latestOverall };
+}
+
+const contentDates = readContentDates();
 
 // https://astro.build/config
 export default defineConfig({
@@ -90,6 +141,36 @@ export default defineConfig({
     sitemap({
       changefreq: 'weekly',
       priority: 0.5,
+      serialize: (item) => {
+        const { pathname } = new URL(item.url);
+        const isHome = pathname === '/' || pathname === '/id/';
+        const isPaged = /\/page\/\d+\/$/.test(pathname);
+        const isArticle = /^\/(?:id\/)?(?:projects|blogs)\/[^/]+\/$/.test(pathname);
+        const isSection = /^\/(?:id\/)?(?:projects|blogs|contact)\/$/.test(pathname);
+        const priority = isHome ? 1 : isPaged ? 0.3 : isArticle ? 0.7 : isSection ? 0.8 : 0.5;
+        const sectionPath = pathname.replace(/page\/\d+\/$/, '');
+        const lastmod = isPaged
+          ? contentDates.latestBySection.get(sectionPath)
+          : (contentDates.dates.get(pathname) ??
+            contentDates.latestBySection.get(pathname) ??
+            (isHome && contentDates.latestOverall.getTime() > 0
+              ? contentDates.latestOverall
+              : undefined));
+        const links = item.links?.length
+          ? [
+              ...item.links,
+              ...(item.links.some((link) => link.lang === 'x-default')
+                ? []
+                : [
+                    {
+                      lang: 'x-default',
+                      url: item.links.find((link) => link.lang === 'en-US')?.url ?? item.url,
+                    },
+                  ]),
+            ]
+          : item.links;
+        return { ...item, priority, lastmod, links };
+      },
       i18n: {
         defaultLocale: 'en',
         locales: { en: 'en-US', id: 'id-ID' },

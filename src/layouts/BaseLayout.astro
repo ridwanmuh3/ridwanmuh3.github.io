@@ -68,6 +68,21 @@ const pageTitle = kind === 'home' || !title ? siteConfig.title : `${title} | ${s
 const pageDescription = truncate(description ?? locale.bio, 160);
 const ogDescription = truncate(description ?? locale.bio, 200);
 const canonical = new URL(path, siteConfig.url).href;
+const other: Lang = lang === 'en' ? 'id' : 'en';
+const otherLocale = siteConfig.locales[other];
+const translationUrl = translation ? new URL(translation, siteConfig.url).href : undefined;
+const defaultUrl = lang === 'en' ? canonical : translationUrl;
+const homeUrl = new URL(localizeHref(lang, '/'), siteConfig.url).href;
+const feedUrl = new URL(localizeHref(lang, '/index.xml'), siteConfig.url).href;
+
+const sectionHref = path.includes('/projects/')
+  ? '/projects/'
+  : path.includes('/blogs/')
+    ? '/blogs/'
+    : undefined;
+const sectionName = sectionHref
+  ? siteConfig.locales[lang].nav.find((item) => item.href === sectionHref)?.name
+  : undefined;
 
 const ogImage = await getImage({
   src: avatar,
@@ -89,7 +104,11 @@ if (kind === 'home') {
     url: new URL(localizeHref(lang, '/'), siteConfig.url).href,
     jobTitle: siteConfig.role,
     description: locale.bio,
+    image: ogImageUrl,
     sameAs: content.socials.map((social) => social.href),
+    knowsAbout: [
+      ...new Set(content.skills.flatMap((group) => group.items.map((item) => item.name))),
+    ],
     alumniOf: content.education
       .filter((entry) => entry.company)
       .map((entry) => ({ '@type': 'CollegeOrUniversity', name: entry.company })),
@@ -102,17 +121,40 @@ if (kind === 'home') {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline,
+    description: pageDescription,
     url: canonical,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    image: [ogImageUrl],
+    inLanguage: locale.htmlLang,
     ...(datePublished ? { datePublished } : {}),
-    ...(dateModified ? { dateModified } : {}),
+    ...(dateModified || datePublished ? { dateModified: dateModified ?? datePublished } : {}),
     author: {
       '@type': 'Person',
       name: siteConfig.fullname,
-      url: new URL(localizeHref(lang, '/'), siteConfig.url).href,
+      url: homeUrl,
+      image: ogImageUrl,
     },
-    publisher: { '@type': 'Person', name: siteConfig.fullname },
+    publisher: { '@type': 'Person', name: siteConfig.fullname, url: homeUrl },
   };
 }
+
+const breadcrumb =
+  kind === 'article' && headline && sectionHref && sectionName
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: t(lang, 'home'), item: homeUrl },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: sectionName,
+            item: new URL(localizeHref(lang, sectionHref), siteConfig.url).href,
+          },
+          { '@type': 'ListItem', position: 3, name: headline, item: canonical },
+        ],
+      }
+    : undefined;
 ---
 
 <!doctype html>
@@ -124,7 +166,28 @@ if (kind === 'home') {
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {translationUrl && (
+      <>
+        <link rel="alternate" hreflang={locale.htmlLang} href={canonical} />
+        <link rel="alternate" hreflang={otherLocale.htmlLang} href={translationUrl} />
+        {defaultUrl && <link rel="alternate" hreflang="x-default" href={defaultUrl} />}
+      </>
+    )}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${siteConfig.title} — RSS`}
+      href={feedUrl}
+    />
+    <meta name="author" content={siteConfig.fullname} />
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta
+        name="robots"
+        content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      />
+    )}
 
     <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
     <link rel="icon" type="image/webp" sizes="32x32" href="/icons/ridwan-logo.webp" />
@@ -142,7 +205,16 @@ if (kind === 'home') {
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content={kind === 'article' ? 'article' : 'website'} />
     <meta property="og:locale" content={locale.ogLocale} />
+    {translationUrl && <meta property="og:locale:alternate" content={otherLocale.ogLocale} />}
+    {kind === 'article' && datePublished && (
+      <meta property="article:published_time" content={datePublished} />
+    )}
+    {kind === 'article' && (dateModified || datePublished) && (
+      <meta property="article:modified_time" content={dateModified ?? datePublished} />
+    )}
+    {kind === 'article' && <meta property="article:author" content={homeUrl} />}
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={siteConfig.fullname} />
@@ -151,11 +223,15 @@ if (kind === 'home') {
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={siteConfig.fullname} />
     <meta name="twitter:site" content={`@${siteConfig.author}`} />
     <meta name="twitter:creator" content={`@${siteConfig.author}`} />
 
     {jsonLd && (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    )}
+    {breadcrumb && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumb)} />
     )}
 
     <Font cssVariable="--font-geist" preload />

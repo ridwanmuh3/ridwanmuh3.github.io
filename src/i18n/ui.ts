@@ -6,6 +6,7 @@ import type { Lang } from '../config';
  */
 const en = {
   skipToContent: 'Skip to content',
+  home: 'Home',
 
   viewCv: 'View CV',
 
@@ -83,6 +84,7 @@ export type UIKey = keyof typeof en;
 
 const id: Record<UIKey, string> = {
   skipToContent: 'Lewati ke konten',
+  home: 'Beranda',
 
   viewCv: 'Lihat CV',
 

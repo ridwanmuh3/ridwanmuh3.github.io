@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 
+# AI training crawlers
 User-agent: GPTBot
 Disallow: /
 
@@ -20,6 +21,24 @@ User-agent: PerplexityBot
 Disallow: /
 
 User-agent: Bytespider
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: YouBot
 Disallow: /
 
 Sitemap: https://ridwanmuh3.github.io/sitemap-index.xml
