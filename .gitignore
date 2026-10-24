@@ -3,6 +3,7 @@ dist/
 
 # generated types
 .astro/
+.impeccable
 
 # dependencies
 node_modules/
