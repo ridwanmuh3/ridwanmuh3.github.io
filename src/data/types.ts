@@ -25,6 +25,7 @@ export interface TimelineItem {
   /** Education-only credential shown beside the dates. */
   gpa?: string;
   description?: string;
+  keypoints?: string[];
 }
 
 export interface ProjectCardData {

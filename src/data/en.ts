@@ -95,6 +95,7 @@ export const en = {
       end: '2026-03',
       description:
         'Implemented a web-based research system securing QR codes and embedded documents, built with Nuxt 4 and exposing 12 REST API endpoints for document issuance and verification.',
+      keypoints: ['digital signature', 'time-based encryption'],
     },
     {
       name: 'Full Stack Web Developer',
@@ -103,6 +104,7 @@ export const en = {
       end: '2026-03',
       description:
         'Built a budget and goods management system for the kitchen operations of the SPPG MBG program with a Go, Fiber, GORM, and PostgreSQL backend, 35 REST API endpoints, and role-based access control.',
+      keypoints: ['row-level locking', 'React', 'TanStack Query'],
     },
     {
       name: 'Backend Developer Intern',
@@ -111,6 +113,7 @@ export const en = {
       end: '2025-08',
       description:
         'Built the REST API backend for an archive system with JWT authentication, role-based access control, file search, archive request submission and tracking, and history management using Go, Echo, GORM, and PostgreSQL.',
+      keypoints: ['layered architecture', 'UML'],
     },
   ],
 
