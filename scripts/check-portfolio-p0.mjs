@@ -22,4 +22,8 @@ for (const prefix of ['', 'id/']) {
   assert.doesNotMatch(detail, /cdn\.jsdelivr\.net/);
   assert.doesNotMatch(page(`${prefix}blogs/hello-world/index.html`), /MermaidScript|<dt class="type-meta">Timeline<\/dt>/);
 }
-console.log('Portfolio P0 EN/ID markup OK');
+const sitemap = page('sitemap.xml');
+assert.equal((sitemap.match(/<loc>/g) ?? []).length, 26);
+assert.match(sitemap, /<loc>https:\/\/ridwanmuh3\.github\.io\/index\.xml<\/loc>/);
+assert.match(page('robots.txt'), /Sitemap: https:\/\/ridwanmuh3\.github\.io\/sitemap\.xml/);
+console.log('Portfolio P0 EN/ID markup and sitemap OK');
