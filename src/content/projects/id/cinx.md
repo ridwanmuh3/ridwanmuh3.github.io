@@ -161,48 +161,7 @@ menggabungkan katalog dan ketersediaan, menormalkan error gRPC menjadi semantik
 HTTP, dan memegang middleware autentikasi. SPA tidak pernah tahu ada enam
 service di belakangnya.
 
-```mermaid
-flowchart TB
-    Web["Browser · Vue 3 SPA"] -->|REST + JWT| Gateway["API Gateway · :3000"]
-
-    subgraph Services["NestJS services"]
-        Gateway -->|gRPC| User["user-service · akun"]
-        Gateway -->|gRPC| Cinema["cinema-service · katalog"]
-        Gateway -->|gRPC command| Booking["booking-service · booking + seat lock"]
-        Gateway -->|gRPC command| Payment["payment-service · pembayaran + Xendit"]
-        Gateway -->|gRPC command| Ticket["ticket-service · tiket"]
-
-        Booking -->|validasi kursi / harga| Cinema
-        Booking -->|kontak pelanggan| User
-        Booking -->|booking.*| MQ["RabbitMQ · ticketing.internal"]
-        Payment -->|payment.*| MQ
-        Ticket -->|tickets.*| MQ
-        MQ -->|payment.*| Booking
-        MQ -->|booking.*| Payment
-        MQ -->|booking.confirmed / refunded| Ticket
-        MQ -->|tickets.issued / payment.received| Notification["notification-service · email"]
-    end
-
-    subgraph PG["PostgreSQL · satu instance di development"]
-        UserDB[(user_db)]
-        CinemaDB[(cinema_db)]
-        BookingDB[(booking_db)]
-        PaymentDB[(payment_db)]
-        TicketDB[(ticket_db)]
-    end
-
-    User --> UserDB
-    Cinema --> CinemaDB
-    Booking --> BookingDB
-    Payment --> PaymentDB
-    Ticket --> TicketDB
-
-    Booking -->|seat lock| Redis[(Redis)]
-    Payment -->|invoice / status / refund| Xendit["Xendit"]
-    Web -->|hosted checkout| Xendit
-    Xendit -->|webhook| Gateway
-    Notification --> Resend["Resend"]
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-id-1.svg" data-lightbox-alt="Arsitektur layanan CinX" data-lightbox-caption="Arsitektur layanan CinX" aria-label="Perbesar diagram arsitektur layanan CinX"><img src="/diagrams/cinx-id-1.svg" width="1776" height="1856" loading="lazy" decoding="async" alt="Diagram arsitektur layanan CinX" /></button>
 
 ### Kepemilikan service
 
@@ -218,46 +177,7 @@ flowchart TB
 
 ### Saga booking
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Pelanggan
-    participant G as Gateway
-    participant B as booking-service
-    participant R as Redis
-    participant X as Xendit
-    participant P as payment-service
-    participant T as ticket-service
-    participant N as notification-service
-
-    C->>G: POST /bookings/holds
-    G->>B: Hold(showtime, kursi)
-    B->>B: validasi kursi + harga via cinema-service
-    B->>R: redlock seat:{showtimeId}:{seatId} × n (TTL 5 menit)
-    B->>B: INSERT booking PENDING + snapshot kursi
-    B-->>C: booking + expiresAt
-
-    C->>G: POST /bookings/{id}/pay
-    G->>B: PrepareCharge(booking)
-    B-->>G: amount, currency, expiry, pelanggan
-    G->>P: Charge(context)
-    P->>X: buat hosted invoice
-    P-->>C: checkoutUrl
-
-    C->>X: bayar di halaman penyedia
-    X->>G: webhook
-    G->>P: Webhook(event)
-    P->>P: tandai pembayaran SETTLED
-    P-)B: payment.settled
-    B->>R: lepas seat lock
-    B-)T: booking.confirmed (snapshot kursi + film)
-    T->>T: terbitkan tiket secara idempoten
-    T-)B: tickets.issued
-    B->>B: booking CONFIRMED
-    B-)N: payment.received
-    T-)N: tickets.issued
-    N->>C: email tiket + kuitansi
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-id-2.svg" data-lightbox-alt="Urutan pemesanan dan pembayaran CinX" data-lightbox-caption="Urutan pemesanan dan pembayaran CinX" aria-label="Perbesar diagram urutan pemesanan dan pembayaran CinX"><img src="/diagrams/cinx-id-2.svg" width="2441" height="1727" loading="lazy" decoding="async" alt="Diagram urutan pemesanan dan pembayaran CinX" /></button>
 
 Detail pentingnya adalah state **sudah dibayar tetapi tiket belum terbit**:
 booking tetap `PENDING` dengan `paid_at` terisi sampai `tickets.issued` datang.
@@ -329,132 +249,7 @@ Lima database, satu per service pemilik data. Referensi lintas database bersifat
 database. `booking_seats` tetap memiliki FK lokal ke `bookings` karena keduanya
 berada di `booking_db`.
 
-```mermaid
-erDiagram
-    USERS {
-        uuid id PK
-        varchar email UK
-        varchar name
-        varchar password_hash
-        enum role
-        timestamptz created_at
-    }
-
-    MOVIES {
-        uuid id PK
-        varchar title
-        text synopsis
-        int duration_minutes
-        enum age_rating
-        varchar poster_url
-        date release_date
-        enum status
-    }
-
-    GENRES {
-        uuid id PK
-        varchar name UK
-    }
-
-    MOVIE_GENRES {
-        uuid movie_id PK
-        uuid genre_id PK
-    }
-
-    THEATERS {
-        uuid id PK
-        varchar name
-        varchar address
-    }
-
-    SEATS {
-        uuid id PK
-        uuid theater_id FK
-        varchar row_label
-        int seat_number
-        enum category
-        boolean is_accessible
-        boolean is_disabled
-    }
-
-    SHOWTIMES {
-        uuid id PK
-        uuid movie_id FK
-        uuid theater_id FK
-        timestamptz starts_at
-        bigint price_amount
-        char price_currency
-    }
-
-    BOOKINGS {
-        uuid id PK
-        uuid user_id
-        uuid showtime_id
-        varchar movie_title
-        varchar theater_name
-        timestamptz starts_at
-        bigint total_amount
-        enum status
-        varchar cancellation_reason
-        timestamptz expires_at
-        timestamptz paid_at
-        timestamptz confirmed_at
-        timestamptz tickets_issued_at
-    }
-
-    BOOKING_SEATS {
-        uuid id PK
-        uuid booking_id FK
-        uuid showtime_id
-        uuid seat_id
-        varchar row_label
-        int seat_number
-        enum category
-        bigint price_amount
-        char price_currency
-    }
-
-    PAYMENTS {
-        uuid id PK
-        uuid booking_id UK
-        varchar external_id
-        varchar provider_txn_id
-        bigint amount
-        enum method
-        enum status
-        varchar invoice_id
-        varchar checkout_url
-        varchar refund_id
-        timestamptz paid_at
-        timestamptz refunded_at
-    }
-
-    TICKETS {
-        uuid id PK
-        uuid booking_id
-        uuid user_id
-        uuid showtime_id
-        varchar code UK
-        varchar movie_title
-        varchar theater_name
-        timestamptz starts_at
-        varchar seat_id
-        varchar row_label
-        int seat_number
-    }
-
-    MOVIES ||--o{ MOVIE_GENRES : "memiliki genre"
-    GENRES ||--o{ MOVIE_GENRES : "mengklasifikasi"
-    MOVIES ||--o{ SHOWTIMES : "dijadwalkan sebagai"
-    THEATERS ||--o{ SEATS : "berisi"
-    THEATERS ||--o{ SHOWTIMES : "menyelenggarakan"
-    BOOKINGS ||--|{ BOOKING_SEATS : "mencakup"
-    USERS ||..o{ BOOKINGS : "memiliki (logis)"
-    SHOWTIMES ||..o{ BOOKINGS : "dipesan untuk (logis)"
-    SEATS ||..o{ BOOKING_SEATS : "snapshot dari (logis)"
-    BOOKINGS ||..|| PAYMENTS : "dibayar oleh (logis)"
-    BOOKINGS ||..o{ TICKETS : "diterbitkan sebagai (logis)"
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-id-3.svg" data-lightbox-alt="Relasi basis data CinX" data-lightbox-caption="Relasi basis data CinX" aria-label="Perbesar diagram relasi basis data CinX"><img src="/diagrams/cinx-id-3.svg" width="1316" height="2519" loading="lazy" decoding="async" alt="Diagram relasi basis data CinX" /></button>
 
 ### Constraint yang membawa makna bisnis
 

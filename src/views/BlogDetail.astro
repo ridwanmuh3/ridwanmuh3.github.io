@@ -22,7 +22,6 @@ const other: Lang = lang === 'en' ? 'id' : 'en';
 const slug = slugFromId(entry.id);
 const back = getContent(lang).pages.blogs;
 const { Content } = await render(entry);
-const hasMermaid = entry.body?.includes('```mermaid') ?? false;
 ---
 
 <BaseLayout
@@ -35,8 +34,6 @@ const hasMermaid = entry.body?.includes('```mermaid') ?? false;
   datePublished={entry.data.date.toISOString().slice(0, 10)}
   dateModified={entry.data.date.toISOString().slice(0, 10)}
   translation={localizeHref(other, `/blogs/${slug}/`)}
-  lightbox={hasMermaid}
-  mermaid={hasMermaid}
 >
   <ArticleLayout
     lang={lang}

@@ -22,7 +22,7 @@ const { lang } = Astro.props;
 const content = getContent(lang);
 const cvHref = `/files/${lang}/cv-ridwan-muhammad-raihan.pdf`;
 
-const widths = [320, 480, 696];
+const widths = [160, 320, 480];
 const variants = await Promise.all(
   widths.map((width) =>
     getImage({
@@ -32,7 +32,7 @@ const variants = await Promise.all(
       fit: 'cover',
       position: 'center',
       format: 'webp',
-      quality: 80,
+      quality: 65,
     }),
   ),
 );

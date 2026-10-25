@@ -70,7 +70,6 @@ const en = {
   imageZoomIn: 'Zoom in',
   imageZoomOut: 'Zoom out',
   imageFit: 'Fit',
-  diagramZoom: 'Enlarge diagram',
   mediaViewer: 'Image and diagram viewer',
 
   error404Title: '// 404 Not Found',
@@ -148,7 +147,6 @@ const id: Record<UIKey, string> = {
   imageZoomIn: 'Perbesar',
   imageZoomOut: 'Perkecil',
   imageFit: 'Pas',
-  diagramZoom: 'Perbesar diagram',
   mediaViewer: 'Penampil gambar dan diagram',
 
   error404Title: '// 404 Tidak Ditemukan',

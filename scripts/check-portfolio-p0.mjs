@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const page = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 
@@ -17,7 +17,13 @@ for (const prefix of ['', 'id/']) {
   assert.doesNotMatch(groups.map((group) => group[1]).join(''), /<img|<svg|ECDSA|ML-DSA|FN-DSA/);
   assert.equal((home.match(/<h3 class="type-label text-ink-muted mb-3">/g) ?? []).length, 6);
   assert.equal((list.match(/line-clamp-2/g) ?? []).length, 5);
-  assert.match(detail, /MermaidScript/);
+  assert.doesNotMatch(detail, /MermaidScript|<pre class="mermaid"/);
+  assert.equal((detail.match(/class="mermaid-zoom"/g) ?? []).length, 3);
+  for (const i of [1, 2, 3]) {
+    const diagram = `diagrams/cinx-${prefix ? 'id' : 'en'}-${i}.svg`;
+    assert.match(detail, new RegExp(`data-lightbox-src="/${diagram.replace('.', '\\.')}"`));
+    assert.ok(existsSync(new URL(`../dist/${diagram}`, import.meta.url)), diagram);
+  }
   assert.match(detail, prefix ? /<dt class="type-meta">Periode<\/dt>/ : /<dt class="type-meta">Timeline<\/dt>/);
   assert.doesNotMatch(detail, /cdn\.jsdelivr\.net/);
   assert.doesNotMatch(page(`${prefix}blogs/hello-world/index.html`), /MermaidScript|<dt class="type-meta">Timeline<\/dt>/);

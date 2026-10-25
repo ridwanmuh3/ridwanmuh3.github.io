@@ -4,7 +4,6 @@ import { Font, getImage } from 'astro:assets';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Lightbox from '../components/Lightbox.astro';
-import MermaidScript from '../components/MermaidScript.astro';
 import { siteConfig, type Lang } from '../config';
 import { en } from '../data/en';
 import { id } from '../data/id';
@@ -22,8 +21,7 @@ import '../styles/global.css';
  * title, description (160), canonical, robots (404 only), icons, theme-color,
  * verification, Open Graph, Twitter, JSON-LD, font preload, stylesheet,
  * `<noscript>` menu fallback. Body is `dark`, skip link, header, `main#main`,
- * footer, then the viewer and the three inline scripts (menu, timeline dot,
- * mermaid) in the same order as `baseof.html`.
+ * footer, then the viewer and inline scripts (menu, timeline dot).
  */
 interface Props {
   lang: Lang;
@@ -43,8 +41,6 @@ interface Props {
   translation?: string;
   /** Include the screenshot/diagram viewer (Hugo: home, projects, mermaid). */
   lightbox?: boolean;
-  /** Load the Mermaid renderer (Hugo: pages whose source has a mermaid block). */
-  mermaid?: boolean;
 }
 
 const {
@@ -59,7 +55,6 @@ const {
   noindex = false,
   translation,
   lightbox = false,
-  mermaid = false,
 } = Astro.props;
 
 const locale = siteConfig.locales[lang];
@@ -268,7 +263,6 @@ const breadcrumb =
     </main>
     <Footer lang={lang} />
     {lightbox && <Lightbox lang={lang} />}
-    {mermaid && <MermaidScript />}
     <script is:inline>
       (() => {
         const nav = document.querySelector('.site-nav');

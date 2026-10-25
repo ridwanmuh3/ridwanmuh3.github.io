@@ -157,48 +157,7 @@ is a backend-for-frontend — it translates JSON into gRPC calls, aggregates
 catalog and availability, normalizes gRPC errors into HTTP semantics, and owns
 authentication middleware. The SPA never learns that six services exist.
 
-```mermaid
-flowchart TB
-    Web["Browser · Vue 3 SPA"] -->|REST + JWT| Gateway["API Gateway · :3000"]
-
-    subgraph Services["NestJS services"]
-        Gateway -->|gRPC| User["user-service · accounts"]
-        Gateway -->|gRPC| Cinema["cinema-service · catalog"]
-        Gateway -->|gRPC commands| Booking["booking-service · bookings + seat locks"]
-        Gateway -->|gRPC commands| Payment["payment-service · payments + Xendit"]
-        Gateway -->|gRPC commands| Ticket["ticket-service · tickets"]
-
-        Booking -->|validate seats / price| Cinema
-        Booking -->|customer contact| User
-        Booking -->|booking.*| MQ["RabbitMQ · ticketing.internal"]
-        Payment -->|payment.*| MQ
-        Ticket -->|tickets.*| MQ
-        MQ -->|payment.*| Booking
-        MQ -->|booking.*| Payment
-        MQ -->|booking.confirmed / refunded| Ticket
-        MQ -->|tickets.issued / payment.received| Notification["notification-service · email"]
-    end
-
-    subgraph PG["PostgreSQL · one instance in dev"]
-        UserDB[(user_db)]
-        CinemaDB[(cinema_db)]
-        BookingDB[(booking_db)]
-        PaymentDB[(payment_db)]
-        TicketDB[(ticket_db)]
-    end
-
-    User --> UserDB
-    Cinema --> CinemaDB
-    Booking --> BookingDB
-    Payment --> PaymentDB
-    Ticket --> TicketDB
-
-    Booking -->|seat locks| Redis[(Redis)]
-    Payment -->|invoice / status / refund| Xendit["Xendit"]
-    Web -->|hosted checkout| Xendit
-    Xendit -->|webhook| Gateway
-    Notification --> Resend["Resend"]
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-en-1.svg" data-lightbox-alt="CinX service architecture" data-lightbox-caption="CinX service architecture" aria-label="Enlarge CinX service architecture diagram"><img src="/diagrams/cinx-en-1.svg" width="1791" height="1769" loading="lazy" decoding="async" alt="CinX service architecture diagram" /></button>
 
 ### Service ownership
 
@@ -214,46 +173,7 @@ flowchart TB
 
 ### The booking saga
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Customer
-    participant G as Gateway
-    participant B as booking-service
-    participant R as Redis
-    participant X as Xendit
-    participant P as payment-service
-    participant T as ticket-service
-    participant N as notification-service
-
-    C->>G: POST /bookings/holds
-    G->>B: Hold(showtime, seats)
-    B->>B: validate seats + price via cinema-service
-    B->>R: redlock seat:{showtimeId}:{seatId} × n (TTL 5 min)
-    B->>B: INSERT PENDING booking + seat snapshots
-    B-->>C: booking + expiresAt
-
-    C->>G: POST /bookings/{id}/pay
-    G->>B: PrepareCharge(booking)
-    B-->>G: amount, currency, expiry, customer
-    G->>P: Charge(context)
-    P->>X: create hosted invoice
-    P-->>C: checkoutUrl
-
-    C->>X: pay on hosted page
-    X->>G: webhook
-    G->>P: Webhook(event)
-    P->>P: mark payment SETTLED
-    P-)B: payment.settled
-    B->>R: release seat locks
-    B-)T: booking.confirmed (seat + movie snapshot)
-    T->>T: issue tickets idempotently
-    T-)B: tickets.issued
-    B->>B: booking CONFIRMED
-    B-)N: payment.received
-    T-)N: tickets.issued
-    N->>C: ticket + receipt email
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-en-2.svg" data-lightbox-alt="CinX booking and payment sequence" data-lightbox-caption="CinX booking and payment sequence" aria-label="Enlarge CinX booking and payment sequence diagram"><img src="/diagrams/cinx-en-2.svg" width="2433" height="1727" loading="lazy" decoding="async" alt="CinX booking and payment sequence diagram" /></button>
 
 The important detail is the **paid-but-unticketed** state: a booking stays
 `PENDING` with `paid_at` set until `tickets.issued` arrives. If ticket-service
@@ -324,132 +244,7 @@ Five databases, one per data-owning service. Cross-database references are
 `booking_seats` keeps a local FK to `bookings` because both live in
 `booking_db`.
 
-```mermaid
-erDiagram
-    USERS {
-        uuid id PK
-        varchar email UK
-        varchar name
-        varchar password_hash
-        enum role
-        timestamptz created_at
-    }
-
-    MOVIES {
-        uuid id PK
-        varchar title
-        text synopsis
-        int duration_minutes
-        enum age_rating
-        varchar poster_url
-        date release_date
-        enum status
-    }
-
-    GENRES {
-        uuid id PK
-        varchar name UK
-    }
-
-    MOVIE_GENRES {
-        uuid movie_id PK
-        uuid genre_id PK
-    }
-
-    THEATERS {
-        uuid id PK
-        varchar name
-        varchar address
-    }
-
-    SEATS {
-        uuid id PK
-        uuid theater_id FK
-        varchar row_label
-        int seat_number
-        enum category
-        boolean is_accessible
-        boolean is_disabled
-    }
-
-    SHOWTIMES {
-        uuid id PK
-        uuid movie_id FK
-        uuid theater_id FK
-        timestamptz starts_at
-        bigint price_amount
-        char price_currency
-    }
-
-    BOOKINGS {
-        uuid id PK
-        uuid user_id
-        uuid showtime_id
-        varchar movie_title
-        varchar theater_name
-        timestamptz starts_at
-        bigint total_amount
-        enum status
-        varchar cancellation_reason
-        timestamptz expires_at
-        timestamptz paid_at
-        timestamptz confirmed_at
-        timestamptz tickets_issued_at
-    }
-
-    BOOKING_SEATS {
-        uuid id PK
-        uuid booking_id FK
-        uuid showtime_id
-        uuid seat_id
-        varchar row_label
-        int seat_number
-        enum category
-        bigint price_amount
-        char price_currency
-    }
-
-    PAYMENTS {
-        uuid id PK
-        uuid booking_id UK
-        varchar external_id
-        varchar provider_txn_id
-        bigint amount
-        enum method
-        enum status
-        varchar invoice_id
-        varchar checkout_url
-        varchar refund_id
-        timestamptz paid_at
-        timestamptz refunded_at
-    }
-
-    TICKETS {
-        uuid id PK
-        uuid booking_id
-        uuid user_id
-        uuid showtime_id
-        varchar code UK
-        varchar movie_title
-        varchar theater_name
-        timestamptz starts_at
-        varchar seat_id
-        varchar row_label
-        int seat_number
-    }
-
-    MOVIES ||--o{ MOVIE_GENRES : "tagged with"
-    GENRES ||--o{ MOVIE_GENRES : "classifies"
-    MOVIES ||--o{ SHOWTIMES : "scheduled as"
-    THEATERS ||--o{ SEATS : "contains"
-    THEATERS ||--o{ SHOWTIMES : "hosts"
-    BOOKINGS ||--|{ BOOKING_SEATS : "includes"
-    USERS ||..o{ BOOKINGS : "owns (logical)"
-    SHOWTIMES ||..o{ BOOKINGS : "booked for (logical)"
-    SEATS ||..o{ BOOKING_SEATS : "snapshot of (logical)"
-    BOOKINGS ||..|| PAYMENTS : "paid by (logical)"
-    BOOKINGS ||..o{ TICKETS : "issued as (logical)"
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/cinx-en-3.svg" data-lightbox-alt="CinX database relationships" data-lightbox-caption="CinX database relationships" aria-label="Enlarge CinX database relationships diagram"><img src="/diagrams/cinx-en-3.svg" width="1287" height="2498" loading="lazy" decoding="async" alt="CinX database relationships diagram" /></button>
 
 ### Constraints that carry business meaning
 

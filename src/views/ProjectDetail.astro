@@ -28,7 +28,6 @@ const { Content } = await render(entry);
 
 const link = entry.data.link;
 const minutes = link?.startsWith('http') ? undefined : readingTime(entry.body ?? '');
-const hasMermaid = entry.body?.includes('```mermaid') ?? false;
 ---
 
 <BaseLayout
@@ -42,7 +41,6 @@ const hasMermaid = entry.body?.includes('```mermaid') ?? false;
   dateModified={entry.data.date.toISOString().slice(0, 10)}
   translation={localizeHref(other, `/projects/${slug}/`)}
   lightbox
-  mermaid={hasMermaid}
 >
   <ArticleLayout
     lang={lang}

@@ -33,7 +33,7 @@ const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
           photo={project.photo}
           caption={project.name}
           alt={shotLabel}
-          sizes="(min-width: 1024px) 440px, (min-width: 672px) 640px, 100vw"
+          sizes="(min-width: 1024px) 440px, (min-width: 672px) 640px, calc(100vw - 4.5rem)"
         />
       ) : (
         <ProjectPlaceholder name={project.name} mark={project.mark} />

@@ -78,9 +78,7 @@ export default defineConfig({
       features: { smartPunctuation: false },
       hastPlugins: [mermaidPlugin],
     }),
-    // Mermaid blocks stay raw in the Markdown pipeline: the hast plugin in
-    // `src/lib/mermaid.ts` rewrites them to `<pre class="mermaid">`, exactly
-    // what Hugo's render hook emits.
+    // Unrendered Mermaid blocks fail the build; CinX diagrams ship as static SVG.
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
     shikiConfig: { theme: chromaMonokai },
   },

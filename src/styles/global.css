@@ -370,32 +370,10 @@ h1, h2, h3, h4, h5, p, li, a {
     }
 }
 
-/* Mermaid: the render hook emits <pre class="mermaid"> and the script in
-   baseof.html replaces it with an SVG. Centre it and keep it inside the column. */
-.prose-article .mermaid {
-    display: flex;
-    justify-content: center;
-    padding: 1.25rem 1rem;
-}
-
-.prose-article .mermaid svg {
+/* Rendered diagram previews stay inside the article column. */
+.prose-article .mermaid-zoom img {
     max-width: 100%;
     height: auto;
-}
-
-.mermaid .row-rect-odd > path:first-child,
-.lightbox__diagram .row-rect-odd > path:first-child {
-    fill: var(--color-surface) !important;
-}
-
-.mermaid .row-rect-even > path:first-child,
-.lightbox__diagram .row-rect-even > path:first-child {
-    fill: var(--color-surface-hover) !important;
-}
-
-.mermaid .node .label,
-.lightbox__diagram .node .label {
-    color: var(--color-ink) !important;
 }
 
 .mermaid-zoom {
@@ -531,6 +509,13 @@ h1, h2, h3, h4, h5, p, li, a {
     animation-range: cover 15% cover 35%;
 }
 
+/* Mobile paints below-fold cards without scroll-linked animation work. */
+@media (max-width: 639px) {
+    .card-arrive {
+        animation: none;
+    }
+}
+
 @keyframes card-arrive {
     from {
         opacity: 0;
@@ -661,26 +646,6 @@ h1, h2, h3, h4, h5, p, li, a {
     border-radius: 0;
     box-shadow: none;
     cursor: zoom-out;
-}
-
-.lightbox__diagram {
-    width: min(100%, 80rem);
-    color: var(--color-ink);
-}
-
-.lightbox__diagram[hidden] {
-    display: none;
-}
-
-.lightbox__diagram svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: none;
-}
-
-.lightbox__diagram.is-zoomed {
-    max-width: none;
 }
 
 

@@ -26,13 +26,11 @@ const { lang } = Astro.props;
   class="lightbox"
   data-lightbox-dialog
   data-lightbox-fit-label={t(lang, 'imageFit')}
-  data-diagram-zoom-label={t(lang, 'diagramZoom')}
   aria-label={t(lang, 'mediaViewer')}
 >
   <div class="lightbox__frame" data-lightbox-frame>
     <div class="lightbox__stage" data-lightbox-stage>
       <img class="lightbox__img" data-lightbox-img alt="" decoding="async" />
-      <div class="lightbox__diagram" data-lightbox-diagram hidden></div>
     </div>
     <div class="lightbox__bar">
       <p class="lightbox__caption type-meta" data-lightbox-caption></p>
@@ -67,7 +65,6 @@ const { lang } = Astro.props;
 
     const q = (sel) => dialog.querySelector(sel);
     const img = q('[data-lightbox-img]');
-    const diagram = q('[data-lightbox-diagram]');
     const stage = q('[data-lightbox-stage]');
     const frame = q('[data-lightbox-frame]');
     const caption = q('[data-lightbox-caption]');
@@ -80,7 +77,6 @@ const { lang } = Astro.props;
     const LEVELS = [0, 1, 2, 3];
     let step = 0;
     let trigger = null;
-    let diagramWidth = 0;
 
     const apply = () => {
       step = Math.min(Math.max(step, 0), LEVELS.length - 1);
@@ -88,10 +84,8 @@ const { lang } = Astro.props;
       const zoomed = zoom > 0;
       // Width is left unset while fitting so CSS contain-boxes the image;
       // past that the img is sized from its own pixels and the stage scrolls.
-      const width = diagramWidth || img.naturalWidth;
-      const media = diagramWidth ? diagram : img;
-      media.style.width = zoomed ? `${Math.round(width * zoom)}px` : '';
-      diagram.classList.toggle('is-zoomed', zoomed && !!diagramWidth);
+      const width = img.naturalWidth;
+      img.style.width = zoomed ? `${Math.round(width * zoom)}px` : '';
       img.classList.toggle('is-zoomed', zoomed);
       level.textContent = zoomed ? `${zoom * 100}%` : fitLabel;
       // Re-centre after the new box has been laid out.
@@ -108,11 +102,6 @@ const { lang } = Astro.props;
 
     const show = (from) => {
       trigger = from;
-      diagramWidth = 0;
-      diagram.hidden = true;
-      diagram.replaceChildren();
-      diagram.style.width = '';
-      img.hidden = false;
       const src = from.dataset.lightboxSrc;
       caption.textContent = from.dataset.lightboxCaption || '';
       img.alt = from.dataset.lightboxAlt || '';
@@ -126,26 +115,6 @@ const { lang } = Astro.props;
       root.classList.add('lightbox-open');
       closeBtn.focus();
     };
-
-    dialog.addEventListener('diagram-open', ({ detail: { button, svg } }) => {
-      trigger = button;
-      const copy = svg.cloneNode(true);
-      copy.removeAttribute('style');
-      copy.removeAttribute('width');
-      copy.removeAttribute('height');
-      copy.setAttribute('role', 'img');
-      copy.setAttribute('aria-label', button.getAttribute('aria-label'));
-      diagramWidth = svg.viewBox.baseVal.width || svg.getBoundingClientRect().width;
-      diagram.replaceChildren(copy);
-      diagram.hidden = false;
-      img.hidden = true;
-      caption.textContent = button.getAttribute('aria-label');
-      step = 0;
-      dialog.showModal();
-      root.classList.add('lightbox-open');
-      apply();
-      closeBtn.focus();
-    });
 
     const hide = () => {
       if (dialog.open) dialog.close();
@@ -167,7 +136,6 @@ const { lang } = Astro.props;
       root.classList.remove('lightbox-open');
       trigger?.focus();
       trigger = null;
-      diagram.replaceChildren();
     });
 
     // One tap-versus-drag discriminator for the whole dialog: a pointer that
@@ -191,7 +159,7 @@ const { lang } = Astro.props;
 
     // Tapping the image itself toggles fit ↔ 100%.
     stage.addEventListener('click', (e) => {
-      if (dragged || (!img.naturalWidth && !diagramWidth) || (e.target !== img && !diagram.contains(e.target))) return;
+      if (dragged || !img.naturalWidth || e.target !== img) return;
       setStep(step > 0 ? 0 : 1);
     });
 
