@@ -13,7 +13,7 @@ export const en = {
     experiences: { title: '// Experience' },
     cta: {
       title: "// Let's Work Together",
-      body: "Hiring a Backend Engineer? I'm open to full-time or contract, hybrid, remote, or onsite in Indonesia.",
+      body: "Hiring a Backend Developer? I'm open to full-time or contract, hybrid, remote, or onsite in Indonesia.",
       cta_label: 'Contact me',
       cta_href: '/contact/',
     },
