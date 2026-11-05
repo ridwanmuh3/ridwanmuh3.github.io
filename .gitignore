@@ -1,6 +1,7 @@
 # build output
 dist/
 
+
 # generated types
 .astro/
 .impeccable
@@ -35,3 +36,6 @@ baseline/
 PLANNING.md
 DESIGN.md
 IMPROVEMENT.md
+
+.vscode/*
+.claude/*

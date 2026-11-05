@@ -55,7 +55,7 @@ export const id = {
       { name: 'GitHub' }, { name: 'Google Cloud Platform' }, { name: 'Postman' },
     ] },
     { label: 'AI Tools', items: [
-      { name: 'OpenCode' }, { name: '9router' },
+      { name: 'OpenCode' },{ name: 'Orca' }, { name: '9router' },
     ] },
   ],
 
@@ -186,6 +186,30 @@ export const id = {
       mark: 'CX',
       url: '/projects/cinx/',
       link: 'https://github.com/ridwanmuh3/cinx',
+    },
+    {
+      name: 'Warung POS',
+      skills: ['React 19', 'TanStack Start', 'TypeScript', 'Turso/libSQL', 'Xendit QRIS'],
+      duration: 'Okt 2026 – Nov 2026',
+      date: '2026-11-01',
+      description:
+        'Alur kasir web yang menyatukan penjualan, stok, kas laci bersama, dan laporan harian untuk warung — checkout otoritatif server dengan QRIS Xendit dan kredit pelanggan (Ngutang).',
+      type: 'Produk',
+      photo: 'warungpos.webp',
+      url: '/projects/warungpos/',
+      link: 'https://github.com/ridwanmuh3/warung-pos',
+    },
+    {
+      name: 'Converty',
+      skills: ['SvelteKit 3', 'Svelte 5', 'TypeScript', 'Web Workers', 'WebCodecs'],
+      duration: 'Okt 2026 – Nov 2026',
+      date: '2026-11-01',
+      description:
+        '15 alat konversi berkas bawaan peramban: tanpa unggah server, Web Worker terisolasi, CSP ketat, dukungan PWA offline penuh.',
+      type: 'Produk',
+      photo: 'converty.webp',
+      url: '/projects/converty/',
+      link: 'https://github.com/ridwanmuh3/converty',
     },
   ],
 } satisfies SiteContent;

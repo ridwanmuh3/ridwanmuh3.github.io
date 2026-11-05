@@ -55,7 +55,7 @@ export const en = {
       { name: 'GitHub' }, { name: 'Google Cloud Platform' }, { name: 'Postman' },
     ] },
     { label: 'AI Tools', items: [
-      { name: 'OpenCode' }, { name: '9router' },
+      { name: 'OpenCode' },{ name: 'Orca' }, { name: '9router' },
     ] },
   ],
 
@@ -186,6 +186,30 @@ export const en = {
       mark: 'CX',
       url: '/projects/cinx/',
       link: 'https://github.com/ridwanmuh3/cinx',
+    },
+    {
+      name: 'Warung POS',
+      skills: ['React 19', 'TanStack Start', 'TypeScript', 'Turso/libSQL', 'Xendit QRIS'],
+      duration: 'Oct 2026 – Nov 2026',
+      date: '2026-11-01',
+      description:
+        'Cashier workflow connecting sales, stock, a shared drawer, and daily reports for Indonesian warungs — server-authoritative checkout with Xendit QRIS and customer credit.',
+      type: 'product',
+      photo: 'warungpos.webp',
+      url: '/projects/warungpos/',
+      link: 'https://github.com/ridwanmuh3/warung-pos',
+    },
+    {
+      name: 'Converty',
+      skills: ['SvelteKit 3', 'Svelte 5', 'TypeScript', 'Web Workers', 'WebCodecs'],
+      duration: 'Oct 2026 – Nov 2026',
+      date: '2026-11-01',
+      description:
+        'Fifteen browser-native file conversion tools: zero server uploads, isolated Web Workers, strict CSP, full offline PWA.',
+      type: 'product',
+      photo: 'converty.webp',
+      url: '/projects/converty/',
+      link: 'https://github.com/ridwanmuh3/converty',
     },
   ],
 } satisfies SiteContent;
