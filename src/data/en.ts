@@ -193,7 +193,7 @@ export const en = {
       duration: 'Oct 2026 – Nov 2026',
       date: '2026-11-01',
       description:
-        'Cashier workflow connecting sales, stock, a shared drawer, and daily reports for Indonesian warungs — server-authoritative checkout with Xendit QRIS and customer credit.',
+        'Warung POS is a cashier workflow for Indonesian warungs. It connects sales, stock, a shared drawer, and daily reports. Checkout runs on the server and supports cash, Xendit QRIS, and customer credit.',
       type: 'product',
       photo: 'warungpos.webp',
       url: '/projects/warungpos/',
@@ -205,7 +205,7 @@ export const en = {
       duration: 'Oct 2026 – Nov 2026',
       date: '2026-11-01',
       description:
-        'Fifteen browser-native file conversion tools: zero server uploads, isolated Web Workers, strict CSP, full offline PWA.',
+        'Fifteen file conversion tools running inside the browser. No files are uploaded to a server. Conversions use isolated Web Workers and work fully offline.',
       type: 'product',
       photo: 'converty.webp',
       url: '/projects/converty/',

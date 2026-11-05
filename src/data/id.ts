@@ -193,7 +193,7 @@ export const id = {
       duration: 'Okt 2026 – Nov 2026',
       date: '2026-11-01',
       description:
-        'Alur kasir web yang menyatukan penjualan, stok, kas laci bersama, dan laporan harian untuk warung — checkout otoritatif server dengan QRIS Xendit dan kredit pelanggan (Ngutang).',
+        'Alur kasir untuk warung di Indonesia. Ini menyatukan penjualan, stok, kas laci bersama, dan laporan harian. Checkout berjalan di server dan mendukung tunai, QRIS Xendit, dan kredit pelanggan.',
       type: 'Produk',
       photo: 'warungpos.webp',
       url: '/projects/warungpos/',
@@ -205,7 +205,7 @@ export const id = {
       duration: 'Okt 2026 – Nov 2026',
       date: '2026-11-01',
       description:
-        '15 alat konversi berkas bawaan peramban: tanpa unggah server, Web Worker terisolasi, CSP ketat, dukungan PWA offline penuh.',
+        '15 alat konversi berkas yang berjalan di dalam peramban. Tidak ada berkas yang diunggah ke server. Konversi menggunakan Web Worker terisolasi dan berfungsi sepenuhnya offline.',
       type: 'Produk',
       photo: 'converty.webp',
       url: '/projects/converty/',
