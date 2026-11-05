@@ -194,7 +194,7 @@ export const en = {
       date: '2026-11-01',
       description:
         'Warung POS is a cashier workflow for Indonesian warungs. It connects sales, stock, a shared drawer, and daily reports. Checkout runs on the server and supports cash, Xendit QRIS, and customer credit.',
-      type: 'product',
+      type: 'Product',
       photo: 'warungpos.webp',
       url: '/projects/warungpos/',
       link: 'https://github.com/ridwanmuh3/warung-pos',
@@ -206,7 +206,7 @@ export const en = {
       date: '2026-11-01',
       description:
         'Fifteen file conversion tools running inside the browser. No files are uploaded to a server. Conversions use isolated Web Workers and work fully offline.',
-      type: 'product',
+      type: 'Product',
       photo: 'converty.webp',
       url: '/projects/converty/',
       link: 'https://github.com/ridwanmuh3/converty',
