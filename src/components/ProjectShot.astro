@@ -69,24 +69,53 @@ const mobileThumb = await getImage({
   format: 'webp',
   quality: 75,
 });
+/**
+ * Mid step between the 1x and 2x crops. Without it a ~380px card on a 1.75x
+ * phone asks for ~665 device pixels and gets bumped from 640w straight to
+ * 1280w, roughly doubling the bytes for no visible gain.
+ */
+const midWidth = Math.round(fill.width * 1.5);
+const midThumb =
+  midWidth < fill2x.width
+    ? await getImage({
+        src: source,
+        width: midWidth,
+        height: Math.round(fill.height * 1.5),
+        fit: 'cover',
+        position: 'center',
+        format: 'webp',
+        quality: 78,
+      })
+    : undefined;
+
+const srcset = [
+  `${mobileThumb.src} ${mobileThumb.options.width}w`,
+  `${thumb.src} ${thumb.options.width}w`,
+  ...(midThumb ? [`${midThumb.src} ${midThumb.options.width}w`] : []),
+  `${thumb2x.src} ${thumb2x.options.width}w`,
+].join(', ');
 // Hugo only resizes above the source width, so a smaller original stays whole.
 const full =
   source.width > 2400
     ? await getImage({ src: source, width: 2400, format: 'webp', quality: 85 })
     : { src: source.src };
+const fullWidth = 'options' in full ? full.options.width : source.width;
+const fullHeight = 'options' in full ? full.options.height : source.height;
 ---
 
 <button
   type="button"
   class:list={['shot group relative z-10 block w-full cursor-zoom-in overflow-hidden', frame && 'rounded-lg border border-line-raised']}
   data-lightbox-src={full.src}
+  data-lightbox-w={fullWidth}
+  data-lightbox-h={fullHeight}
   data-lightbox-alt={alt}
   data-lightbox-caption={caption}
   aria-label={t(lang, 'imageEnlarge', { title: caption })}
 >
   <img
     src={thumb.src}
-    srcset={`${mobileThumb.src} ${mobileThumb.options.width}w, ${thumb.src} ${thumb.options.width}w, ${thumb2x.src} ${thumb2x.options.width}w`}
+    srcset={srcset}
     sizes={sizes}
     width={thumb.options.width}
     height={thumb.options.height}

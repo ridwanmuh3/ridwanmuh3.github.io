@@ -543,7 +543,6 @@ h1, h2, h3, h4, h5, p, li, a {
     border: 1px solid var(--color-line-raised);
     background: color-mix(in oklch, var(--color-page) 78%, transparent);
     color: var(--color-ink-muted);
-    backdrop-filter: blur(6px);
     transition:
         opacity var(--dur-state) var(--ease-state),
         color var(--dur-state) var(--ease-state),
@@ -552,7 +551,9 @@ h1, h2, h3, h4, h5, p, li, a {
 }
 
 /* No hover on the phone this site is mostly read on, so the hint is simply
-   always legible there and only reveals itself on pointer devices. */
+   always legible there and only reveals itself on pointer devices. The blur
+   follows the same rule: a hidden backdrop filter still costs a compositing
+   layer per screenshot card. */
 @media (hover: hover) {
     .shot-zoom {
         opacity: 0;
@@ -561,6 +562,7 @@ h1, h2, h3, h4, h5, p, li, a {
     .shot:hover .shot-zoom,
     .shot:focus-visible .shot-zoom {
         opacity: 1;
+        backdrop-filter: blur(6px);
         color: var(--color-accent);
         border-color: color-mix(in oklch, var(--color-accent) 45%, transparent);
     }
@@ -743,19 +745,37 @@ html.lightbox-open {
     overflow: hidden;
 }
 
+/* The "lifted" shadow is painted by a pseudo-element and revealed by fading its
+   `opacity`, which the compositor can run on its own. Animating `box-shadow`
+   directly (the previous approach) repaints the sticky header on every scroll
+   frame. `isolation` makes the negative-z overlay paint above the island's own
+   background while staying behind the nav content. */
 .header-island {
-    animation: header-lift linear both;
+    position: relative;
+    isolation: isolate;
+}
+
+.header-island::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.9), 0 2px 8px -2px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    /* Longhands: the minifier folds `animation-timeline` into the shorthand,
+       which Chromium then rejects (see `.card-arrive`). */
+    animation-name: header-lift;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: scroll(root);
     animation-range: 0 5rem;
 }
 
 @keyframes header-lift {
-    from {
-        box-shadow: inset 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.45);
-    }
-
     to {
-        box-shadow: inset 0 1px rgb(255 255 255 / 0.12), 0 10px 30px -12px rgb(0 0 0 / 0.9), 0 2px 8px -2px rgb(0 0 0 / 0.55);
+        opacity: 1;
     }
 }
 

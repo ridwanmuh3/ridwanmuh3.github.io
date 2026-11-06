@@ -17,9 +17,11 @@ interface Props {
   lang: Lang;
   project: ProjectCardData;
   slug: string;
+  /** Above-the-fold cards load eagerly so the list's LCP is not delayed. */
+  priority?: boolean;
 }
 
-const { lang, project, slug } = Astro.props;
+const { lang, project, slug, priority = false } = Astro.props;
 const href = localizeHref(lang, `/projects/${slug}/`);
 const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
 const date = new Date(`${project.date}T00:00:00Z`);
@@ -37,6 +39,7 @@ const date = new Date(`${project.date}T00:00:00Z`);
         fill2x={{ width: 1280, height: 800 }}
         sizes="(min-width: 1024px) 480px, (min-width: 672px) 640px, 100vw"
         frame={false}
+        priority={priority}
       />
     ) : (
       <ProjectPlaceholder name={project.name} mark={project.mark} frame={false} />

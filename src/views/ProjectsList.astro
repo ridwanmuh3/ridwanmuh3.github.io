@@ -44,7 +44,7 @@ const path = current === 1 ? basePath : `${basePath}page/${current}/`;
 >
   <ListLayout lang={lang} section="projects" page={page}>
     {
-      page.items.map((entry) => {
+      page.items.map((entry, index) => {
         const slug = slugFromId(entry.id);
         const card = cards.get(`/projects/${slug}/`);
         const project: ProjectCardData = {
@@ -58,7 +58,7 @@ const path = current === 1 ? basePath : `${basePath}page/${current}/`;
           mark: entry.data.mark,
           link: entry.data.link,
         };
-        return <ProjectListCard lang={lang} project={project} slug={slug} />;
+        return <ProjectListCard lang={lang} project={project} slug={slug} priority={index === 0} />;
       })
     }
   </ListLayout>

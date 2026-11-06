@@ -21,7 +21,7 @@ import '../styles/global.css';
  * title, description (160), canonical, robots (404 only), icons, theme-color,
  * verification, Open Graph, Twitter, JSON-LD, font preload, stylesheet,
  * `<noscript>` menu fallback. Body is `dark`, skip link, header, `main#main`,
- * footer, then the viewer and inline scripts (menu, timeline dot).
+ * footer, then the viewer and the bundled nav/lightbox scripts.
  */
 interface Props {
   lang: Lang;
@@ -263,41 +263,10 @@ const breadcrumb =
     </main>
     <Footer lang={lang} />
     {lightbox && <Lightbox lang={lang} />}
-    <script is:inline>
-      (() => {
-        const nav = document.querySelector('.site-nav');
-        const toggle = nav?.querySelector('.site-nav-toggle');
-        if (!toggle) return;
-        const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
-        const setOpen = (open) => toggle.setAttribute('aria-expanded', String(open));
-        toggle.addEventListener('click', () => {
-          const open = !isOpen();
-          setOpen(open);
-          if (open) nav.querySelector('.site-menu a')?.focus();
-        });
-        document.addEventListener('click', (e) => {
-          if (isOpen() && !nav.contains(e.target)) setOpen(false);
-        });
-        document.addEventListener('keydown', (e) => {
-          if (e.key !== 'Escape' || !isOpen()) return;
-          setOpen(false);
-          toggle.focus();
-        });
-      })();
-    </script>
-    <script is:inline>
-      (() => {
-        const dots = document.querySelectorAll('.timeline-dot');
-        if (!dots.length) return;
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) e.target.classList.toggle('is-active', e.isIntersecting);
-          },
-          { threshold: 0.5 },
-        );
-        dots.forEach((d) => io.observe(d));
-      })();
+    <script>
+      import { initNav } from '../scripts/nav';
+
+      initNav();
     </script>
   </body>
 </html>
