@@ -198,6 +198,7 @@ export const en = {
       photo: 'warungpos.webp',
       url: '/projects/warungpos/',
       link: 'https://github.com/ridwanmuh3/warung-pos',
+      demo: 'https://warungdotpos.netlify.app',
     },
     {
       name: 'Converty',
@@ -210,6 +211,7 @@ export const en = {
       photo: 'converty.webp',
       url: '/projects/converty/',
       link: 'https://github.com/ridwanmuh3/converty',
+      demo: 'https://ridwanmuh3.github.io/converty',
     },
   ],
 } satisfies SiteContent;

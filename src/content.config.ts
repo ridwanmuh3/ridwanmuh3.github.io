@@ -26,6 +26,7 @@ const projects = defineCollection({
     photo: z.string().optional(),
     mark: z.string().optional(),
     link: z.string().optional(),
+    demo: z.string().optional(),
   }),
 });
 

@@ -16,6 +16,7 @@ interface Props {
   title: string;
   date: Date;
   link?: string;
+  demo?: string;
   photo?: string;
   description?: string;
   minutes?: number;
@@ -23,7 +24,7 @@ interface Props {
   backTitle: string;
 }
 
-const { lang, title, date, link, photo, description, minutes, backHref, backTitle } = Astro.props;
+const { lang, title, date, link, demo, photo, description, minutes, backHref, backTitle } = Astro.props;
 const isExternal = link?.startsWith('http') ?? false;
 ---
 
@@ -33,16 +34,40 @@ const isExternal = link?.startsWith('http') ?? false;
       <h1 class="type-display text-accent text-balance">{title}</h1>
       <p class="type-meta">
         <time datetime={formatDateISO(date)}>{formatDate(date, lang)}</time>
-        {
-          isExternal && (
-            <>
-              <span aria-hidden="true"> · </span>
-              <a href={link} target="_blank" rel="noopener" class="link-accent">
-                {t(lang, 'viewProject')}
-              </a>
-            </>
-          )
-        }
+        <ul class="inline-flex gap-2">
+          {
+            demo?.startsWith('http') && (
+              <li>
+                <a
+                  href={demo}
+                  target="_blank"
+                  rel="noopener"
+                  class="link-accent"
+                  aria-label={t(lang, 'liveSite') + ' ' + title}
+                >
+                  {t(lang, 'liveSite')}
+                  <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+                </a>
+              </li>
+            )
+          }
+          {
+            link?.startsWith('http') && (
+              <li>
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener"
+                  class="link-accent"
+                  aria-label={t(lang, 'viewSource') + ' ' + title}
+                >
+                  {t(lang, 'viewSource')}
+                  <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+                </a>
+              </li>
+            )
+          }
+        </ul>
         {
           !isExternal && minutes && (
             <>

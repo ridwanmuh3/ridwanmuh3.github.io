@@ -58,4 +58,34 @@ const date = new Date(`${project.date}T00:00:00Z`);
       </ul>
     )}
   </a>
+  {
+    project.demo?.startsWith('http') && (
+      <div class="p-4 pt-2 flex gap-2 border-t border-line-raised">
+        <a
+          href={project.demo}
+          target="_blank"
+          rel="noopener"
+          class="type-meta link-accent"
+          aria-label={t(lang, 'liveSite') + ' ' + project.name}
+        >
+          {t(lang, 'liveSite')}
+          <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+        </a>
+        {
+          project.link?.startsWith('http') && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener"
+              class="type-meta link-accent"
+              aria-label={t(lang, 'viewSource') + ' ' + project.name}
+            >
+              {t(lang, 'viewSource')}
+              <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+            </a>
+          )
+        }
+      </div>
+    )
+  }
 </li>

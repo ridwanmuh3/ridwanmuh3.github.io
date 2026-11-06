@@ -59,18 +59,40 @@ const shotLabel = t(lang, 'projectScreenshot', { title: project.name });
         }
       </h3>
       <div class="flex flex-col gap-1 lg:items-end lg:text-right lg:shrink-0">
-        {
-          project.link?.startsWith('http') && (
-            <a
-              class="type-meta link-accent relative z-10"
-              href={project.link}
-              target="_blank"
-              rel="noopener"
-            >
-              {t(lang, 'viewProject')}
-            </a>
-          )
-        }
+        <ul class="flex gap-2">
+          {
+            project.demo?.startsWith('http') && (
+              <li>
+                <a
+                  class="type-meta link-accent relative z-10"
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={t(lang, 'liveSite') + ' ' + project.name}
+                >
+                  {t(lang, 'liveSite')}
+                  <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+                </a>
+              </li>
+            )
+          }
+          {
+            project.link?.startsWith('http') && (
+              <li>
+                <a
+                  class="type-meta link-accent relative z-10"
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={t(lang, 'viewSource') + ' ' + project.name}
+                >
+                  {t(lang, 'viewSource')}
+                  <span class="sr-only ml-0.5">· {t(lang, 'opensNewTab')}</span>
+                </a>
+              </li>
+            )
+          }
+        </ul>
         {project.duration && <span class="type-meta sm:text-nowrap">{enDash(project.duration)}</span>}
       </div>
     </div>

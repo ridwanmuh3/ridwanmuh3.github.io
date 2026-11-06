@@ -39,6 +39,7 @@ export interface ProjectCardData {
   mark?: string;
   url?: string;
   link?: string;
+  demo?: string;
 }
 
 export interface SectionMeta {

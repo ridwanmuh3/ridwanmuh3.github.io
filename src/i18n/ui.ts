@@ -52,6 +52,9 @@ const en = {
 
   minRead: 'min read',
   viewProject: 'View project',
+  liveSite: 'Live site',
+  viewSource: 'View source',
+  opensNewTab: 'opens in new tab',
   backTo: 'Back to {title}',
   navSection: 'Section',
 
@@ -129,6 +132,9 @@ const id: Record<UIKey, string> = {
 
   minRead: 'menit baca',
   viewProject: 'Lihat proyek',
+  liveSite: 'Situs langsung',
+  viewSource: 'Lihat kode',
+  opensNewTab: 'buka di tab baru',
   backTo: 'Kembali ke {title}',
   navSection: 'Bagian',
 
