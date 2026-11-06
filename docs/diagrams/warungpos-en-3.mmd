@@ -1,0 +1,144 @@
+erDiagram
+  users ||--o{ memberships : "joins"
+  tenants ||--o{ memberships : "contains"
+  users ||--o{ orders : "places"
+  users ||--o{ shifts : "runs"
+  users ||--o{ carts : "owns"
+  tenants ||--o{ products : "owns"
+  tenants ||--o{ orders : "owns"
+  tenants ||--o{ shifts : "owns"
+  tenants ||--o{ counters : "numbers"
+  tenants ||--o{ stock_movements : "records"
+  tenants ||--o{ carts : "owns"
+  tenants ||--o{ payments : "owns"
+  products ||--o{ stock_movements : "moves"
+  products |o..o{ cart_items : "snapshotted into"
+  products |o..o{ order_items : "snapshotted into"
+  orders ||--o{ order_items : "contains"
+  orders ||--o{ payments : "attempts"
+  shifts |o..o{ orders : "covers"
+  carts ||--o{ cart_items : "contains"
+  carts |o..o| orders : "becomes"
+
+  users {
+    text id PK
+    text name
+    text email UK
+    text password_hash
+    text salt
+  }
+
+  tenants {
+    text id PK
+    text name
+  }
+
+  memberships {
+    text id PK
+    text tenant_id FK
+    text user_id FK
+    text role
+  }
+
+  products {
+    text id PK
+    text tenant_id FK
+    text name
+    integer price
+    integer cost
+    text category
+    integer stock
+    integer low_stock_threshold
+    text sku UK
+    text barcode UK
+  }
+
+  orders {
+    text id PK
+    text tenant_id FK
+    text order_number UK
+    integer subtotal
+    integer discount
+    integer total
+    integer cost_total
+    integer profit
+    text payment_method
+    text status
+    text settlement_status
+    text settled_in_shift_id
+    text channel
+    text shift_id
+    text cart_id UK
+    text user_id FK
+  }
+
+  order_items {
+    text id PK
+    text order_id FK
+    text product_id
+    text name
+    integer price
+    integer cost
+    integer qty
+  }
+
+  shifts {
+    text id PK
+    text tenant_id FK
+    text opened_at
+    text closed_at
+    integer opening_cash
+    integer closing_cash
+    integer expected_cash
+    integer variance
+    text user_id FK
+  }
+
+  counters {
+    text tenant_id PK
+    text key PK
+    integer value
+  }
+
+  stock_movements {
+    text id PK
+    text tenant_id FK
+    text product_id FK
+    integer delta
+    text reason
+    text at
+    text order_id
+  }
+
+  carts {
+    text id PK
+    text tenant_id FK
+    text user_id FK
+    text status
+    text label
+    text checked_out_at
+  }
+
+  cart_items {
+    text id PK
+    text cart_id FK
+    text product_id
+    text name
+    integer price
+    integer cost
+    integer qty
+  }
+
+  payments {
+    text id PK
+    text tenant_id FK
+    text order_id FK
+    text reference_id UK
+    text provider_ref
+    text status
+    integer amount
+    text qr_string
+    text expires_at
+    text paid_at
+    text failure_code
+  }

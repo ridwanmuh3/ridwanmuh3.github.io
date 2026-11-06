@@ -1,0 +1,31 @@
+sequenceDiagram
+  autonumber
+  participant C as Cashier
+  participant F as checkoutFn
+  participant T as tenant.server
+  participant S as data.server
+  participant D as Turso
+  participant X as Xendit
+
+  C->>F: POST cart payload (Zod wire schema)
+  F->>T: resolve tenant from session cookie
+  T->>D: read membership + role
+  T-->>F: tenantId + role
+  F->>S: checkout(tenantId, input)
+  S->>D: re-read prices and HPP
+  S->>S: compute subtotal · discount · cost · profit
+  S->>D: transaction: order + order_items
+  S->>D: apply stock deltas + stock_movements
+  S->>D: take order number from counters
+
+  alt cash or credit
+    S-->>C: order paid (credit stays unsettled)
+  else QRIS
+    S->>D: pending order + payments row
+    S->>X: create fixed-amount QR
+    X-->>S: QR_STRING + payment_request_id
+    S-->>C: pending screen with QR
+    X->>S: webhook (reference_id)
+    S->>S: verify token · match attempt · compare amount
+    S->>D: mark payment and order paid
+  end

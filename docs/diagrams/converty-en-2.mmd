@@ -1,0 +1,25 @@
+sequenceDiagram
+  autonumber
+  participant U as User
+  participant M as Main thread
+  participant S as Scheduler
+  participant W as Web Worker
+
+  U->>M: drop or pick files
+  M->>M: detect MIME + extension, resolve tool
+  M->>S: enqueue job
+  S->>S: capacity check (RAM ≥ 8 GB, ≥ 4 cores)
+
+  alt capacity available
+    S->>W: postMessage (transfer ArrayBuffer)
+  else low-end or mobile
+    S->>S: wait for the previous job
+    S->>W: postMessage (one at a time)
+  end
+
+  W-->>M: progress
+  M-->>U: progress bar
+  W-->>S: done (Blob)
+  S-->>M: release slot
+  M-->>U: download or ZIP
+  Note over M,W: CSP connect-src 'self' — nothing leaves the page

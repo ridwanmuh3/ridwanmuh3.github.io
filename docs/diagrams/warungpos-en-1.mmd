@@ -1,0 +1,29 @@
+flowchart TD
+  Browser["Browser<br/>cashier · owner · manager"]
+  Routes["src/routes/<br/>public pages + POS screens"]
+  Fn["src/lib/*.functions.ts<br/>createServerFn (typed RPC)"]
+  Server["src/lib/*.server.ts<br/>server-only logic"]
+  Domain["src/domain/<br/>pricing · lifecycle · drawer · reports"]
+  Data["src/lib/data/*.server.ts<br/>tenant-scoped SQL"]
+  DB["src/db/client.server.ts<br/>Drizzle ORM"]
+  Turso[("Turso / libSQL")]
+  Xendit["Xendit Payments API v3"]
+  Callback["/api/xendit/callback"]
+  R2[("Cloudflare R2")]
+  Img["/img proxy"]
+
+  Browser -->|"HTTP RPC"| Fn
+  Browser --> Routes
+  Routes --> Fn
+  Fn --> Server
+  Fn --> Domain
+  Server --> Data
+  Domain -.->|"rules only"| Data
+  Data --> DB
+  DB --> Turso
+  Server -->|"create QR · status check"| Xendit
+  Xendit -->|"webhook"| Callback
+  Callback -->|"verify + settle"| Server
+  Browser -->|"signed PUT"| R2
+  Browser --> Img
+  Img --> R2

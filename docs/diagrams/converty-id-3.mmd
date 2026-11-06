@@ -1,0 +1,41 @@
+erDiagram
+  GROUP ||--o{ TOOL : "mengelompokkan"
+  TOOL ||--|| WORKER_ENTRY : "dijalankan oleh"
+  TOOL ||--o{ ACCEPTED_TYPE : "menerima"
+  TOOL ||--o{ OPTION : "mendeklarasikan"
+  WORKER_ENTRY ||--o{ TOOL : "melayani"
+
+  GROUP {
+    string id PK
+    string label
+    string order
+  }
+
+  TOOL {
+    string slug PK
+    string title
+    string description
+    string group FK
+    string worker FK
+    string output
+  }
+
+  ACCEPTED_TYPE {
+    string kind PK
+    string mime
+    string extension
+    boolean primary
+  }
+
+  OPTION {
+    string key PK
+    string label
+    string type
+    string defaultValue
+  }
+
+  WORKER_ENTRY {
+    string name PK
+    string file
+    string engine
+  }

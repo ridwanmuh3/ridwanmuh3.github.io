@@ -1,0 +1,41 @@
+erDiagram
+  GROUP ||--o{ TOOL : "groups"
+  TOOL ||--|| WORKER_ENTRY : "runs on"
+  TOOL ||--o{ ACCEPTED_TYPE : "accepts"
+  TOOL ||--o{ OPTION : "declares"
+  WORKER_ENTRY ||--o{ TOOL : "serves"
+
+  GROUP {
+    string id PK
+    string label
+    string order
+  }
+
+  TOOL {
+    string slug PK
+    string title
+    string description
+    string group FK
+    string worker FK
+    string output
+  }
+
+  ACCEPTED_TYPE {
+    string kind PK
+    string mime
+    string extension
+    boolean primary
+  }
+
+  OPTION {
+    string key PK
+    string label
+    string type
+    string defaultValue
+  }
+
+  WORKER_ENTRY {
+    string name PK
+    string file
+    string engine
+  }

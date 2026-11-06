@@ -1,0 +1,23 @@
+flowchart LR
+  UI["Svelte 5 app shell<br/>driven by the tool manifest"]
+  Intake["File intake<br/>MIME + extension detection"]
+  Sched["Scheduler<br/>2-up on desktop · 1-up on mobile"]
+
+  subgraph Workers["Isolated Web Workers — 7 bundles"]
+    W1["document<br/>Word · Excel · PDF"]
+    W2["pdf-edit<br/>merge · split"]
+    W3["pdf-image<br/>PDF → JPG"]
+    W4["image-pdf<br/>image → PDF"]
+    W5["image<br/>convert · compress"]
+    W6["audio<br/>AudioContext · lamejs"]
+    W7["video<br/>mp4box · WebCodecs"]
+  end
+
+  Out["Result → user download<br/>Blob or ZIP via fflate"]
+  SW["Service worker<br/>app shell cache"]
+
+  UI --> Intake
+  Intake --> Sched
+  Sched --> W1 & W2 & W3 & W4 & W5 & W6 & W7
+  W1 & W2 & W3 & W4 & W5 & W6 & W7 --> Out
+  SW -.->|"offline reload"| UI

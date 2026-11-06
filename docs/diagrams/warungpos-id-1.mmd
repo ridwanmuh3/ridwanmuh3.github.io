@@ -1,0 +1,29 @@
+flowchart TD
+  Browser["Peramban<br/>kasir · pemilik · manajer"]
+  Routes["src/routes/<br/>halaman publik + layar POS"]
+  Fn["src/lib/*.functions.ts<br/>createServerFn (RPC bertipe)"]
+  Server["src/lib/*.server.ts<br/>logika khusus server"]
+  Domain["src/domain/<br/>harga · siklus transaksi · laci · laporan"]
+  Data["src/lib/data/*.server.ts<br/>SQL ter-scope tenant"]
+  DB["src/db/client.server.ts<br/>Drizzle ORM"]
+  Turso[("Turso / libSQL")]
+  Xendit["Xendit Payments API v3"]
+  Callback["/api/xendit/callback"]
+  R2[("Cloudflare R2")]
+  Img["proksi /img"]
+
+  Browser -->|"RPC HTTP"| Fn
+  Browser --> Routes
+  Routes --> Fn
+  Fn --> Server
+  Fn --> Domain
+  Server --> Data
+  Domain -.->|"aturan saja"| Data
+  Data --> DB
+  DB --> Turso
+  Server -->|"buat QR · cek status"| Xendit
+  Xendit -->|"webhook"| Callback
+  Callback -->|"verifikasi + settle"| Server
+  Browser -->|"PUT bertanda tangan"| R2
+  Browser --> Img
+  Img --> R2

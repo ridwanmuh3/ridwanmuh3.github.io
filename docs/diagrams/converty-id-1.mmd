@@ -1,0 +1,23 @@
+flowchart LR
+  UI["App shell Svelte 5<br/>digerakkan manifes alat"]
+  Intake["Penerimaan berkas<br/>deteksi MIME + ekstensi"]
+  Sched["Penjadwal<br/>2-up di desktop · 1-up di seluler"]
+
+  subgraph Workers["Web Worker terisolasi — 7 bundel"]
+    W1["document<br/>Word · Excel · PDF"]
+    W2["pdf-edit<br/>gabung · pisah"]
+    W3["pdf-image<br/>PDF → JPG"]
+    W4["image-pdf<br/>gambar → PDF"]
+    W5["image<br/>konversi · kompresi"]
+    W6["audio<br/>AudioContext · lamejs"]
+    W7["video<br/>mp4box · WebCodecs"]
+  end
+
+  Out["Hasil → unduhan pengguna<br/>Blob atau ZIP via fflate"]
+  SW["Service worker<br/>cache app shell"]
+
+  UI --> Intake
+  Intake --> Sched
+  Sched --> W1 & W2 & W3 & W4 & W5 & W6 & W7
+  W1 & W2 & W3 & W4 & W5 & W6 & W7 --> Out
+  SW -.->|"muat ulang offline"| UI

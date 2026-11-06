@@ -5,11 +5,12 @@ draft = false
 description = 'Cashier workflow connecting sales, stock, a shared drawer, and daily reports for Indonesian warungs — server-authoritative checkout with Xendit QRIS and customer credit.'
 photo = 'warungpos.webp'
 link = 'https://github.com/ridwanmuh3/warung-pos'
+demo = 'https://warungdotpos.netlify.app'
 +++
 
-# Warung POS — A Point of Sale for Indonesian Warungs
-
-A web-based cashier workflow that connects sales, stock, the shared cash drawer, and daily reports. It favors explicit accounting rules over a pile of disconnected CRUD screens.
+> A web-based cashier workflow that connects sales, stock, the shared cash drawer,
+> and daily reports. It favors explicit accounting rules over a pile of
+> disconnected CRUD screens.
 
 | | |
 | --- | --- |
@@ -23,11 +24,25 @@ A web-based cashier workflow that connects sales, stock, the shared cash drawer,
 
 ## 1. Project Overview
 
-A small shop can make a sale in seconds and still spend the evening reconciling three separate records: what was sold, what remains on the shelf, and what should be in the drawer. Warung POS gives those records one operational flow. A cashier selects products, accepts payment, and issues a receipt; an owner sees sales, cost, outstanding customer credit, and the difference between expected and counted cash.
+A small shop can make a sale in seconds and still spend the evening reconciling
+three separate records: what was sold, what remains on the shelf, and what should
+be in the drawer. Warung POS gives those records one operational flow. A cashier
+selects products, accepts payment, and issues a receipt; an owner sees sales,
+cost, outstanding customer credit, and the difference between expected and
+counted cash.
 
-The hard part is not displaying a total. It is keeping distinct facts distinct: **a sale is not the same as money received**, **stock on hand is not always an authoritative limit**, and **an order marked void after closing a drawer is not the same as money refunded from a later drawer**. The app models these differences explicitly rather than trying to infer them from a single payment label.
+The hard part is not displaying a total. It is keeping distinct facts distinct:
+**a sale is not the same as money received**, **stock on hand is not always an
+authoritative limit**, and **an order marked void after closing a drawer is not
+the same as money refunded from a later drawer**. The app models these
+differences explicitly rather than trying to infer them from a single payment
+label.
 
-The core design uses a server-authoritative checkout. A browser cart stays responsive and survives reloads, but the server re-reads product prices and costs, calculates the total, consumes the open cart, numbers the order, and records stock movement. A unique `orders.cart_id` prevents a repeated checkout of the same cart from creating a second sale.
+The core design uses a server-authoritative checkout. A browser cart stays
+responsive and survives reloads, but the server re-reads product prices and
+costs, calculates the total, consumes the open cart, numbers the order, and
+records stock movement. A unique `orders.cart_id` prevents a repeated checkout
+of the same cart from creating a second sale.
 
 ### At a glance
 
@@ -44,7 +59,13 @@ The core design uses a server-authoritative checkout. A browser cart stays respo
 
 ### Intentionally limited
 
-This is a working application, not a claim that a shop can safely move live money without deployment validation. Checkout needs a server connection; it is not an offline POS. A test-mode QR does not prove that production QR issuance and callback delivery work in a live Xendit account. Credit settlement is recorded in full, not in installments. A browser print dialog handles receipts; there is no direct thermal-printer integration. No load benchmark, multi-region availability, or production service-level claim is made.
+This is a working application, not a claim that a shop can safely move live money
+without deployment validation. Checkout needs a server connection; it is not an
+offline POS. A test-mode QR does not prove that production QR issuance and
+callback delivery work in a live Xendit account. Credit settlement is recorded in
+full, not in installments. A browser print dialog handles receipts; there is no
+direct thermal-printer integration. No load benchmark, multi-region availability,
+or production service-level claim is made.
 
 ---
 
@@ -52,27 +73,53 @@ This is a working application, not a claim that a shop can safely move live mone
 
 ### Cashier workflow
 
-- **Find and ring up products** — search by name, SKU, or barcode; a keyboard-wedge scanner can send a code followed by Enter. Category filters and low-stock labels help navigation.
-- **Responsive cart** — local-first interactions survive refresh; the open cart is synced to the server, and a cart can be parked and resumed. A changed catalog price is surfaced before checkout.
-- **Cash checkout** — quick tender amounts, automatic change, nominal or percentage discount, and a receipt printable through the browser.
-- **Dynamic QRIS** — when configured, Xendit creates a fixed-amount QR for a pending order. The pending screen polls local payment state and offers a direct provider status check, regeneration, or cancellation. A sandbox simulation action appears only with a test key.
-- **Customer credit** — `Ngutang` records a completed sale with an unsettled balance and customer name. Later settlement records the method and, for cash, the drawer receiving it. Revenue is recognized once at sale time; outstanding credit is shown separately.
-- **Order context** — channel (`dine-in`, `takeaway`, `delivery`) and optional cashier display name appear on receipts and in history.
+- **Find and ring up products** — search by name, SKU, or barcode; a
+  keyboard-wedge scanner can send a code followed by Enter. Category filters and
+  low-stock labels help navigation.
+- **Responsive cart** — local-first interactions survive refresh; the open cart
+  is synced to the server, and a cart can be parked and resumed. A changed
+  catalog price is surfaced before checkout.
+- **Cash checkout** — quick tender amounts, automatic change, nominal or
+  percentage discount, and a receipt printable through the browser.
+- **Dynamic QRIS** — when configured, Xendit creates a fixed-amount QR for a
+  pending order. The pending screen polls local payment state and offers a direct
+  provider status check, regeneration, or cancellation. A sandbox simulation
+  action appears only with a test key.
+- **Customer credit** — `Ngutang` records a completed sale with an unsettled
+  balance and customer name. Later settlement records the method and, for cash,
+  the drawer receiving it. Revenue is recognized once at sale time; outstanding
+  credit is shown separately.
+- **Order context** — channel (`dine-in`, `takeaway`, `delivery`) and optional
+  cashier display name appear on receipts and in history.
 
 ### Owner and manager workflow
 
-- **Catalog and stock** — manage prices, purchase costs (HPP), optional stock counts, restock thresholds, SKU, barcode, and product images in Cloudflare R2. Every tracked stock adjustment writes a movement.
-- **Shared drawer** — open with a float, then close against physical cash. Expected cash counts cash sales and relevant cash settlements or refunds, not every transaction labeled as revenue.
-- **Daily reporting** — revenue, cost, gross profit after discount, margin, sales by method and category, top products, busy hours, channel breakdown, and a seven-day trend. Export CSV or a printable Z-report.
-- **Corrections with history** — void a paid sale while its original shift is open; after that shift closes, record a refund against the drawer that pays it out. Restore tracked stock and retain the original order and reason.
-- **Team access** — an owner manages memberships; server-side role checks gate actions. A user may belong to more than one tenant.
+- **Catalog and stock** — manage prices, purchase costs (HPP), optional stock
+  counts, restock thresholds, SKU, barcode, and product images in Cloudflare R2.
+  Every tracked stock adjustment writes a movement.
+- **Shared drawer** — open with a float, then close against physical cash.
+  Expected cash counts cash sales and relevant cash settlements or refunds, not
+  every transaction labeled as revenue.
+- **Daily reporting** — revenue, cost, gross profit after discount, margin, sales
+  by method and category, top products, busy hours, channel breakdown, and a
+  seven-day trend. Export CSV or a printable Z-report.
+- **Corrections with history** — void a paid sale while its original shift is
+  open; after that shift closes, record a refund against the drawer that pays it
+  out. Restore tracked stock and retain the original order and reason.
+- **Team access** — an owner manages memberships; server-side role checks gate
+  actions. A user may belong to more than one tenant.
 
 ### Platform behavior
 
-- **Public marketing, private POS** — the homepage renders without a session; authenticated routes resolve an encrypted, HTTP-only cookie and enforce membership on the server.
-- **Onboarding without fake sales** — a new owner sees an empty catalog and a setup checklist instead of seeded transactions.
-- **Legacy-data recovery** — an explicit import path helps move older browser-held data into the tenant-backed database.
-- **Browser-first product images** — the server signs uploads to R2; image reads go through the app's same-origin `/img` proxy by default.
+- **Public marketing, private POS** — the homepage renders without a session;
+  authenticated routes resolve an encrypted, HTTP-only cookie and enforce
+  membership on the server.
+- **Onboarding without fake sales** — a new owner sees an empty catalog and a
+  setup checklist instead of seeded transactions.
+- **Legacy-data recovery** — an explicit import path helps move older
+  browser-held data into the tenant-backed database.
+- **Browser-first product images** — the server signs uploads to R2; image reads
+  go through the app's same-origin `/img` proxy by default.
 
 ---
 
@@ -95,14 +142,15 @@ This is a working application, not a claim that a shop can safely move live mone
 
 ### System shape
 
-Warung POS is a modular monolith, not a network of services. The browser talks to the TanStack Start origin. Route loaders and server functions call tenant-aware data modules; those modules use Drizzle against libSQL. Payment creation and reconciliation call Xendit from the server, while product-image uploads go straight to R2 using server-signed requests.
+Warung POS is a modular monolith, not a network of services. The browser talks to
+the TanStack Start origin. Route loaders and server functions call tenant-aware
+data modules; those modules use Drizzle against libSQL. Payment creation and
+reconciliation call Xendit from the server, while product-image uploads go
+straight to R2 using server-signed requests.
 
-```text
-Browser → TanStack routes / server functions → domain rules + tenant-scoped data → Turso
-                                      ├→ Xendit payment requests
-Xendit → /api/xendit/callback ────────┘
-Browser → signed PUT → Cloudflare R2; image reads → /img proxy → R2
-```
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/warungpos-en-1.svg" data-lightbox-alt="Warung POS system architecture" data-lightbox-caption="Warung POS system architecture" aria-label="Enlarge Warung POS system architecture diagram"><img src="/diagrams/warungpos-en-1.svg" width="831" height="1032" loading="lazy" decoding="async" alt="Warung POS system architecture diagram" /></button>
+
+### Ownership boundaries
 
 | Boundary | Responsibility |
 | --- | --- |
@@ -115,13 +163,27 @@ Browser → signed PUT → Cloudflare R2; image reads → /img proxy → R2
 
 ### A checkout and its payment
 
-1. Browser updates its local cart; cart sync persists the open cart for the signed-in user and tenant.
-2. Checkout flushes that cart. Server reads current product prices and HPP, validates the request, computes amounts, and atomically creates an order while consuming the cart and recording tracked stock changes.
-3. Cash and credit settle in the application immediately, with different money semantics. QRIS instead creates a `pending` order and requests a QR from Xendit. Pending sales do **not** count as paid revenue.
-4. Xendit returns a `QR_STRING` action for display; the cashier presents that QR. The callback verifies its token and matches a globally unique `reference_id` to the stored payment attempt, rather than trusting a tenant ID from the webhook body.
-5. A successful capture with the expected amount marks the payment and order paid. Polling the app's stored state handles normal waiting; the explicit status check asks Xendit directly when a callback is delayed or lost.
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/warungpos-en-2.svg" data-lightbox-alt="Warung POS checkout and QRIS sequence" data-lightbox-caption="Warung POS checkout and QRIS sequence" aria-label="Enlarge Warung POS checkout and QRIS sequence diagram"><img src="/diagrams/warungpos-en-2.svg" width="1574" height="1151" loading="lazy" decoding="async" alt="Warung POS checkout and QRIS sequence diagram" /></button>
 
-QR creation and callback delivery are separate steps. Configuring a callback alone does not make a QR appear: the initial provider request must succeed and return a QR string.
+1. Browser updates its local cart; cart sync persists the open cart for the
+   signed-in user and tenant.
+2. Checkout flushes that cart. Server reads current product prices and HPP,
+   validates the request, computes amounts, and atomically creates an order while
+   consuming the cart and recording tracked stock changes.
+3. Cash and credit settle in the application immediately, with different money
+   semantics. QRIS instead creates a `pending` order and requests a QR from
+   Xendit. Pending sales do **not** count as paid revenue.
+4. Xendit returns a `QR_STRING` action for display; the cashier presents that QR.
+   The callback verifies its token and matches a globally unique `reference_id`
+   to the stored payment attempt, rather than trusting a tenant ID from the
+   webhook body.
+5. A successful capture with the expected amount marks the payment and order
+   paid. Polling the app's stored state handles normal waiting; the explicit
+   status check asks Xendit directly when a callback is delayed or lost.
+
+QR creation and callback delivery are separate steps. Configuring a callback
+alone does not make a QR appear: the initial provider request must succeed and
+return a QR string.
 
 ### Consistency and failure handling
 
@@ -138,9 +200,16 @@ QR creation and callback delivery are separate steps. Configuring a callback alo
 
 ---
 
-## 5. Data Model
+## 5. ERD
 
-One libSQL database holds the shop's business data. The source of truth is [`src/db/schema.ts`](../src/db/schema.ts); older ERD text may not yet include the QRIS `payments` table.
+One libSQL database holds the shop's business data. The source of truth is
+[`src/db/schema.ts`](https://github.com/ridwanmuh3/warung-pos/blob/main/src/db/schema.ts).
+Solid lines are foreign keys; dotted lines are **logical** references — a
+`product_id` on a sold line item is a snapshot, not a constraint.
+
+<button type="button" class="mermaid-zoom" data-lightbox-src="/diagrams/warungpos-en-3.svg" data-lightbox-alt="Warung POS database relationships" data-lightbox-caption="Warung POS database relationships" aria-label="Enlarge Warung POS database relationships diagram"><img src="/diagrams/warungpos-en-3.svg" width="2490" height="2286" loading="lazy" decoding="async" alt="Warung POS database relationships diagram" /></button>
+
+### Entities
 
 | Entity | Business role |
 | --- | --- |
@@ -162,7 +231,13 @@ One libSQL database holds the shop's business data. The source of truth is [`src
 | `UNIQUE (reference_id)` on `payments` | Resolve callbacks to the right attempt without accepting a caller-supplied tenant |
 | Exact integer-rupiah amount match before QRIS settlement | A mismatched capture never silently pays an order |
 
-Line items store name, image key, price and HPP snapshots so a later catalog edit cannot rewrite a past receipt or profit calculation. Money uses whole rupiah. Every `tenant_id` column is `NOT NULL`; isolation is enforced by tenant-filtered server queries and their tests, not by database row-level security. Some references are deliberately soft (text without foreign keys).
+### Design notes
+
+Line items store name, image key, price and HPP snapshots so a later catalog edit
+cannot rewrite a past receipt or profit calculation. Money uses whole rupiah.
+Every `tenant_id` column is `NOT NULL`; isolation is enforced by tenant-filtered
+server queries and their tests, not by database row-level security. Some
+references are deliberately soft (text without foreign keys).
 
 ---
 
@@ -181,26 +256,41 @@ Line items store name, image key, price and HPP snapshots so a later catalog edi
 
 ### Before depending on it for live operations
 
-- Verify QR issuance, real callback delivery, settlement, expiry, and exceptions end-to-end in the target Xendit account. In particular, a configured API key and callback do not prove that a scannable QR is being returned.
-- Define a provider refund workflow for QRIS payments; the present order refund records internal state and drawer effects, not a provider-initiated refund.
-- Add tenant-local timezone handling and a shared rate limiter or WAF if the deployment spans instances.
-- Exercise backups, migrations, restore, and deployment smoke checks against a separate environment. No high-availability or load-test result is claimed here.
+- Verify QR issuance, real callback delivery, settlement, expiry, and exceptions
+  end-to-end in the target Xendit account. In particular, a configured API key
+  and callback do not prove that a scannable QR is being returned.
+- Define a provider refund workflow for QRIS payments; the present order refund
+  records internal state and drawer effects, not a provider-initiated refund.
+- Add tenant-local timezone handling and a shared rate limiter or WAF if the
+  deployment spans instances.
+- Exercise backups, migrations, restore, and deployment smoke checks against a
+  separate environment. No high-availability or load-test result is claimed here.
 
 ---
 
 ## 7. Conclusion
 
-Warung POS is built around a practical invariant: **a cashier may finish the sale quickly, but the records must still explain what happened to stock, receivables, and cash.**
+Warung POS is built around a practical invariant: **a cashier may finish the sale
+quickly, but the records must still explain what happened to stock, receivables,
+and cash.**
 
-The cart can be fast without being trusted as the price authority. An order can count as a sale while its credit remains unpaid. A pending QRIS request can reserve stock without claiming revenue. A void and a later refund can both correct a sale while recording different cash-drawer effects. These distinctions are why the application has separate orders, payment attempts, stock movements, shifts, and credit-settlement fields rather than a single mutable “paid” flag.
+The cart can be fast without being trusted as the price authority. An order can
+count as a sale while its credit remains unpaid. A pending QRIS request can
+reserve stock without claiming revenue. A void and a later refund can both
+correct a sale while recording different cash-drawer effects. These distinctions
+are why the application has separate orders, payment attempts, stock movements,
+shifts, and credit-settlement fields rather than a single mutable “paid” flag.
 
-It remains a bounded project: real payment readiness, timezone handling, and operational recovery need deployment-level proof. The architecture makes those limits visible instead of treating a working screen as proof that the underlying money flow is complete.
+It remains a bounded project: real payment readiness, timezone handling, and
+operational recovery need deployment-level proof. The architecture makes those
+limits visible instead of treating a working screen as proof that the underlying
+money flow is complete.
 
 ### Further reading
 
-- [`README.md`](../README.md) — setup and feature overview (some payment copy predates Xendit integration)
-- [`CONTEXT.md`](../CONTEXT.md) — shared domain language and known business-day gap
-- [`src/db/schema.ts`](../src/db/schema.ts) — current schema, including payment attempts
-- [`docs/architecture.md`](architecture.md) — architecture and tenant boundaries (some paths predate feature split)
-- [`docs/erd.md`](erd.md) — core entity relationships (payment attempts not yet drawn)
-- [`docs/adr/`](adr/) — decisions on snapshots, checkout, stock and refunds
+- [`README.md`](https://github.com/ridwanmuh3/warung-pos/blob/main/README.md) — setup and feature overview (some payment copy predates the Xendit integration)
+- [`CONTEXT.md`](https://github.com/ridwanmuh3/warung-pos/blob/main/CONTEXT.md) — shared domain language and the known business-day gap
+- [`src/db/schema.ts`](https://github.com/ridwanmuh3/warung-pos/blob/main/src/db/schema.ts) — current schema, including payment attempts
+- [`docs/architecture.md`](https://github.com/ridwanmuh3/warung-pos/blob/main/docs/architecture.md) — architecture and tenant boundaries (some paths predate the feature split)
+- [`docs/erd.md`](https://github.com/ridwanmuh3/warung-pos/blob/main/docs/erd.md) — core entity relationships (payment attempts not yet drawn)
+- [`docs/adr/`](https://github.com/ridwanmuh3/warung-pos/tree/main/docs/adr) — decisions on snapshots, checkout, stock and refunds

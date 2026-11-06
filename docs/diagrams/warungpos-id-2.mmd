@@ -1,0 +1,31 @@
+sequenceDiagram
+  autonumber
+  participant C as Kasir
+  participant F as checkoutFn
+  participant T as tenant.server
+  participant S as data.server
+  participant D as Turso
+  participant X as Xendit
+
+  C->>F: POST payload keranjang (skema wire Zod)
+  F->>T: resolve tenant dari cookie sesi
+  T->>D: baca membership + role
+  T-->>F: tenantId + role
+  F->>S: checkout(tenantId, input)
+  S->>D: baca ulang harga dan HPP
+  S->>S: hitung subtotal · diskon · biaya · laba
+  S->>D: transaksi: order + order_items
+  S->>D: terapkan delta stok + stock_movements
+  S->>D: ambil nomor order dari counters
+
+  alt tunai atau kredit
+    S-->>C: order lunas (kredit tetap belum settle)
+  else QRIS
+    S->>D: order pending + baris payments
+    S->>X: buat QR nominal tetap
+    X-->>S: QR_STRING + payment_request_id
+    S-->>C: layar menunggu dengan QR
+    X->>S: webhook (reference_id)
+    S->>S: verifikasi token · cocokkan attempt · bandingkan nominal
+    S->>D: tandai payment dan order lunas
+  end

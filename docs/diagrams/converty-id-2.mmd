@@ -1,0 +1,25 @@
+sequenceDiagram
+  autonumber
+  participant U as Pengguna
+  participant M as Main thread
+  participant S as Penjadwal
+  participant W as Web Worker
+
+  U->>M: jatuhkan atau pilih berkas
+  M->>M: deteksi MIME + ekstensi, tentukan alat
+  M->>S: masukkan tugas ke antrean
+  S->>S: cek kapasitas (RAM ≥ 8 GB, ≥ 4 inti)
+
+  alt kapasitas tersedia
+    S->>W: postMessage (transfer ArrayBuffer)
+  else perangkat rendah atau seluler
+    S->>S: tunggu tugas sebelumnya
+    S->>W: postMessage (satu per satu)
+  end
+
+  W-->>M: progres
+  M-->>U: bilah progres
+  W-->>S: selesai (Blob)
+  S-->>M: lepas slot
+  M-->>U: unduh atau ZIP
+  Note over M,W: CSP connect-src 'self' — tidak ada data yang keluar
